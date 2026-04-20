@@ -247,6 +247,65 @@ body {
   gap: 8px;
 }
 
+
+.picker.mode-hsl .preview-wrap {
+  flex: 0 0 120px;
+}
+
+.picker.mode-hsl .preview-badges {
+  left: 12px;
+  bottom: 12px;
+  transform: none;
+}
+
+.vsliders-area.hsl-mode-layout {
+  gap: 14px;
+  align-items: stretch;
+}
+
+.hsl-field-wrap {
+  flex: 1;
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: crosshair;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--border) inset,
+    0 2px 8px rgba(0,0,0,0.3);
+}
+
+.hsl-field-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.hsl-field-thumb {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 18px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.96);
+  background: rgba(255,255,255,0.18);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  pointer-events: none;
+}
+
+.hsl-field-wrap:hover .hsl-field-thumb,
+.hsl-field-wrap.dragging .hsl-field-thumb {
+  box-shadow:
+    0 3px 12px rgba(0,0,0,0.55),
+    0 0 0 3px rgba(255,255,255,0.12);
+}
+
+.vslider-col.is-hsl-hue {
+  flex: 0 0 58px;
+}
+
 .vslider-col {
   flex: 1;
   display: flex;
@@ -529,6 +588,7 @@ body {
     <div class="mode-toggle" id="modeToggle">
       <button class="mode-btn active" data-mode="oklch">OKLCH</button>
       <button class="mode-btn" data-mode="rgb">RGB</button>
+      <button class="mode-btn" data-mode="hsl">HSL</button>
     </div>
   </div>
 
@@ -724,13 +784,74 @@ const Color = (() => {
     return [Lv, Cv, Hv];
   }
 
+  function rgbToHSV(r, g, b) {
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const d = max - min;
+    let h = 0;
+    if (d > 1e-9) {
+      if (max === r) h = ((g - b) / d) % 6;
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60;
+      if (h < 0) h += 360;
+    }
+    const s = max <= 1e-9 ? 0 : d / max;
+    return [h, s, max];
+  }
+
+  function hsvToRGB(h, s, v) {
+    const hh = ((h % 360) + 360) % 360;
+    const c = v * s;
+    const x = c * (1 - Math.abs((hh / 60) % 2 - 1));
+    const m = v - c;
+    let r1 = 0, g1 = 0, b1 = 0;
+    if (hh < 60) [r1, g1, b1] = [c, x, 0];
+    else if (hh < 120) [r1, g1, b1] = [x, c, 0];
+    else if (hh < 180) [r1, g1, b1] = [0, c, x];
+    else if (hh < 240) [r1, g1, b1] = [0, x, c];
+    else if (hh < 300) [r1, g1, b1] = [x, 0, c];
+    else [r1, g1, b1] = [c, 0, x];
+    return [r1 + m, g1 + m, b1 + m];
+  }
+
+  function rgbToHSL(r, g, b) {
+    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    const d = max - min;
+    let h = 0, s = 0;
+    if (d > 1e-9) {
+      s = d / (1 - Math.abs(2 * l - 1));
+      if (max === r) h = ((g - b) / d) % 6;
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60;
+      if (h < 0) h += 360;
+    }
+    return [h, s || 0, l];
+  }
+
+  function hslToRGB(h, s, l) {
+    const hh = ((h % 360) + 360) % 360;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((hh / 60) % 2 - 1));
+    const m = l - c / 2;
+    let r1 = 0, g1 = 0, b1 = 0;
+    if (hh < 60) [r1, g1, b1] = [c, x, 0];
+    else if (hh < 120) [r1, g1, b1] = [x, c, 0];
+    else if (hh < 180) [r1, g1, b1] = [0, c, x];
+    else if (hh < 240) [r1, g1, b1] = [0, x, c];
+    else if (hh < 300) [r1, g1, b1] = [x, 0, c];
+    else [r1, g1, b1] = [c, 0, x];
+    return [r1 + m, g1 + m, b1 + m];
+  }
+
   function toHex(r, g, b) {
     return '#' + [r,g,b]
       .map(v => Math.round(Math.max(0, Math.min(255, v))).toString(16).padStart(2,'0'))
       .join('');
   }
 
-  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, hueBoundaries, lightnessBoundaries, rgbToOKLCH, toHex };
+  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, hueBoundaries, lightnessBoundaries, rgbToOKLCH, rgbToHSV, hsvToRGB, rgbToHSL, hslToRGB, toHex };
 })();
 
 // ═══════════════════════════════════════════════════════════
@@ -743,6 +864,8 @@ const S = {
   alpha: 1,
   savedOKLCH: { L: 0.3657, C: 0.2375, H: 271.03 },
   rgbDirty: false,
+  hslH: 0, hslS: 0, hslLight: 0,
+  hsvH: 0, hsvS: 0, hsvV: 0,
 };
 
 const C_MAX = 0.4;
@@ -754,6 +877,16 @@ const SUPPORT = {
 
 function clamp01(v) {
   return Math.max(0, Math.min(1, v));
+}
+
+function clamp255(v) {
+  return Math.round(Math.max(0, Math.min(255, v)));
+}
+
+function normHue(v, fallback = 0) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return fallback;
+  return ((n % 360) + 360) % 360;
 }
 
 function getCanvasCtx(canvas) {
@@ -792,8 +925,34 @@ function formatRGBCode(r, g, b, alpha = S.alpha) {
   return `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)}${formatAlphaRaw(alpha)})`;
 }
 
+function formatHSLCode(h, s, l, alpha = S.alpha) {
+  const hh = Math.round(normHue(h, 0));
+  const ss = Math.round(clamp01(s) * 100);
+  const ll = Math.round(clamp01(l) * 100);
+  return alpha < 1
+    ? `hsla(${hh} ${ss}% ${ll}% / ${alpha.toFixed(2)})`
+    : `hsl(${hh} ${ss}% ${ll}%)`;
+}
+
 function rememberCurrentOKLCH() {
   S.savedOKLCH = { L: S.L, C: S.C, H: S.H };
+}
+
+function syncAuxSpacesFromRGB() {
+  const [hsvH, hsvS, hsvV] = Color.rgbToHSV(S.r / 255, S.g / 255, S.b / 255);
+  const [hslH, hslS, hslL] = Color.rgbToHSL(S.r / 255, S.g / 255, S.b / 255);
+
+  const hueFallback = Number.isFinite(S.hsvH) ? S.hsvH : (Number.isFinite(S.hslH) ? S.hslH : 0);
+  const chosenHue = (hsvS > 1e-6 && hsvV > 1e-6)
+    ? hsvH
+    : ((hslS > 1e-6) ? hslH : hueFallback);
+
+  S.hsvH = normHue(chosenHue, hueFallback);
+  S.hsvS = clamp01(hsvS);
+  S.hsvV = clamp01(hsvV);
+  S.hslH = normHue(chosenHue, hueFallback);
+  S.hslS = clamp01(hslS);
+  S.hslLight = clamp01(hslL);
 }
 
 function restoreSavedOKLCH() {
@@ -805,11 +964,12 @@ function restoreSavedOKLCH() {
   S.r = Math.round(r01 * 255);
   S.g = Math.round(g01 * 255);
   S.b = Math.round(b01 * 255);
+  syncAuxSpacesFromRGB();
   return true;
 }
 
 function markRGBDirty() {
-  if (S.mode === 'rgb') S.rgbDirty = true;
+  if (S.mode !== 'oklch') S.rgbDirty = true;
 }
 
 function parseUnitNumber(token, scale = 1) {
@@ -820,14 +980,15 @@ function parseUnitNumber(token, scale = 1) {
 }
 
 function syncStateFromRGB(r, g, b, options = {}) {
-  const { markDirty: shouldMarkDirty = S.mode === 'rgb', rememberDerived = true } = options;
-  S.r = Math.round(Math.max(0, Math.min(255, r)));
-  S.g = Math.round(Math.max(0, Math.min(255, g)));
-  S.b = Math.round(Math.max(0, Math.min(255, b)));
+  const { markDirty: shouldMarkDirty = S.mode !== 'oklch', rememberDerived = true } = options;
+  S.r = clamp255(r);
+  S.g = clamp255(g);
+  S.b = clamp255(b);
   const [L, C, H] = Color.rgbToOKLCH(S.r / 255, S.g / 255, S.b / 255);
   S.L = L;
   S.C = C;
   S.H = H;
+  syncAuxSpacesFromRGB();
   if (rememberDerived) rememberCurrentOKLCH();
   S.rgbDirty = !!shouldMarkDirty;
 }
@@ -836,13 +997,36 @@ function syncStateFromOKLCH(L, C, H, options = {}) {
   const { rememberRaw = true, clearRGBDirty = true } = options;
   S.L = Math.max(0, Math.min(1, L));
   S.C = Math.max(0, Math.min(C_MAX, C));
-  S.H = ((H % 360) + 360) % 360;
+  S.H = normHue(H, S.H);
   const [r01, g01, b01] = Color.oklchClamped(S.L, S.C, S.H);
   S.r = Math.round(r01 * 255);
   S.g = Math.round(g01 * 255);
   S.b = Math.round(b01 * 255);
+  syncAuxSpacesFromRGB();
   if (rememberRaw) rememberCurrentOKLCH();
   if (clearRGBDirty) S.rgbDirty = false;
+}
+
+function syncStateFromHSV(H, Sv, V, options = {}) {
+  S.hsvH = normHue(H, S.hsvH);
+  S.hslH = S.hsvH;
+  const [r01, g01, b01] = Color.hsvToRGB(S.hsvH, clamp01(Sv), clamp01(V));
+  syncStateFromRGB(r01 * 255, g01 * 255, b01 * 255, options);
+  S.hsvH = normHue(H, S.hsvH);
+  S.hslH = S.hsvH;
+  S.hsvS = clamp01(Sv);
+  S.hsvV = clamp01(V);
+}
+
+function syncStateFromHSL(H, Sval, Lval, options = {}) {
+  S.hslH = normHue(H, S.hslH);
+  S.hsvH = S.hslH;
+  const [r01, g01, b01] = Color.hslToRGB(S.hslH, clamp01(Sval), clamp01(Lval));
+  syncStateFromRGB(r01 * 255, g01 * 255, b01 * 255, options);
+  S.hslH = normHue(H, S.hslH);
+  S.hsvH = S.hslH;
+  S.hslS = clamp01(Sval);
+  S.hslLight = clamp01(Lval);
 }
 
 function parseHexColor(text) {
@@ -881,6 +1065,14 @@ function parseFunctionalColor(text) {
     return { space: 'rgb', r, g, b, alpha };
   }
 
+  if ((fn === 'hsl' || fn === 'hsla') && body.length >= 3) {
+    const h = parseUnitNumber(body[0], 1);
+    const s = parseUnitNumber(body[1], 1);
+    const l = parseUnitNumber(body[2], 1);
+    if ([h, s, l].some(v => Number.isNaN(v))) return null;
+    return { space: 'hsl', h, s, l, alpha };
+  }
+
   return null;
 }
 
@@ -896,7 +1088,12 @@ function applyColorInput(text) {
 
   if (parsed.space === 'rgb') {
     syncStateFromRGB(parsed.r, parsed.g, parsed.b, {
-      markDirty: S.mode === 'rgb',
+      markDirty: S.mode !== 'oklch',
+      rememberDerived: true,
+    });
+  } else if (parsed.space === 'hsl') {
+    syncStateFromHSL(parsed.h, parsed.s, parsed.l, {
+      markDirty: S.mode !== 'oklch',
       rememberDerived: true,
     });
   } else {
@@ -929,7 +1126,7 @@ function colorSpecFromRGB(rgb, alpha = 1) {
 
 function currentRGB01() {
   if (S.mode === 'oklch') return Color.oklchClamped(S.L, S.C, S.H);
-  return [S.r/255, S.g/255, S.b/255];
+  return [S.r / 255, S.g / 255, S.b / 255];
 }
 
 function currentComputedRGB255() {
@@ -988,22 +1185,27 @@ function buildSingleBoundaryMarkers(srgbT, p3T) {
 
 function switchMode(m) {
   if (m === S.mode) return;
-  if (S.mode === 'oklch') {
+
+  if (S.mode === 'oklch' && m !== 'oklch') {
     rememberCurrentOKLCH();
-    const [r,g,b] = currentRGB01();
-    S.r = Math.round(r*255);
-    S.g = Math.round(g*255);
-    S.b = Math.round(b*255);
+    const [r, g, b] = currentRGB01();
+    S.r = Math.round(r * 255);
+    S.g = Math.round(g * 255);
+    S.b = Math.round(b * 255);
+    syncAuxSpacesFromRGB();
     S.rgbDirty = false;
-  } else {
+  } else if (S.mode !== 'oklch' && m === 'oklch') {
     if (!(S.savedOKLCH && !S.rgbDirty && restoreSavedOKLCH())) {
       syncStateFromRGB(S.r, S.g, S.b, { markDirty: false, rememberDerived: true });
     }
     S.rgbDirty = false;
   }
+
   S.mode = m;
   rebuildUI();
 }
+
+syncAuxSpacesFromRGB();
 
 // ═══════════════════════════════════════════════════════════
 // 3 ▸ CANVAS RENDERING
@@ -1058,16 +1260,14 @@ function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
     p3:   { line: 'rgba(0,0,0,0.92)' },
   };
 
-  for (const boundary of boundaries) {
-    const marker = typeof boundary === 'number' ? { t: boundary, gamut: 'srgb' } : boundary;
+  for (const marker of boundaries) {
     const style = styles[marker.gamut] || styles.srgb;
+    ctx.fillStyle = style.line;
     if (isVert) {
-      const y = Math.round((1 - marker.t) * Math.max(1, h - 1));
-      ctx.fillStyle = style.line;
+      const y = Math.round((1 - marker.t) * (h - 1));
       ctx.fillRect(0, y - 1, w, 2);
     } else {
-      const x = Math.round(marker.t * Math.max(1, w - 1));
-      ctx.fillStyle = style.line;
+      const x = Math.round(marker.t * (w - 1));
       ctx.fillRect(x - 1, 0, 2, h);
     }
   }
@@ -1080,16 +1280,14 @@ function renderAlphaCanvas(canvas, isVert) {
   if (!ctx || !w || !h) return;
   ctx.clearRect(0, 0, w, h);
 
-  // Checkerboard
   const ts = 8;
-  for (let ty = 0; ty < Math.ceil(h/ts); ty++) {
-    for (let tx = 0; tx < Math.ceil(w/ts); tx++) {
-      ctx.fillStyle = (tx+ty)%2===0 ? '#2e2e3e' : '#1e1e2a';
-      ctx.fillRect(tx*ts, ty*ts, ts, ts);
+  for (let ty = 0; ty < Math.ceil(h / ts); ty++) {
+    for (let tx = 0; tx < Math.ceil(w / ts); tx++) {
+      ctx.fillStyle = (tx + ty) % 2 === 0 ? '#2e2e3e' : '#1e1e2a';
+      ctx.fillRect(tx * ts, ty * ts, ts, ts);
     }
   }
 
-  // Gradient overlay
   let grad;
   if (isVert) {
     grad = ctx.createLinearGradient(0, 0, 0, h);
@@ -1104,16 +1302,54 @@ function renderAlphaCanvas(canvas, isVert) {
   ctx.fillRect(0, 0, w, h);
 }
 
+function renderHSLFieldCanvas(canvas) {
+  const ctx = getCanvasCtx(canvas);
+  const w = canvas.width, h = canvas.height;
+  if (!ctx || !w || !h) return;
+  ctx.clearRect(0, 0, w, h);
+
+  const img = ctx.createImageData(w, h);
+  const d = img.data;
+
+  for (let y = 0; y < h; y++) {
+    const v = 1 - y / Math.max(1, h - 1);
+    for (let x = 0; x < w; x++) {
+      const s = x / Math.max(1, w - 1);
+      const [r, g, b] = Color.hsvToRGB(S.hsvH, s, v);
+      const i = (y * w + x) * 4;
+      d[i] = Math.round(r * 255);
+      d[i + 1] = Math.round(g * 255);
+      d[i + 2] = Math.round(b * 255);
+      d[i + 3] = 255;
+    }
+  }
+
+  ctx.putImageData(img, 0, 0);
+}
+
 // ═══════════════════════════════════════════════════════════
 // 4 ▸ SLIDER DEFINITIONS
 // ═══════════════════════════════════════════════════════════
+function getHSLHueDef() {
+  return {
+    key:'hslHue', label:'H', full:'Hue',
+    min:0, max:360,
+    get:()=>S.hsvH,
+    set:v=>{ syncStateFromHSV(v, S.hsvS, S.hsvV, { markDirty: true, rememberDerived: true }); },
+    fmt:v=>Math.round(v).toString(),
+    vFn: t => colorSpecFromRGB(Color.hsvToRGB(t * 360, 1, 1).map(v => v * 255)),
+    vBounds: () => [],
+    showH: false,
+  };
+}
+
 function getSliderDefs() {
   if (S.mode === 'oklch') {
     return [
       {
         key:'L', label:'L', full:'Lightness',
         min:0, max:1,
-        get:()=>S.L, set:v=>{S.L=v;},
+        get:()=>S.L, set:v=>{ S.L = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
         fmt:v=>v.toFixed(4),
         vFn: t => {
           const g = Math.round(t * 255);
@@ -1136,7 +1372,8 @@ function getSliderDefs() {
       {
         key:'C', label:'C', full:'Chroma',
         min:0, max:C_MAX,
-        get:()=>S.C, set:v=>{S.C=v;},
+        get:()=>S.C,
+        set:v=>{ S.C = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
         fmt:v=>v.toFixed(4),
         vFn: t => {
           const c = t * C_MAX;
@@ -1161,12 +1398,10 @@ function getSliderDefs() {
       {
         key:'H', label:'H', full:'Hue',
         min:0, max:360,
-        get:()=>S.H, set:v=>{S.H=v;},
+        get:()=>S.H,
+        set:v=>{ S.H = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
         fmt:v=>v.toFixed(2),
-        vFn: t => {
-          const h = t * 360;
-          return colorSpecFromOKLCH(VERT_HUE_LIGHTNESS, S.C, h);
-        },
+        vFn: t => colorSpecFromOKLCH(VERT_HUE_LIGHTNESS, S.C, t * 360),
         vBounds: () => [],
         hFn: t => {
           const h = t * 360;
@@ -1188,38 +1423,43 @@ function getSliderDefs() {
         showH: false,
       }
     ];
-  } else {
+  }
+
+  if (S.mode === 'rgb') {
     return [
       {
         key:'r', label:'R', full:'Red',
         min:0, max:255,
-        get:()=>S.r, set:v=>{S.r=Math.round(v); markRGBDirty();},
+        get:()=>S.r,
+        set:v=>{ syncStateFromRGB(v, S.g, S.b, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-        vFn: t => colorSpecFromRGB([t*255, 0, 0]),
+        vFn: t => colorSpecFromRGB([t * 255, 0, 0]),
         vBounds: () => [],
-        hFn: t => colorSpecFromRGB([t*255, S.g, S.b]),
+        hFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
         hBounds: () => [],
         showH: true,
       },
       {
         key:'g', label:'G', full:'Green',
         min:0, max:255,
-        get:()=>S.g, set:v=>{S.g=Math.round(v); markRGBDirty();},
+        get:()=>S.g,
+        set:v=>{ syncStateFromRGB(S.r, v, S.b, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-        vFn: t => colorSpecFromRGB([0, t*255, 0]),
+        vFn: t => colorSpecFromRGB([0, t * 255, 0]),
         vBounds: () => [],
-        hFn: t => colorSpecFromRGB([S.r, t*255, S.b]),
+        hFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
         hBounds: () => [],
         showH: true,
       },
       {
         key:'b', label:'B', full:'Blue',
         min:0, max:255,
-        get:()=>S.b, set:v=>{S.b=Math.round(v); markRGBDirty();},
+        get:()=>S.b,
+        set:v=>{ syncStateFromRGB(S.r, S.g, v, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-        vFn: t => colorSpecFromRGB([0, 0, t*255]),
+        vFn: t => colorSpecFromRGB([0, 0, t * 255]),
         vBounds: () => [],
-        hFn: t => colorSpecFromRGB([S.r, S.g, t*255]),
+        hFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
         hBounds: () => [],
         showH: true,
       },
@@ -1233,12 +1473,48 @@ function getSliderDefs() {
       }
     ];
   }
+
+  return [
+    {
+      key:'hslS', label:'S', full:'Saturation',
+      min:0, max:1,
+      get:()=>S.hslS,
+      set:v=>{ syncStateFromHSL(S.hslH, v, S.hslLight, { markDirty: true, rememberDerived: true }); },
+      fmt:v=>`${Math.round(v * 100)}%`,
+      editText:()=>`${Math.round(S.hslS * 100)}`,
+      parse:text=>parseUnitNumber(text, 1),
+      hFn: t => colorSpecFromRGB(Color.hslToRGB(S.hslH, t, S.hslLight).map(v => v * 255)),
+      hBounds: () => [],
+      showH: true,
+    },
+    {
+      key:'hslL', label:'L', full:'Lightness',
+      min:0, max:1,
+      get:()=>S.hslLight,
+      set:v=>{ syncStateFromHSL(S.hslH, S.hslS, v, { markDirty: true, rememberDerived: true }); },
+      fmt:v=>`${Math.round(v * 100)}%`,
+      editText:()=>`${Math.round(S.hslLight * 100)}`,
+      parse:text=>parseUnitNumber(text, 1),
+      hFn: t => colorSpecFromRGB(Color.hslToRGB(S.hslH, S.hslS, t).map(v => v * 255)),
+      hBounds: () => [],
+      showH: true,
+    },
+    {
+      key:'alpha', label:'A', full:'Opacity',
+      isAlpha: true,
+      min:0, max:1,
+      get:()=>S.alpha, set:v=>{S.alpha=v;},
+      fmt:v=>v.toFixed(2),
+      showH: true,
+    }
+  ];
 }
 
 // ═══════════════════════════════════════════════════════════
 // 5 ▸ UI CONSTRUCTION
 // ═══════════════════════════════════════════════════════════
-let sliders = []; // { def, vTrack, vCanvas, vThumb, vValEl, hTrack, hCanvas, hThumb, hValEl }
+let sliders = [];
+let hslFieldUI = null;
 
 function buildVSlider(def) {
   const col = document.createElement('div');
@@ -1302,12 +1578,26 @@ function buildHSlider(def) {
   return { row, track, canvas: cv, thumb, valEl: infoVal };
 }
 
+function buildHSLField() {
+  const wrap = document.createElement('div');
+  wrap.className = 'hsl-field-wrap';
+
+  const cv = document.createElement('canvas');
+  cv.className = 'hsl-field-canvas';
+
+  const thumb = document.createElement('div');
+  thumb.className = 'hsl-field-thumb';
+
+  wrap.append(cv, thumb);
+  return { wrap, canvas: cv, thumb };
+}
+
 function makeEditableVal(el, def) {
   el.title = 'Click to edit';
   el.addEventListener('click', e => {
     e.stopPropagation();
     el.contentEditable = 'true';
-    el.textContent = def.get().toString();
+    el.textContent = def.editText ? def.editText() : def.get().toString();
     const range = document.createRange();
     range.selectNodeContents(el);
     const sel = window.getSelection();
@@ -1316,7 +1606,7 @@ function makeEditableVal(el, def) {
   });
   el.addEventListener('blur', () => {
     el.contentEditable = 'false';
-    const v = parseFloat(el.textContent);
+    const v = def.parse ? def.parse(el.textContent) : parseFloat(el.textContent);
     if (!isNaN(v)) {
       def.set(Math.max(def.min, Math.min(def.max, v)));
     }
@@ -1372,41 +1662,66 @@ function makeEditableColorField(el, getText) {
 }
 
 function rebuildUI() {
+  const picker = document.querySelector('.picker');
   const vsArea = document.getElementById('vslidersArea');
   const hsArea = document.getElementById('hslidersArea');
+  picker.classList.toggle('mode-hsl', S.mode === 'hsl');
   vsArea.innerHTML = '';
   hsArea.innerHTML = '';
+  vsArea.classList.toggle('hsl-mode-layout', S.mode === 'hsl');
   sliders = [];
+  hslFieldUI = null;
 
-  const defs = getSliderDefs();
+  if (S.mode === 'hsl') {
+    hslFieldUI = buildHSLField();
+    vsArea.appendChild(hslFieldUI.wrap);
 
-  defs.forEach(def => {
-    const vi = buildVSlider(def);
-    vsArea.appendChild(vi.col);
+    const hueDef = getHSLHueDef();
+    const hueUI = buildVSlider(hueDef);
+    hueUI.col.classList.add('is-hsl-hue');
+    vsArea.appendChild(hueUI.col);
+    sliders.push({ def: hueDef, vi: hueUI, hi: null });
 
-    let hi = null;
-    if (def.showH) {
-      hi = buildHSlider(def);
+    getSliderDefs().forEach(def => {
+      const hi = buildHSlider(def);
       hsArea.appendChild(hi.row);
-    }
-
-    sliders.push({ def, vi, hi });
-  });
+      sliders.push({ def, vi: null, hi });
+    });
+  } else {
+    const defs = getSliderDefs();
+    defs.forEach(def => {
+      const vi = buildVSlider(def);
+      vsArea.appendChild(vi.col);
+      let hi = null;
+      if (def.showH) {
+        hi = buildHSlider(def);
+        hsArea.appendChild(hi.row);
+      }
+      sliders.push({ def, vi, hi });
+    });
+  }
 
   document.querySelectorAll('.mode-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === S.mode);
   });
 
-  // Init canvases after layout
   requestAnimationFrame(() => {
     sliders.forEach(({ vi, hi }) => {
-      vi.canvas.width  = vi.track.offsetWidth  || 44;
-      vi.canvas.height = vi.track.offsetHeight || 240;
+      if (vi) {
+        vi.canvas.width = vi.track.offsetWidth || 44;
+        vi.canvas.height = vi.track.offsetHeight || 240;
+      }
       if (hi) {
-        hi.canvas.width  = hi.track.offsetWidth  || 400;
+        hi.canvas.width = hi.track.offsetWidth || 400;
         hi.canvas.height = hi.track.offsetHeight || 46;
       }
     });
+
+    if (hslFieldUI) {
+      hslFieldUI.canvas.width = hslFieldUI.wrap.offsetWidth || 280;
+      hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight || 280;
+    }
+
     setupInteractions();
     makeEditableColorField(document.getElementById('codeVal'), () => document.getElementById('codeVal').textContent);
     makeEditableColorField(document.getElementById('hexVal'), () => document.getElementById('hexVal').textContent);
@@ -1428,7 +1743,6 @@ function updateUI() {
   const alpha = S.alpha;
   const fallbackState = splitPreview ? getFallbackState(alpha) : null;
 
-  // Preview
   const swatch = document.getElementById('previewSwatch');
   const layer = document.getElementById('previewColorLayer');
   const split = document.getElementById('previewSplit');
@@ -1448,7 +1762,6 @@ function updateUI() {
     layer.style.background = currentColorCss(alpha);
   }
 
-  // Badges
   document.getElementById('badgeMode').textContent = S.mode;
   const badgeP3 = document.getElementById('badgeP3');
   const badgeGamut = document.getElementById('badgeGamut');
@@ -1462,7 +1775,6 @@ function updateUI() {
     badgeGamut.style.display = 'none';
   }
 
-  // Codes and labels
   const codeLabel = document.getElementById('codeLabel');
   const hexLabel = document.getElementById('hexLabel');
   const fallbackCodeLabel = document.getElementById('fallbackCodeLabel');
@@ -1482,62 +1794,53 @@ function updateUI() {
 
   const computedCode = S.mode === 'oklch'
     ? formatOKLCHCode(S.L, S.C, S.H, alpha)
-    : formatRGBCode(S.r, S.g, S.b, alpha);
+    : (S.mode === 'hsl'
+      ? formatHSLCode(S.hslH, S.hslS, S.hslLight, alpha)
+      : formatRGBCode(S.r, S.g, S.b, alpha));
 
-  if (document.activeElement !== codeEl) {
-    codeEl.textContent = computedCode;
-  }
-  if (document.activeElement !== hexEl) {
-    hexEl.textContent = computedHex;
-  }
+  if (document.activeElement !== codeEl) codeEl.textContent = computedCode;
+  if (document.activeElement !== hexEl) hexEl.textContent = computedHex;
 
   if (splitPreview && fallbackState) {
     fallbackBar.style.display = '';
-    if (document.activeElement !== fallbackCodeEl) {
-      fallbackCodeEl.textContent = fallbackState.code;
-    }
-    if (document.activeElement !== fallbackHexEl) {
-      fallbackHexEl.textContent = fallbackState.hex;
-    }
+    if (document.activeElement !== fallbackCodeEl) fallbackCodeEl.textContent = fallbackState.code;
+    if (document.activeElement !== fallbackHexEl) fallbackHexEl.textContent = fallbackState.hex;
   } else {
     fallbackBar.style.display = 'none';
   }
 
-  // Sliders
   sliders.forEach(({ def, vi, hi }) => {
     const val = def.get();
-    const t   = (val - def.min) / (def.max - def.min);
+    const t = (val - def.min) / (def.max - def.min);
 
-    const trackH = vi.track.clientHeight || 240;
-    vi.thumb.style.bottom = (t * trackH - 8) + 'px';
-    if (document.activeElement !== vi.valEl) {
-      vi.valEl.textContent = def.fmt(val);
-    }
-
-    if (vi.canvas.width > 0 && vi.canvas.height > 0) {
-      if (def.isAlpha) {
-        renderAlphaCanvas(vi.canvas, true);
-      } else {
-        renderSliderCanvas(vi.canvas, def.vFn, true, def.vBounds());
+    if (vi) {
+      const trackH = vi.track.clientHeight || 240;
+      vi.thumb.style.bottom = (t * trackH - 8) + 'px';
+      if (document.activeElement !== vi.valEl) vi.valEl.textContent = def.fmt(val);
+      if (vi.canvas.width > 0 && vi.canvas.height > 0) {
+        if (def.isAlpha) renderAlphaCanvas(vi.canvas, true);
+        else renderSliderCanvas(vi.canvas, def.vFn, true, def.vBounds ? def.vBounds() : []);
       }
     }
 
     if (hi) {
       const trackW = hi.track.clientWidth || 400;
       hi.thumb.style.left = (t * trackW - 8) + 'px';
-      if (document.activeElement !== hi.valEl) {
-        hi.valEl.textContent = def.fmt(val);
-      }
-
+      if (document.activeElement !== hi.valEl) hi.valEl.textContent = def.fmt(val);
       if (hi.canvas.width > 0 && hi.canvas.height > 0) {
-        if (def.isAlpha) {
-          renderAlphaCanvas(hi.canvas, false);
-        } else {
-          renderSliderCanvas(hi.canvas, def.hFn, false, def.hBounds ? def.hBounds() : []);
-        }
+        if (def.isAlpha) renderAlphaCanvas(hi.canvas, false);
+        else renderSliderCanvas(hi.canvas, def.hFn, false, def.hBounds ? def.hBounds() : []);
       }
     }
   });
+
+  if (S.mode === 'hsl' && hslFieldUI) {
+    renderHSLFieldCanvas(hslFieldUI.canvas);
+    const w = hslFieldUI.wrap.clientWidth || 280;
+    const h = hslFieldUI.wrap.clientHeight || 280;
+    hslFieldUI.thumb.style.left = `${S.hsvS * w}px`;
+    hslFieldUI.thumb.style.top = `${(1 - S.hsvV) * h}px`;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1565,6 +1868,15 @@ window.addEventListener('touchend', () => {
 
 function applyDrag(cx, cy) {
   const rect = drag.track.getBoundingClientRect();
+
+  if (drag.kind === 'hsl-field') {
+    const s = Math.max(0, Math.min(1, (cx - rect.left) / rect.width));
+    const v = Math.max(0, Math.min(1, 1 - (cy - rect.top) / rect.height));
+    syncStateFromHSV(S.hsvH, s, v, { markDirty: true, rememberDerived: true });
+    updateUI();
+    return;
+  }
+
   let t = drag.isVert
     ? 1 - (cy - rect.top) / rect.height
     : (cx - rect.left) / rect.width;
@@ -1588,11 +1900,27 @@ function setupTrackDrag(track, def, isVert) {
   }, { passive: false });
 }
 
+function setupHSLFieldDrag(track) {
+  track.addEventListener('mousedown', e => {
+    e.preventDefault();
+    track.classList.add('dragging');
+    drag = { track, kind: 'hsl-field' };
+    applyDrag(e.clientX, e.clientY);
+  });
+  track.addEventListener('touchstart', e => {
+    e.preventDefault();
+    track.classList.add('dragging');
+    drag = { track, kind: 'hsl-field' };
+    applyDrag(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+}
+
 function setupInteractions() {
   sliders.forEach(({ def, vi, hi }) => {
-    setupTrackDrag(vi.track, def, true);
+    if (vi) setupTrackDrag(vi.track, def, true);
     if (hi) setupTrackDrag(hi.track, def, false);
   });
+  if (hslFieldUI) setupHSLFieldDrag(hslFieldUI.wrap);
 }
 
 // ═══════════════════════════════════════════════════════════
