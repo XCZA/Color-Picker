@@ -37,7 +37,7 @@ body {
 }
 
 .picker {
-  width: 580px;
+  width: min(580px, 100%);
   background: var(--card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -238,6 +238,20 @@ body {
 .preview-split-label.is-alert,
 .chip-label.is-alert {
   color: rgba(255, 142, 142, 0.92);
+}
+
+.chip-label.is-bright {
+  color: var(--text);
+}
+
+/* HSL vertical slider strip (mobile only, built by JS) */
+.hsl-vstrip {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  width: 100%;
+  height: 110px;
+  flex-shrink: 0;
 }
 
 /* ─── VERTICAL SLIDERS ────────────────────────────── */
@@ -576,6 +590,126 @@ body {
     repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
     center / 10px 10px;
 }
+
+/* ─── RESPONSIVE ──────────────────────────────────── */
+@media (max-width: 560px) {
+  body {
+    padding: 12px;
+    padding-top: 16px;
+    align-items: flex-start;
+  }
+
+  .picker {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  /* Stack preview above sliders */
+  .main-area {
+    flex-direction: column;
+    height: auto;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .preview-wrap {
+    flex: none;
+    width: 100%;
+    height: 160px;
+  }
+
+  /* HSL mode: preview override */
+  .picker.mode-hsl .preview-wrap {
+    flex: none;
+    width: 100%;
+    height: 160px;
+  }
+
+  /* Vertical sliders become a short horizontal strip */
+  .vsliders-area {
+    height: 110px;
+    flex-direction: row;
+  }
+
+  /* HSL field + hue need more vertical room */
+  .vsliders-area.hsl-mode-layout {
+    flex-direction: column;
+    height: auto;
+    gap: 8px;
+  }
+
+  /* SV field gets fixed height when stacked */
+  .hsl-field-wrap {
+    flex: 0 0 160px;
+    border-radius: 10px;
+  }
+
+  /* Mobile HSL vstrip (all 4 sliders in a row) */
+  .hsl-vstrip {
+    height: 110px;
+  }
+
+  /* Horizontal sliders: tighter info panel */
+  .hslider-track {
+    height: 40px;
+  }
+
+  .hslider-thumb {
+    height: 28px;
+  }
+
+  .hslider-info {
+    width: 72px;
+    flex-shrink: 0;
+  }
+
+  .hslider-info-val {
+    font-size: 11px;
+  }
+
+  .hsliders-area {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  /* Values chips */
+  .values-bar {
+    gap: 6px;
+  }
+
+  .val-chip {
+    padding: 8px 10px;
+  }
+
+  .val-chip .chip-val {
+    font-size: 10px;
+  }
+
+  .chip-hex {
+    width: 82px;
+  }
+
+  .chip-alpha {
+    width: 66px;
+  }
+
+  /* Preview badges */
+  .preview-badges {
+    bottom: 8px;
+    gap: 4px;
+  }
+
+  .picker.mode-hsl .preview-badges {
+    left: 10px;
+    bottom: 10px;
+  }
+
+  /* Mode toggle */
+  .mode-btn {
+    padding: 5px 10px;
+    font-size: 9px;
+  }
+}
 </style>
 </head>
 <body>
@@ -632,7 +766,7 @@ body {
       </div>
     </div>
 
-    <div class="values-bar" id="fallbackValuesBar" style="display:none">
+    <div class="values-bar" id="fallbackValuesBar" style="visibility:hidden">
       <div class="val-chip chip-code" id="fallbackCodeChip">
         <div class="copy-ring"></div>
         <span class="chip-label" id="fallbackCodeLabel">Color Code (Fallback)</span>
@@ -978,6 +1112,20 @@ function parseUnitNumber(token, scale = 1) {
   if (v.endsWith('%')) return parseFloat(v) / 100 * scale;
   return parseFloat(v);
 }
+
+// For fields displayed as %, treat bare numbers > 1 as percentage values.
+// "50" → 0.5 · "100" → 1.0 · "0.5" → 0.5 (decimal point present) · "1" → 1.0 (≤ 1)
+function parsePercentField(text) {
+  const s = String(text).trim();
+  if (!s) return NaN;
+  if (s.endsWith('%')) return parseFloat(s) / 100;
+  const n = parseFloat(s);
+  if (isNaN(n)) return NaN;
+  if (!s.includes('.') && n > 1) return n / 100;
+  return n;
+}
+
+function isMobile() { return window.innerWidth <= 560; }
 
 function syncStateFromRGB(r, g, b, options = {}) {
   const { markDirty: shouldMarkDirty = S.mode !== 'oklch', rememberDerived = true } = options;
@@ -1482,7 +1630,9 @@ function getSliderDefs() {
       set:v=>{ syncStateFromHSL(S.hslH, v, S.hslLight, { markDirty: true, rememberDerived: true }); },
       fmt:v=>`${Math.round(v * 100)}%`,
       editText:()=>`${Math.round(S.hslS * 100)}`,
-      parse:text=>parseUnitNumber(text, 1),
+      parse: parsePercentField,
+      vFn: t => colorSpecFromRGB(Color.hslToRGB(S.hslH, t, S.hslLight).map(v => v * 255)),
+      vBounds: () => [],
       hFn: t => colorSpecFromRGB(Color.hslToRGB(S.hslH, t, S.hslLight).map(v => v * 255)),
       hBounds: () => [],
       showH: true,
@@ -1494,7 +1644,9 @@ function getSliderDefs() {
       set:v=>{ syncStateFromHSL(S.hslH, S.hslS, v, { markDirty: true, rememberDerived: true }); },
       fmt:v=>`${Math.round(v * 100)}%`,
       editText:()=>`${Math.round(S.hslLight * 100)}`,
-      parse:text=>parseUnitNumber(text, 1),
+      parse: parsePercentField,
+      vFn: t => colorSpecFromRGB(Color.hslToRGB(S.hslH, S.hslS, t).map(v => v * 255)),
+      vBounds: () => [],
       hFn: t => colorSpecFromRGB(Color.hslToRGB(S.hslH, S.hslS, t).map(v => v * 255)),
       hBounds: () => [],
       showH: true,
@@ -1676,17 +1828,36 @@ function rebuildUI() {
     hslFieldUI = buildHSLField();
     vsArea.appendChild(hslFieldUI.wrap);
 
-    const hueDef = getHSLHueDef();
-    const hueUI = buildVSlider(hueDef);
-    hueUI.col.classList.add('is-hsl-hue');
-    vsArea.appendChild(hueUI.col);
-    sliders.push({ def: hueDef, vi: hueUI, hi: null });
+    if (isMobile()) {
+      // Mobile: all 4 sliders (H, S, L, A) as vertical columns in a strip below the SV field
+      const strip = document.createElement('div');
+      strip.className = 'hsl-vstrip';
+      vsArea.appendChild(strip);
 
-    getSliderDefs().forEach(def => {
-      const hi = buildHSlider(def);
-      hsArea.appendChild(hi.row);
-      sliders.push({ def, vi: null, hi });
-    });
+      const hueDef = getHSLHueDef();
+      const hueUI = buildVSlider(hueDef);
+      strip.appendChild(hueUI.col);
+      sliders.push({ def: hueDef, vi: hueUI, hi: null });
+
+      getSliderDefs().forEach(def => {
+        const vi = buildVSlider(def);
+        strip.appendChild(vi.col);
+        sliders.push({ def, vi, hi: null });
+      });
+    } else {
+      // Desktop: hue vertical beside SV field, others as horizontal rows below
+      const hueDef = getHSLHueDef();
+      const hueUI = buildVSlider(hueDef);
+      hueUI.col.classList.add('is-hsl-hue');
+      vsArea.appendChild(hueUI.col);
+      sliders.push({ def: hueDef, vi: hueUI, hi: null });
+
+      getSliderDefs().forEach(def => {
+        const hi = buildHSlider(def);
+        hsArea.appendChild(hi.row);
+        sliders.push({ def, vi: null, hi });
+      });
+    }
   } else {
     const defs = getSliderDefs();
     defs.forEach(def => {
@@ -1769,9 +1940,11 @@ function updateUI() {
   if (!splitPreview && S.mode === 'oklch' && !inSRGB) {
     badgeP3.style.display = '';
     badgeP3.textContent = 'P3';
+    badgeP3.classList.add('is-alert');
     badgeGamut.style.display = 'none';
   } else {
     badgeP3.style.display = 'none';
+    badgeP3.classList.remove('is-alert');
     badgeGamut.style.display = 'none';
   }
 
@@ -1785,12 +1958,19 @@ function updateUI() {
   const fallbackCodeEl = document.getElementById('fallbackCodeVal');
   const fallbackHexEl = document.getElementById('fallbackHexVal');
 
-  codeLabel.textContent = splitPreview ? 'Color Code (Computed)' : 'Color Code';
-  hexLabel.textContent = splitPreview ? 'Hex (Computed)' : 'Hex';
-  codeLabel.classList.toggle('is-alert', splitPreview);
-  hexLabel.classList.toggle('is-alert', splitPreview);
-  fallbackCodeLabel.classList.toggle('is-bright', splitPreview);
-  fallbackHexLabel.classList.toggle('is-bright', splitPreview);
+  if (splitPreview) {
+    codeLabel.innerHTML = 'Color Code <span class="is-alert">(Computed)</span>';
+    hexLabel.innerHTML  = 'Hex <span class="is-alert">(Computed)</span>';
+    fallbackCodeLabel.innerHTML = 'Color Code <span style="color:var(--text)">(Fallback)</span>';
+    fallbackHexLabel.innerHTML  = 'Hex <span style="color:var(--text)">(Fallback)</span>';
+  } else {
+    codeLabel.textContent = 'Color Code';
+    hexLabel.textContent  = 'Hex';
+    fallbackCodeLabel.textContent = 'Color Code (Fallback)';
+    fallbackHexLabel.textContent  = 'Hex (Fallback)';
+  }
+  codeLabel.classList.remove('is-alert');
+  hexLabel.classList.remove('is-alert');
 
   const computedCode = S.mode === 'oklch'
     ? formatOKLCHCode(S.L, S.C, S.H, alpha)
@@ -1802,11 +1982,11 @@ function updateUI() {
   if (document.activeElement !== hexEl) hexEl.textContent = computedHex;
 
   if (splitPreview && fallbackState) {
-    fallbackBar.style.display = '';
+    fallbackBar.style.visibility = 'visible';
     if (document.activeElement !== fallbackCodeEl) fallbackCodeEl.textContent = fallbackState.code;
     if (document.activeElement !== fallbackHexEl) fallbackHexEl.textContent = fallbackState.hex;
   } else {
-    fallbackBar.style.display = 'none';
+    fallbackBar.style.visibility = 'hidden';
   }
 
   sliders.forEach(({ def, vi, hi }) => {
@@ -1977,6 +2157,30 @@ document.getElementById('modeToggle').addEventListener('click', e => {
 // ═══════════════════════════════════════════════════════════
 // 9 ▸ BOOTSTRAP
 // ═══════════════════════════════════════════════════════════
+
+// Resize canvases + re-render when window/orientation changes
+let _resizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_resizeTimer);
+  _resizeTimer = setTimeout(() => {
+    sliders.forEach(({ vi, hi }) => {
+      if (vi && vi.track.offsetHeight > 0) {
+        vi.canvas.width  = vi.track.offsetWidth;
+        vi.canvas.height = vi.track.offsetHeight;
+      }
+      if (hi && hi.track.offsetWidth > 0) {
+        hi.canvas.width  = hi.track.offsetWidth;
+        hi.canvas.height = hi.track.offsetHeight;
+      }
+    });
+    if (hslFieldUI && hslFieldUI.wrap.offsetWidth > 0) {
+      hslFieldUI.canvas.width  = hslFieldUI.wrap.offsetWidth;
+      hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight;
+    }
+    updateUI();
+  }, 80);
+});
+
 rebuildUI();
 </script>
 </body>
