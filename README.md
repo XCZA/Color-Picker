@@ -370,18 +370,4 @@ A few natural next steps for the project:
 
 ---
 
-## License
-
-Add the license you want to use here.
-
-For example:
-
-- MIT
-- Apache-2.0
-- GPL-3.0
-
----
-
-## Credits
-
 Built as an experimental color picker focused on **OKLCH**, **gamut-aware UI**, and modern CSS color output.
