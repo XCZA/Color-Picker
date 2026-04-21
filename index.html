@@ -28,9 +28,11 @@ body {
   font-family: var(--font);
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 24px;
+  /* Use top padding to approximate vertical centering without repositioning
+     on height changes. clamp(min, ideal, max) where ideal = 50vh - half picker height */
+  padding: clamp(24px, calc(50vh - 430px), 80px) 24px 48px;
   background-image:
     radial-gradient(ellipse 60% 40% at 20% 20%, rgba(80,60,140,0.12) 0%, transparent 70%),
     radial-gradient(ellipse 40% 30% at 80% 80%, rgba(40,80,160,0.09) 0%, transparent 70%);
@@ -594,9 +596,7 @@ body {
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 560px) {
   body {
-    padding: 12px;
-    padding-top: 16px;
-    align-items: flex-start;
+    padding: 16px 12px 32px;
   }
 
   .picker {
@@ -985,7 +985,14 @@ const Color = (() => {
       .join('');
   }
 
-  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, hueBoundaries, lightnessBoundaries, rgbToOKLCH, rgbToHSV, hsvToRGB, rgbToHSL, hslToRGB, toHex };
+  function toHexAlpha(r, g, b, alpha = 1) {
+    const base = toHex(r, g, b);
+    if (alpha >= 1) return base;
+    const a = Math.round(Math.max(0, Math.min(255, alpha * 255))).toString(16).padStart(2, '0');
+    return base + a;
+  }
+
+  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, hueBoundaries, lightnessBoundaries, rgbToOKLCH, rgbToHSV, hsvToRGB, rgbToHSL, hslToRGB, toHex, toHexAlpha };
 })();
 
 // ═══════════════════════════════════════════════════════════
@@ -1056,16 +1063,16 @@ function formatOKLCHCode(L, C, H, alpha = S.alpha) {
 }
 
 function formatRGBCode(r, g, b, alpha = S.alpha) {
-  return `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)}${formatAlphaRaw(alpha)})`;
+  const base = `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)}`;
+  return alpha < 1 ? `${base} / ${alpha.toFixed(2)})` : `${base})`;
 }
 
 function formatHSLCode(h, s, l, alpha = S.alpha) {
   const hh = Math.round(normHue(h, 0));
   const ss = Math.round(clamp01(s) * 100);
   const ll = Math.round(clamp01(l) * 100);
-  return alpha < 1
-    ? `hsla(${hh} ${ss}% ${ll}% / ${alpha.toFixed(2)})`
-    : `hsl(${hh} ${ss}% ${ll}%)`;
+  const base = `hsl(${hh} ${ss}% ${ll}%`;
+  return alpha < 1 ? `${base} / ${alpha.toFixed(2)})` : `${base})`;
 }
 
 function rememberCurrentOKLCH() {
@@ -1205,22 +1212,50 @@ function parseHexColor(text) {
 }
 
 function parseFunctionalColor(text) {
-  const match = String(text).trim().match(/^([a-z]+)\((.*)\)$/i);
+  const match = String(text).trim().match(/^([a-z]+)\(\s*(.*?)\s*\)$/i);
   if (!match) return null;
   const fn = match[1].toLowerCase();
-  const parts = match[2].split('/');
-  const body = parts[0].replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
-  const alpha = parts[1] != null ? parseUnitNumber(parts[1], 1) : null;
+  const raw = match[2];
+
+  // Split on slash to separate alpha
+  const slashIdx = raw.lastIndexOf('/');
+  const bodyStr = slashIdx >= 0 ? raw.slice(0, slashIdx).trim() : raw;
+  const alphaStr = slashIdx >= 0 ? raw.slice(slashIdx + 1).trim() : null;
+
+  // Normalize commas to spaces, then split on whitespace
+  const body = bodyStr.replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
+
+  // Alpha: from slash, or from 4th body token (legacy rgba/hsla)
+  let alpha = null;
+  if (alphaStr !== null) {
+    alpha = parseUnitNumber(alphaStr, 1);
+  } else if (body.length >= 4) {
+    alpha = parseUnitNumber(body[3], 1);
+  }
 
   if (fn === 'oklch' && body.length >= 3) {
     const L = parseUnitNumber(body[0], 1);
     const C = parseUnitNumber(body[1], 1);
-    const H = parseUnitNumber(body[2], 1);
-    if ([L, C, H].some(v => Number.isNaN(v))) return null;
+    const H = parseUnitNumber(body[2], 360);
+    // H without unit is degrees, body[2] with no % sign → pass as-is
+    const Hval = body[2].endsWith('%') ? parseUnitNumber(body[2], 360) : parseFloat(body[2]);
+    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(Hval)) return null;
+    return { space: 'oklch', L, C, H: Hval, alpha };
+  }
+
+  if (fn === 'oklab' && body.length >= 3) {
+    const L = parseUnitNumber(body[0], 1);
+    const a = parseUnitNumber(body[1], 0.4);
+    const b = parseUnitNumber(body[2], 0.4);
+    if ([L, a, b].some(v => Number.isNaN(v))) return null;
+    // Convert oklab → oklch
+    const C = Math.sqrt(a * a + b * b);
+    let H = Math.atan2(b, a) * 180 / Math.PI;
+    if (H < 0) H += 360;
     return { space: 'oklch', L, C, H, alpha };
   }
 
-  if (fn === 'rgb' && body.length >= 3) {
+  if ((fn === 'rgb' || fn === 'rgba') && body.length >= 3) {
     const r = parseUnitNumber(body[0], 255);
     const g = parseUnitNumber(body[1], 255);
     const b = parseUnitNumber(body[2], 255);
@@ -1229,11 +1264,32 @@ function parseFunctionalColor(text) {
   }
 
   if ((fn === 'hsl' || fn === 'hsla') && body.length >= 3) {
-    const h = parseUnitNumber(body[0], 1);
+    // Hue: strip deg/rad/turn units
+    let hRaw = body[0].replace(/deg$/i, '').replace(/grad$/i, '');
+    if (/rad$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 180 / Math.PI).toString();
+    if (/turn$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 360).toString();
+    const h = parseFloat(hRaw);
     const s = parseUnitNumber(body[1], 1);
     const l = parseUnitNumber(body[2], 1);
     if ([h, s, l].some(v => Number.isNaN(v))) return null;
     return { space: 'hsl', h, s, l, alpha };
+  }
+
+  if (fn === 'hwb' && body.length >= 3) {
+    // HWB → HSL/RGB conversion
+    let hRaw = body[0].replace(/deg$/i, '');
+    const h = parseFloat(hRaw);
+    const w = parseUnitNumber(body[1], 1);
+    const bk = parseUnitNumber(body[2], 1);
+    if ([h, w, bk].some(v => Number.isNaN(v))) return null;
+    // HWB to RGB
+    let ww = w, bb = bk;
+    if (ww + bb > 1) { const s = ww + bb; ww /= s; bb /= s; }
+    const [r01, g01, b01] = Color.hslToRGB(h, 1, 0.5);
+    const r = (r01 * (1 - ww - bb) + ww) * 255;
+    const g = (g01 * (1 - ww - bb) + ww) * 255;
+    const b = (b01 * (1 - ww - bb) + ww) * 255;
+    return { space: 'rgb', r, g, b, alpha };
   }
 
   return null;
@@ -1243,9 +1299,13 @@ function applyColorInput(text) {
   const trimmed = String(text).trim();
   if (!trimmed) return false;
 
-  const parsed = trimmed.startsWith('#')
-    ? parseHexColor(trimmed)
-    : parseFunctionalColor(trimmed);
+  let parsed;
+  if (trimmed.startsWith('#')) {
+    parsed = parseHexColor(trimmed);
+  } else if (/^[0-9a-f]+$/i.test(trimmed) && [3, 4, 6, 8].includes(trimmed.length)) {
+    parsed = parseHexColor('#' + trimmed);
+  }
+  if (!parsed) parsed = parseFunctionalColor(trimmed);
 
   if (!parsed) return false;
 
@@ -1314,7 +1374,7 @@ function getFallbackState(alpha = S.alpha) {
 
   const fallbackChroma = Math.min(S.C, Color.maxChroma(S.L, S.H, 'p3'));
   const spec = colorSpecFromOKLCH(S.L, fallbackChroma, S.H, alpha);
-  const hex = Color.toHex(...spec.fallback);
+  const hex = Color.toHexAlpha(...spec.fallback, alpha);
   const [fallbackL, fallbackC, fallbackH] = Color.rgbToOKLCH(
     spec.fallback[0] / 255,
     spec.fallback[1] / 255,
@@ -1497,6 +1557,7 @@ function getHSLHueDef() {
   return {
     key:'hslHue', label:'H', full:'Hue',
     min:0, max:360,
+    inputMode: 'decimal',
     get:()=>S.hsvH,
     set:v=>{ syncStateFromHSV(v, S.hsvS, S.hsvV, { markDirty: true, rememberDerived: true }); },
     fmt:v=>Math.round(v).toString(),
@@ -1512,6 +1573,7 @@ function getSliderDefs() {
       {
         key:'L', label:'L', full:'Lightness',
         min:0, max:1,
+        inputMode: 'decimal',
         get:()=>S.L, set:v=>{ S.L = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
         fmt:v=>v.toFixed(4),
         vFn: t => {
@@ -1535,6 +1597,7 @@ function getSliderDefs() {
       {
         key:'C', label:'C', full:'Chroma',
         min:0, max:C_MAX,
+        inputMode: 'decimal',
         get:()=>S.C,
         set:v=>{ S.C = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
         fmt:v=>v.toFixed(4),
@@ -1561,6 +1624,7 @@ function getSliderDefs() {
       {
         key:'H', label:'H', full:'Hue',
         min:0, max:360,
+        inputMode: 'decimal',
         get:()=>S.H,
         set:v=>{ S.H = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
         fmt:v=>v.toFixed(2),
@@ -1581,6 +1645,7 @@ function getSliderDefs() {
         key:'alpha', label:'A', full:'Opacity',
         isAlpha: true,
         min:0, max:1,
+        inputMode: 'decimal',
         get:()=>S.alpha, set:v=>{S.alpha=v;},
         fmt:v=>v.toFixed(2),
         editText:()=>S.alpha.toFixed(2),
@@ -1591,14 +1656,25 @@ function getSliderDefs() {
   }
 
   if (S.mode === 'rgb') {
+    function parseRGBPercent(text) {
+      const s = String(text).trim().replace(/%$/, '');
+      const n = parseFloat(s);
+      if (isNaN(n)) return NaN;
+      return Math.max(0, Math.min(255, n / 100 * 255));
+    }
     return [
       {
         key:'r', label:'R', full:'Red',
         min:0, max:255,
+        inputMode: 'decimal',
         get:()=>S.r,
         set:v=>{ syncStateFromRGB(v, S.g, S.b, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-        vFn: t => colorSpecFromRGB([t * 255, 0, 0]),
+        vLabel: 'R%',
+        vFmt: v => Math.round(v / 255 * 100) + '%',
+        vEditText: () => Math.round(S.r / 255 * 100).toString(),
+        vParse: parseRGBPercent,
+        vFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
         vBounds: () => [],
         hFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
         hBounds: () => [],
@@ -1607,10 +1683,15 @@ function getSliderDefs() {
       {
         key:'g', label:'G', full:'Green',
         min:0, max:255,
+        inputMode: 'decimal',
         get:()=>S.g,
         set:v=>{ syncStateFromRGB(S.r, v, S.b, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-        vFn: t => colorSpecFromRGB([0, t * 255, 0]),
+        vLabel: 'G%',
+        vFmt: v => Math.round(v / 255 * 100) + '%',
+        vEditText: () => Math.round(S.g / 255 * 100).toString(),
+        vParse: parseRGBPercent,
+        vFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
         vBounds: () => [],
         hFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
         hBounds: () => [],
@@ -1619,10 +1700,15 @@ function getSliderDefs() {
       {
         key:'b', label:'B', full:'Blue',
         min:0, max:255,
+        inputMode: 'decimal',
         get:()=>S.b,
         set:v=>{ syncStateFromRGB(S.r, S.g, v, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-        vFn: t => colorSpecFromRGB([0, 0, t * 255]),
+        vLabel: 'B%',
+        vFmt: v => Math.round(v / 255 * 100) + '%',
+        vEditText: () => Math.round(S.b / 255 * 100).toString(),
+        vParse: parseRGBPercent,
+        vFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
         vBounds: () => [],
         hFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
         hBounds: () => [],
@@ -1632,6 +1718,7 @@ function getSliderDefs() {
         key:'alpha', label:'A', full:'Opacity',
         isAlpha: true,
         min:0, max:1,
+        inputMode: 'decimal',
         get:()=>S.alpha, set:v=>{S.alpha=v;},
         fmt:v=>v.toFixed(2),
         editText:()=>S.alpha.toFixed(2),
@@ -1645,6 +1732,7 @@ function getSliderDefs() {
     {
       key:'hslS', label:'S', full:'Saturation',
       min:0, max:1,
+      inputMode: 'decimal',
       get:()=>S.hslS,
       set:v=>{ syncStateFromHSL(S.hslH, v, S.hslLight, { markDirty: true, rememberDerived: true }); },
       fmt:v=>`${Math.round(v * 100)}%`,
@@ -1659,6 +1747,7 @@ function getSliderDefs() {
     {
       key:'hslL', label:'L', full:'Lightness',
       min:0, max:1,
+      inputMode: 'decimal',
       get:()=>S.hslLight,
       set:v=>{ syncStateFromHSL(S.hslH, S.hslS, v, { markDirty: true, rememberDerived: true }); },
       fmt:v=>`${Math.round(v * 100)}%`,
@@ -1674,6 +1763,7 @@ function getSliderDefs() {
       key:'alpha', label:'A', full:'Opacity',
       isAlpha: true,
       min:0, max:1,
+      inputMode: 'decimal',
       get:()=>S.alpha, set:v=>{S.alpha=v;},
       fmt:v=>v.toFixed(2),
       editText:()=>S.alpha.toFixed(2),
@@ -1690,12 +1780,20 @@ let sliders = [];
 let hslFieldUI = null;
 
 function buildVSlider(def) {
+  // Build a merged def for vertical-specific overrides
+  const vdef = Object.assign({}, def, {
+    label:    def.vLabel    || def.label,
+    fmt:      def.vFmt      || def.fmt,
+    editText: def.vEditText || def.editText,
+    parse:    def.vParse    || def.parse,
+  });
+
   const col = document.createElement('div');
   col.className = 'vslider-col';
 
   const lbl = document.createElement('div');
   lbl.className = 'vslider-label';
-  lbl.textContent = def.label;
+  lbl.textContent = vdef.label;
 
   const track = document.createElement('div');
   track.className = def.isAlpha ? 'vslider-track has-checker' : 'vslider-track';
@@ -1711,11 +1809,11 @@ function buildVSlider(def) {
 
   const valEl = document.createElement('div');
   valEl.className = 'vslider-val';
-  valEl.textContent = def.fmt(def.get());
-  makeEditableVal(valEl, def);
+  valEl.textContent = vdef.fmt(def.get());
+  makeEditableVal(valEl, vdef);
 
   col.append(lbl, track, valEl);
-  return { col, track, canvas: cv, thumb, valEl };
+  return { col, track, canvas: cv, thumb, valEl, vdef };
 }
 
 function buildHSlider(def) {
@@ -1770,6 +1868,7 @@ function makeEditableVal(el, def) {
   el.addEventListener('click', e => {
     e.stopPropagation();
     el.contentEditable = 'true';
+    if (def.inputMode) el.inputMode = def.inputMode;
     el.textContent = def.editText ? def.editText() : def.get().toString();
     const range = document.createRange();
     range.selectNodeContents(el);
@@ -1779,6 +1878,7 @@ function makeEditableVal(el, def) {
   });
   el.addEventListener('blur', () => {
     el.contentEditable = 'false';
+    el.removeAttribute('inputmode');
     const v = def.parse 
       ? def.parse(el.textContent) 
       : parseFloat(el.textContent);
@@ -1805,6 +1905,7 @@ function makeEditableColorField(el, getText) {
     const initialText = getText();
     el.dataset.editStartText = initialText;
     el.contentEditable = 'true';
+    if (el.dataset.inputmode) el.inputMode = el.dataset.inputmode;
     el.textContent = initialText;
     const range = document.createRange();
     range.selectNodeContents(el);
@@ -1814,6 +1915,7 @@ function makeEditableColorField(el, getText) {
   });
   el.addEventListener('blur', () => {
     el.contentEditable = 'false';
+    el.removeAttribute('inputmode');
     const initialText = el.dataset.editStartText ?? getText();
     const submittedText = String(el.textContent || '').trim();
     delete el.dataset.editStartText;
@@ -1841,6 +1943,11 @@ function rebuildUI() {
   const picker = document.querySelector('.picker');
   const vsArea = document.getElementById('vslidersArea');
   const hsArea = document.getElementById('hslidersArea');
+
+  // Immediately hide fallback bar — prevents one-frame flash when switching modes
+  const fallbackBar = document.getElementById('fallbackValuesBar');
+  if (fallbackBar) fallbackBar.style.visibility = 'hidden';
+
   picker.classList.toggle('mode-hsl', S.mode === 'hsl');
   vsArea.innerHTML = '';
   hsArea.innerHTML = '';
@@ -1930,12 +2037,12 @@ function rebuildUI() {
 // 6 ▸ UI UPDATE
 // ═══════════════════════════════════════════════════════════
 function updateUI() {
+  const alpha = S.alpha;
   const computedRGB = currentComputedRGB255();
-  const computedHex = Color.toHex(...computedRGB);
+  const computedHex = Color.toHexAlpha(...computedRGB, alpha);
   const inSRGB = S.mode !== 'oklch' || Color.inSRGB(S.L, S.C, S.H);
   const inP3 = S.mode !== 'oklch' || Color.inP3(S.L, S.C, S.H);
   const splitPreview = S.mode === 'oklch' && !inP3;
-  const alpha = S.alpha;
   const fallbackState = splitPreview ? getFallbackState(alpha) : null;
 
   const swatch = document.getElementById('previewSwatch');
@@ -1983,8 +2090,8 @@ function updateUI() {
   const fallbackHexEl = document.getElementById('fallbackHexVal');
 
   if (splitPreview) {
-    codeLabel.innerHTML = 'Color Code <span class="is-alert">(Computed)</span>';
-    hexLabel.innerHTML  = 'Hex <span class="is-alert">(Computed)</span>';
+    codeLabel.innerHTML = 'Color Code <span class="is-alert" style="color: rgba(255, 142, 142, 0.92);">(Computed)</span>';
+    hexLabel.innerHTML  = 'Hex <span class="is-alert" style="color: rgba(255, 142, 142, 0.92);">(Computed)</span>';
     fallbackCodeLabel.innerHTML = 'Color Code <span style="color:var(--text)">(Fallback)</span>';
     fallbackHexLabel.innerHTML  = 'Hex <span style="color:var(--text)">(Fallback)</span>';
   } else {
@@ -2020,7 +2127,8 @@ function updateUI() {
     if (vi) {
       const trackH = vi.track.clientHeight || 240;
       vi.thumb.style.bottom = (t * trackH - 8) + 'px';
-      if (document.activeElement !== vi.valEl) vi.valEl.textContent = def.fmt(val);
+      const vfmt = vi.vdef ? vi.vdef.fmt : def.fmt;
+      if (document.activeElement !== vi.valEl) vi.valEl.textContent = vfmt(val);
       if (vi.canvas.width > 0 && vi.canvas.height > 0) {
         if (def.isAlpha) renderAlphaCanvas(vi.canvas, true);
         else renderSliderCanvas(vi.canvas, def.vFn, true, def.vBounds ? def.vBounds() : []);
