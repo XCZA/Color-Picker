@@ -9,17 +9,17 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 :root {
-  --bg: #0c0c10;
-  --card: #131318;
-  --surface: #1a1a22;
-  --surface2: #22222e;
-  --border: #24242e;
-  --border2: #32323f;
-  --text: #dde0ee;
-  --text2: #7878a0;
-  --text3: #44445a;
+  --bg: #050507;
+  --card: rgba(18,18,23,0.96);
+  --surface: rgba(28,28,35,0.88);
+  --surface2: rgba(42,42,50,0.92);
+  --border: rgba(255,255,255,0.09);
+  --border2: rgba(255,255,255,0.22);
+  --text: #f5f5f9;
+  --text2: #b0b0bd;
+  --text3: #7a7a8a;
   --font: 'JetBrains Mono', 'Courier New', monospace;
-  --radius: 20px;
+  --radius: 26px;
 }
 
 body {
@@ -30,25 +30,26 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  /* Use top padding to approximate vertical centering without repositioning
-     on height changes. clamp(min, ideal, max) where ideal = 50vh - half picker height */
-  padding: clamp(24px, calc(50vh - 430px), 80px) 24px 48px;
+  /* Tighter vertical centering for smaller picker */
+  padding: clamp(18px, calc(50vh - 310px), 60px) 18px 36px;
   background-image:
-    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(80,60,140,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(40,80,160,0.09) 0%, transparent 70%);
+    radial-gradient(ellipse 70% 45% at 25% 15%, rgba(80,80,120,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 75% 85%, rgba(60,90,140,0.07) 0%, transparent 70%);
 }
 
 .picker {
-  width: min(580px, 100%);
+  width: min(450px, 100%);
   background: var(--card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  padding: 18px;
+  padding: 13px;
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.03) inset,
+    0 0 0 1px rgba(255,255,255,0.06) inset,
     0 2px 0 rgba(255,255,255,0.04) inset,
-    0 40px 120px rgba(0,0,0,0.75),
-    0 12px 40px rgba(0,0,0,0.5);
+    0 25px 70px -10px rgba(0,0,0,0.65),
+    0 8px 25px -6px rgba(0,0,0,0.4);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
   user-select: none;
 }
 
@@ -57,24 +58,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 11px;
 }
 
 .app-title {
   font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.18em;
   color: var(--text3);
   text-transform: lowercase;
 }
 
 .mode-toggle {
   display: flex;
-  background: var(--bg);
+  background: rgba(255,255,255,0.06);
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: 14px;
   padding: 2px;
   gap: 2px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .mode-btn {
@@ -84,17 +87,19 @@ body {
   font-family: var(--font);
   font-size: 10px;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  padding: 5px 14px;
-  border-radius: 7px;
+  letter-spacing: 0.12em;
+  padding: 4px 12px;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.18s;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mode-btn.active {
-  background: var(--surface2);
+  background: rgba(255,255,255,0.14);
   color: var(--text);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  box-shadow:
+    0 1px 4px rgba(0,0,0,0.3),
+    0 0 0 1px rgba(255,255,255,0.12) inset;
 }
 
 .mode-btn:hover:not(.active) {
@@ -104,35 +109,38 @@ body {
 /* ─── MAIN AREA ───────────────────────────────────── */
 .main-area {
   display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  height: 280px;
+  gap: 9px;
+  margin-bottom: 10px;
+  height: 218px;
 }
 
 /* ─── PREVIEW ─────────────────────────────────────── */
 .preview-wrap {
-  flex: 0 0 280px;
-  height: 280px;
+  flex: 0 0 218px;
+  height: 218px;
   position: relative;
 }
 
 .preview-swatch {
   width: 100%;
   height: 100%;
-  border-radius: 14px;
+  border-radius: 18px;
   position: relative;
   overflow: hidden;
   transition: background-color 0.08s;
-  /* Checkerboard base for transparency */
   background-image:
     repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
-    center / 18px 18px;
+    center / 16px 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 8px 20px rgba(0,0,0,0.4);
 }
 
 .preview-color-layer {
   position: absolute;
   inset: 0;
-  border-radius: 14px;
+  border-radius: 18px;
 }
 
 .preview-split {
@@ -153,75 +161,79 @@ body {
   position: relative;
   flex: 1;
   overflow: hidden;
+  border-radius: 18px;
 }
 
 .preview-split-half:first-child {
-  border-radius: 14px 0 0 14px;
+  border-radius: 18px 0 0 18px;
 }
 
 .preview-split-half:last-child {
-  border-radius: 0 14px 14px 0;
+  border-radius: 0 18px 18px 0;
 }
 
 .preview-split-half + .preview-split-half {
-  border-left: 1px solid rgba(255,255,255,0.12);
+  border-left: 1px solid rgba(255,255,255,0.14);
 }
 
 .preview-split-layer {
   position: absolute;
   inset: 0;
+  /* border-radius: 18px; */
 }
 
 .preview-split-label {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   z-index: 2;
   font-family: var(--font);
   font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.08em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: lowercase;
-  padding: 4px 9px;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.5);
-  color: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.12);
+  padding: 3px 8px;
+  border-radius: 9999px;
+  background: rgba(0,0,0,0.45);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .preview-split-fallback .preview-split-label {
   left: auto;
-  right: 12px;
+  right: 10px;
 }
 
 .preview-badges {
   position: absolute;
-  bottom: 12px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 5px;
+  gap: 4px;
   align-items: center;
   white-space: nowrap;
 }
 
 .badge {
   font-family: var(--font);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.07em;
-  padding: 4px 10px;
-  border-radius: 20px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 3px 9px;
+  border-radius: 9999px;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .badge-mode {
-  background: rgba(0,0,0,0.5);
-  color: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.45);
+  color: rgba(255,255,255,0.85);
+  border: 1px solid rgba(255,255,255,0.15);
 }
 
 .badge-gamut {
@@ -239,7 +251,7 @@ body {
 .badge.is-alert,
 .preview-split-label.is-alert,
 .chip-label.is-alert {
-  color: rgba(255, 142, 142, 0.92);
+  color: #ff9a9a;
 }
 
 .chip-label.is-bright {
@@ -250,9 +262,9 @@ body {
 .hsl-vstrip {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: 7px;
   width: 100%;
-  height: 110px;
+  height: 185px;
   flex-shrink: 0;
 }
 
@@ -260,35 +272,38 @@ body {
 .vsliders-area {
   flex: 1;
   display: flex;
-  gap: 8px;
+  gap: 7px;
 }
 
 
 .picker.mode-hsl .preview-wrap {
-  flex: 0 0 120px;
+  flex: 0 0 105px;
 }
 
 .picker.mode-hsl .preview-badges {
-  left: 12px;
-  bottom: 12px;
+  left: 10px;
+  bottom: 10px;
   transform: none;
 }
 
 .vsliders-area.hsl-mode-layout {
-  gap: 14px;
+  gap: 10px;
   align-items: stretch;
 }
 
 .hsl-field-wrap {
   flex: 1;
   position: relative;
-  border-radius: 14px;
+  border-radius: 18px;
   overflow: hidden;
   cursor: crosshair;
   background: var(--surface);
+  border: 1px solid var(--border);
   box-shadow:
-    0 0 0 1px var(--border) inset,
-    0 2px 8px rgba(0,0,0,0.3);
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 8px 20px rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .hsl-field-canvas {
@@ -301,13 +316,15 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 18px;
-  height: 18px;
+  width: 17px;
+  height: 17px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.96);
-  background: rgba(255,255,255,0.18);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  border: 2.5px solid rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.15);
+  box-shadow:
+    0 3px 10px rgba(0,0,0,0.4),
+    0 0 0 3px rgba(255,255,255,0.12);
   pointer-events: none;
 }
 
@@ -319,7 +336,7 @@ body {
 }
 
 .vslider-col.is-hsl-hue {
-  flex: 0 0 58px;
+  flex: 0 0 52px;
 }
 
 .vslider-col {
@@ -327,12 +344,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
 }
 
 .vslider-label {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.12em;
   color: var(--text3);
@@ -343,12 +360,16 @@ body {
   flex: 1;
   width: 100%;
   position: relative;
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: ns-resize;
+  background: var(--surface);
+  border: 1px solid var(--border);
   box-shadow:
-    0 0 0 1px var(--border) inset,
-    0 2px 8px rgba(0,0,0,0.3);
+    0 0 0 1px rgba(255,255,255,0.07) inset,
+    0 2px 8px rgba(0,0,0,0.35);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .slider-canvas {
@@ -362,28 +383,32 @@ body {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  width: 30px;
-  height: 16px;
-  background: rgba(255,255,255,0.92);
-  border-radius: 5px;
-  border: 2px solid rgba(255,255,255,0.98);
+  width: 28px;
+  height: 15px;
+  background: linear-gradient(180deg, #f8f8f9 0%, #e5e5eb 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.95);
   box-shadow:
-    0 2px 8px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(0,0,0,0.2);
+    0 4px 12px -2px rgba(0,0,0,0.45),
+    0 1px 3px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
   pointer-events: none;
-  transition: box-shadow 0.12s;
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s;
 }
 
 .vslider-track:hover .vslider-thumb,
 .vslider-track.dragging .vslider-thumb {
   box-shadow:
-    0 3px 12px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(0,0,0,0.3),
+    0 6px 16px -3px rgba(0,0,0,0.5),
+    0 1px 3px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.9),
     0 0 0 3px rgba(255,255,255,0.12);
+  transform: translateX(-50%) scale(1.05);
 }
 
 .vslider-val {
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 400;
   color: var(--text2);
   text-align: center;
@@ -391,7 +416,7 @@ body {
   padding: 2px 4px;
   border-radius: 4px;
   transition: all 0.12s;
-  min-width: 40px;
+  min-width: 38px;
 }
 
 .vslider-val:hover {
@@ -403,27 +428,30 @@ body {
 .hsliders-area {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  margin-bottom: 12px;
+  gap: 7px;
+  margin-bottom: 10px;
 }
 
 .hslider-row {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .hslider-track {
   flex: 1;
-  height: 46px;
+  height: 40px;
   position: relative;
-  border-radius: 10px;
+  border-radius: 14px;
   overflow: hidden;
   cursor: ew-resize;
-  box-shadow:
-    0 0 0 1px var(--border) inset,
-    0 2px 8px rgba(0,0,0,0.25);
   background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.07) inset,
+    0 2px 8px rgba(0,0,0,0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .hslider-thumb {
@@ -431,27 +459,32 @@ body {
   top: 50%;
   left: 0;
   transform: translateY(-50%);
-  width: 16px;
-  height: 32px;
-  background: rgba(255,255,255,0.92);
-  border-radius: 5px;
-  border: 2px solid rgba(255,255,255,0.98);
+  width: 15px;
+  height: 27px;
+  background: linear-gradient(180deg, #f8f8f9 0%, #e5e5eb 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.95);
   box-shadow:
-    0 2px 8px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(0,0,0,0.2);
+    0 4px 12px -2px rgba(0,0,0,0.45),
+    0 1px 3px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
   pointer-events: none;
+  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s;
 }
 
 .hslider-track:hover .hslider-thumb,
 .hslider-track.dragging .hslider-thumb {
   box-shadow:
-    0 3px 12px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(0,0,0,0.3),
+    0 6px 16px -3px rgba(0,0,0,0.5),
+    0 1px 3px rgba(0,0,0,0.25),
+    inset 0 1px 0 rgba(255,255,255,0.9),
     0 0 0 3px rgba(255,255,255,0.12);
+  transform: translateY(-50%) scale(1.05);
 }
 
 .hslider-info {
-  width: 96px;
+  width: 88px;
   flex-shrink: 0;
 }
 
@@ -490,21 +523,25 @@ body {
 .values-stack {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .values-bar {
   display: flex;
-  gap: 8px;
+  gap: 7px;
 }
 
 .val-chip {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 9px 12px;
+  border-radius: 14px;
+  padding: 8px 10px;
   transition: border-color 0.14s, background 0.14s;
   cursor: default;
+  position: relative;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
 }
 
 .val-chip:hover {
@@ -515,16 +552,16 @@ body {
 .val-chip .chip-label {
   display: block;
   font-size: 8px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.14em;
   color: var(--text3);
   text-transform: uppercase;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .val-chip .chip-val {
-  font-size: 11px;
-  font-weight: 400;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
@@ -532,8 +569,8 @@ body {
 }
 
 .chip-code { flex: 1; }
-.chip-hex  { width: 100px; }
-.chip-alpha { width: 76px; }
+.chip-hex  { width: 92px; }
+.chip-alpha { width: 70px; }
 
 .chip-alpha .chip-val {
   outline: none;
@@ -548,36 +585,36 @@ body {
 .copy-ring {
   position: absolute;
   inset: 0;
-  border-radius: 10px;
+  border-radius: 14px;
   pointer-events: none;
-  box-shadow: 0 0 0 0 rgba(100,160,255,0);
-  transition: box-shadow 0.1s;
+  box-shadow: 0 0 0 0 rgba(120,170,255,0);
+  transition: box-shadow 0.15s;
 }
 
 .val-chip.copied .copy-ring {
-  box-shadow: 0 0 0 2px rgba(100,160,255,0.6);
+  box-shadow: 0 0 0 3px rgba(120,170,255,0.55);
   transition: box-shadow 0s;
 }
-
-.val-chip { position: relative; }
 
 /* ─── TOAST ───────────────────────────────────────── */
 .toast {
   position: fixed;
-  bottom: 24px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%) translateY(10px);
-  background: var(--surface2);
+  background: rgba(30,30,38,0.95);
   border: 1px solid var(--border2);
   color: var(--text);
   font-family: var(--font);
   font-size: 11px;
-  padding: 8px 16px;
-  border-radius: 9px;
+  padding: 7px 15px;
+  border-radius: 14px;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s, transform 0.2s;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   z-index: 9999;
 }
 
@@ -596,38 +633,38 @@ body {
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 560px) {
   body {
-    padding: 16px 12px 32px;
+    padding: 14px 10px 28px;
   }
 
   .picker {
-    padding: 14px;
-    border-radius: 16px;
+    padding: 11px;
+    border-radius: 22px;
   }
 
   /* Stack preview above sliders */
   .main-area {
     flex-direction: column;
     height: auto;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
 
   .preview-wrap {
     flex: none;
     width: 100%;
-    height: 160px;
+    height: 145px;
   }
 
   /* HSL mode: preview override */
   .picker.mode-hsl .preview-wrap {
     flex: none;
     width: 100%;
-    height: 160px;
+    height: 145px;
   }
 
   /* Vertical sliders become a short horizontal strip */
   .vsliders-area {
-    height: 110px;
+    height: 98px;
     flex-direction: row;
   }
 
@@ -640,57 +677,57 @@ body {
 
   /* SV field gets fixed height when stacked */
   .hsl-field-wrap {
-    flex: 0 0 160px;
+    flex: 0 0 145px;
     border-radius: 10px;
   }
 
   /* Mobile HSL vstrip (all 4 sliders in a row) */
   .hsl-vstrip {
-    height: 210px;
+    height: 185px;
   }
 
   /* Horizontal sliders: tighter info panel */
   .hslider-track {
-    height: 40px;
+    height: 36px;
   }
 
   .hslider-thumb {
-    height: 28px;
+    height: 26px;
   }
 
   .hslider-info {
-    width: 72px;
+    width: 68px;
     flex-shrink: 0;
   }
 
   .hslider-info-val {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .hsliders-area {
-    gap: 8px;
-    margin-bottom: 10px;
+    gap: 6px;
+    margin-bottom: 8px;
   }
 
   /* Values chips */
   .values-bar {
-    gap: 6px;
+    gap: 5px;
   }
 
   .val-chip {
-    padding: 8px 10px;
+    padding: 7px 9px;
   }
 
   .val-chip .chip-val {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .chip-hex {
-    width: 82px;
+    width: 80px;
   }
 
   .chip-alpha {
-    width: 66px;
+    width: 64px;
   }
 
   /* Preview badges */
@@ -700,14 +737,14 @@ body {
   }
 
   .picker.mode-hsl .preview-badges {
-    left: 10px;
-    bottom: 10px;
+    left: 9px;
+    bottom: 9px;
   }
 
   /* Mode toggle */
   .mode-btn {
-    padding: 5px 10px;
-    font-size: 9px;
+    padding: 4px 10px;
+    font-size: 9.5px;
   }
 }
 </style>
@@ -1121,8 +1158,6 @@ function parseUnitNumber(token, scale = 1) {
 }
 
 // Smart parser for % fields (S/L) and alpha/opacity fields
-// % fields: "50" → 0.5, "100" → 1, "0.5" → 0.5, "50%" → 0.5, "0.5%" → 0.005
-// Alpha: same logic, since alpha is also 0–1 range
 function parsePercentField(text) {
   let s = String(text).trim();
   if (!s) return NaN;
@@ -1136,10 +1171,9 @@ function parsePercentField(text) {
   if (isNaN(n)) return NaN;
 
   if (hadPercent) {
-    return n / 100;                    // explicit % always means percentage
+    return n / 100;
   }
 
-  // No % sign: only treat bare integers > 1 as percentages
   if (!s.includes('.') && n > 1) {
     return n / 100;
   }
@@ -1217,15 +1251,12 @@ function parseFunctionalColor(text) {
   const fn = match[1].toLowerCase();
   const raw = match[2];
 
-  // Split on slash to separate alpha
   const slashIdx = raw.lastIndexOf('/');
   const bodyStr = slashIdx >= 0 ? raw.slice(0, slashIdx).trim() : raw;
   const alphaStr = slashIdx >= 0 ? raw.slice(slashIdx + 1).trim() : null;
 
-  // Normalize commas to spaces, then split on whitespace
   const body = bodyStr.replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
 
-  // Alpha: from slash, or from 4th body token (legacy rgba/hsla)
   let alpha = null;
   if (alphaStr !== null) {
     alpha = parseUnitNumber(alphaStr, 1);
@@ -1236,11 +1267,10 @@ function parseFunctionalColor(text) {
   if (fn === 'oklch' && body.length >= 3) {
     const L = parseUnitNumber(body[0], 1);
     const C = parseUnitNumber(body[1], 1);
-    const H = parseUnitNumber(body[2], 360);
-    // H without unit is degrees, body[2] with no % sign → pass as-is
-    const Hval = body[2].endsWith('%') ? parseUnitNumber(body[2], 360) : parseFloat(body[2]);
-    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(Hval)) return null;
-    return { space: 'oklch', L, C, H: Hval, alpha };
+    let H = parseUnitNumber(body[2], 360);
+    if (body[2].endsWith('%')) H = parseUnitNumber(body[2], 360);
+    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(H)) return null;
+    return { space: 'oklch', L, C, H, alpha };
   }
 
   if (fn === 'oklab' && body.length >= 3) {
@@ -1248,7 +1278,6 @@ function parseFunctionalColor(text) {
     const a = parseUnitNumber(body[1], 0.4);
     const b = parseUnitNumber(body[2], 0.4);
     if ([L, a, b].some(v => Number.isNaN(v))) return null;
-    // Convert oklab → oklch
     const C = Math.sqrt(a * a + b * b);
     let H = Math.atan2(b, a) * 180 / Math.PI;
     if (H < 0) H += 360;
@@ -1264,7 +1293,6 @@ function parseFunctionalColor(text) {
   }
 
   if ((fn === 'hsl' || fn === 'hsla') && body.length >= 3) {
-    // Hue: strip deg/rad/turn units
     let hRaw = body[0].replace(/deg$/i, '').replace(/grad$/i, '');
     if (/rad$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 180 / Math.PI).toString();
     if (/turn$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 360).toString();
@@ -1276,13 +1304,11 @@ function parseFunctionalColor(text) {
   }
 
   if (fn === 'hwb' && body.length >= 3) {
-    // HWB → HSL/RGB conversion
     let hRaw = body[0].replace(/deg$/i, '');
     const h = parseFloat(hRaw);
     const w = parseUnitNumber(body[1], 1);
     const bk = parseUnitNumber(body[2], 1);
     if ([h, w, bk].some(v => Number.isNaN(v))) return null;
-    // HWB to RGB
     let ww = w, bb = bk;
     if (ww + bb > 1) { const s = ww + bb; ww /= s; bb /= s; }
     const [r01, g01, b01] = Color.hslToRGB(h, 1, 0.5);
@@ -1434,7 +1460,6 @@ syncAuxSpacesFromRGB();
 // 3 ▸ CANVAS RENDERING
 // ═══════════════════════════════════════════════════════════
 
-// colorFn(t) → { css, fallback } | [r,g,b] | null (out-of-gamut → checkerboard)
 function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   const ctx = getCanvasCtx(canvas);
   const w = canvas.width, h = canvas.height;
@@ -1496,7 +1521,6 @@ function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   }
 }
 
-// Opacity slider: checkerboard + gradient with transparency
 function renderAlphaCanvas(canvas, isVert) {
   const ctx = getCanvasCtx(canvas);
   const w = canvas.width, h = canvas.height;
@@ -1655,95 +1679,95 @@ function getSliderDefs() {
     ];
   }
 
-  if (S.mode === 'rgb') {
-  function parseRGBPercent(text) {
-    const s = String(text).trim().replace(/%$/, '');
-    const n = parseFloat(s);
-    if (isNaN(n)) return NaN;
-    return Math.max(0, Math.min(255, n / 100 * 255));
-  }
-
-  return [
-    {
-      key:'r', label:'R', full:'Red',
-      min:0, max:255,
-      inputMode: 'decimal',
-      get:()=>S.r,
-      set:v=>{ syncStateFromRGB(v, S.g, S.b, { markDirty: true, rememberDerived: true }); },
-      fmt:v=>Math.round(v).toString(),
-
-      vLabel: 'R%',
-      vFmt: v => Math.round(v / 255 * 100) + '%',
-      vEditText: () => Math.round(S.r / 255 * 100).toString(),
-      vParse: parseRGBPercent,
-
-      // keep vertical gradient fixed: black -> red
-      vFn: t => colorSpecFromRGB([t * 255, 0, 0]),
-      vBounds: () => [],
-
-      // keep horizontal preview/live gradient
-      hFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
-      hBounds: () => [],
-      showH: true,
-    },
-    {
-      key:'g', label:'G', full:'Green',
-      min:0, max:255,
-      inputMode: 'decimal',
-      get:()=>S.g,
-      set:v=>{ syncStateFromRGB(S.r, v, S.b, { markDirty: true, rememberDerived: true }); },
-      fmt:v=>Math.round(v).toString(),
-
-      vLabel: 'G%',
-      vFmt: v => Math.round(v / 255 * 100) + '%',
-      vEditText: () => Math.round(S.g / 255 * 100).toString(),
-      vParse: parseRGBPercent,
-
-      // keep vertical gradient fixed: black -> green
-      vFn: t => colorSpecFromRGB([0, t * 255, 0]),
-      vBounds: () => [],
-
-      // keep horizontal preview/live gradient
-      hFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
-      hBounds: () => [],
-      showH: true,
-    },
-    {
-      key:'b', label:'B', full:'Blue',
-      min:0, max:255,
-      inputMode: 'decimal',
-      get:()=>S.b,
-      set:v=>{ syncStateFromRGB(S.r, S.g, v, { markDirty: true, rememberDerived: true }); },
-      fmt:v=>Math.round(v).toString(),
-
-      vLabel: 'B%',
-      vFmt: v => Math.round(v / 255 * 100) + '%',
-      vEditText: () => Math.round(S.b / 255 * 100).toString(),
-      vParse: parseRGBPercent,
-
-      // keep vertical gradient fixed: black -> blue
-      vFn: t => colorSpecFromRGB([0, 0, t * 255]),
-      vBounds: () => [],
-
-      // keep horizontal preview/live gradient
-      hFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
-      hBounds: () => [],
-      showH: true,
-    },
-    {
-      key:'alpha', label:'A', full:'Opacity',
-      isAlpha: true,
-      min:0, max:1,
-      inputMode: 'decimal',
-      get:()=>S.alpha,
-      set:v=>{ S.alpha = v; },
-      fmt:v=>v.toFixed(2),
-      editText:()=>S.alpha.toFixed(2),
-      parse: parsePercentField,
-      showH: false,
+    if (S.mode === 'rgb') {
+    function parseRGBPercent(text) {
+      const s = String(text).trim().replace(/%$/, '');
+      const n = parseFloat(s);
+      if (isNaN(n)) return NaN;
+      return Math.max(0, Math.min(255, n / 100 * 255));
     }
-  ];
-}
+
+    return [
+      {
+        key:'r', label:'R', full:'Red',
+        min:0, max:255,
+        inputMode: 'decimal',
+        get:()=>S.r,
+        set:v=>{ syncStateFromRGB(v, S.g, S.b, { markDirty: true, rememberDerived: true }); },
+        fmt:v=>Math.round(v).toString(),
+
+        vLabel: 'R%',
+        vFmt: v => Math.round(v / 255 * 100) + '%',
+        vEditText: () => Math.round(S.r / 255 * 100).toString(),
+        vParse: parseRGBPercent,
+
+        // keep vertical gradient fixed: black -> red
+        vFn: t => colorSpecFromRGB([t * 255, 0, 0]),
+        vBounds: () => [],
+
+        // keep horizontal preview/live gradient
+        hFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'g', label:'G', full:'Green',
+        min:0, max:255,
+        inputMode: 'decimal',
+        get:()=>S.g,
+        set:v=>{ syncStateFromRGB(S.r, v, S.b, { markDirty: true, rememberDerived: true }); },
+        fmt:v=>Math.round(v).toString(),
+
+        vLabel: 'G%',
+        vFmt: v => Math.round(v / 255 * 100) + '%',
+        vEditText: () => Math.round(S.g / 255 * 100).toString(),
+        vParse: parseRGBPercent,
+
+        // keep vertical gradient fixed: black -> green
+        vFn: t => colorSpecFromRGB([0, t * 255, 0]),
+        vBounds: () => [],
+
+        // keep horizontal preview/live gradient
+        hFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'b', label:'B', full:'Blue',
+        min:0, max:255,
+        inputMode: 'decimal',
+        get:()=>S.b,
+        set:v=>{ syncStateFromRGB(S.r, S.g, v, { markDirty: true, rememberDerived: true }); },
+        fmt:v=>Math.round(v).toString(),
+
+        vLabel: 'B%',
+        vFmt: v => Math.round(v / 255 * 100) + '%',
+        vEditText: () => Math.round(S.b / 255 * 100).toString(),
+        vParse: parseRGBPercent,
+
+        // keep vertical gradient fixed: black -> blue
+        vFn: t => colorSpecFromRGB([0, 0, t * 255]),
+        vBounds: () => [],
+
+        // keep horizontal preview/live gradient
+        hFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'alpha', label:'A', full:'Opacity',
+        isAlpha: true,
+        min:0, max:1,
+        inputMode: 'decimal',
+        get:()=>S.alpha,
+        set:v=>{ S.alpha = v; },
+        fmt:v=>v.toFixed(2),
+        editText:()=>S.alpha.toFixed(2),
+        parse: parsePercentField,
+        showH: false,
+      }
+    ];
+  }
 
   return [
     {
@@ -1797,7 +1821,6 @@ let sliders = [];
 let hslFieldUI = null;
 
 function buildVSlider(def) {
-  // Build a merged def for vertical-specific overrides
   const vdef = Object.assign({}, def, {
     label:    def.vLabel    || def.label,
     fmt:      def.vFmt      || def.fmt,
@@ -1961,7 +1984,6 @@ function rebuildUI() {
   const vsArea = document.getElementById('vslidersArea');
   const hsArea = document.getElementById('hslidersArea');
 
-  // Immediately hide fallback bar — prevents one-frame flash when switching modes
   const fallbackBar = document.getElementById('fallbackValuesBar');
   if (fallbackBar) fallbackBar.style.visibility = 'hidden';
 
@@ -1977,7 +1999,6 @@ function rebuildUI() {
     vsArea.appendChild(hslFieldUI.wrap);
 
     if (isMobile()) {
-      // Mobile: all 4 sliders (H, S, L, A) as vertical columns in a strip below the SV field
       const strip = document.createElement('div');
       strip.className = 'hsl-vstrip';
       vsArea.appendChild(strip);
@@ -1993,7 +2014,6 @@ function rebuildUI() {
         sliders.push({ def, vi, hi: null });
       });
     } else {
-      // Desktop: hue vertical beside SV field, others as horizontal rows below
       const hueDef = getHSLHueDef();
       const hueUI = buildVSlider(hueDef);
       hueUI.col.classList.add('is-hsl-hue');
@@ -2028,17 +2048,17 @@ function rebuildUI() {
     sliders.forEach(({ vi, hi }) => {
       if (vi) {
         vi.canvas.width = vi.track.offsetWidth || 44;
-        vi.canvas.height = vi.track.offsetHeight || 240;
+        vi.canvas.height = vi.track.offsetHeight || 218;
       }
       if (hi) {
-        hi.canvas.width = hi.track.offsetWidth || 400;
-        hi.canvas.height = hi.track.offsetHeight || 46;
+        hi.canvas.width = hi.track.offsetWidth || 320;
+        hi.canvas.height = hi.track.offsetHeight || 40;
       }
     });
 
     if (hslFieldUI) {
-      hslFieldUI.canvas.width = hslFieldUI.wrap.offsetWidth || 280;
-      hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight || 280;
+      hslFieldUI.canvas.width = hslFieldUI.wrap.offsetWidth || 218;
+      hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight || 218;
     }
 
     setupInteractions();
@@ -2142,8 +2162,8 @@ function updateUI() {
     const t = (val - def.min) / (def.max - def.min);
 
     if (vi) {
-      const trackH = vi.track.clientHeight || 240;
-      vi.thumb.style.bottom = (t * trackH - 8) + 'px';
+      const trackH = vi.track.clientHeight || 218;
+      vi.thumb.style.bottom = (t * trackH - 7.5) + 'px';
       const vfmt = vi.vdef ? vi.vdef.fmt : def.fmt;
       if (document.activeElement !== vi.valEl) vi.valEl.textContent = vfmt(val);
       if (vi.canvas.width > 0 && vi.canvas.height > 0) {
@@ -2153,8 +2173,8 @@ function updateUI() {
     }
 
     if (hi) {
-      const trackW = hi.track.clientWidth || 400;
-      hi.thumb.style.left = (t * trackW - 8) + 'px';
+      const trackW = hi.track.clientWidth || 320;
+      hi.thumb.style.left = (t * trackW - 7.5) + 'px';
       if (document.activeElement !== hi.valEl) hi.valEl.textContent = def.fmt(val);
       if (hi.canvas.width > 0 && hi.canvas.height > 0) {
         if (def.isAlpha) renderAlphaCanvas(hi.canvas, false);
@@ -2165,8 +2185,8 @@ function updateUI() {
 
   if (S.mode === 'hsl' && hslFieldUI) {
     renderHSLFieldCanvas(hslFieldUI.canvas);
-    const w = hslFieldUI.wrap.clientWidth || 280;
-    const h = hslFieldUI.wrap.clientHeight || 280;
+    const w = hslFieldUI.wrap.clientWidth || 218;
+    const h = hslFieldUI.wrap.clientHeight || 218;
     hslFieldUI.thumb.style.left = `${S.hsvS * w}px`;
     hslFieldUI.thumb.style.top = `${(1 - S.hsvV) * h}px`;
   }
@@ -2307,7 +2327,6 @@ document.getElementById('modeToggle').addEventListener('click', e => {
 // 9 ▸ BOOTSTRAP
 // ═══════════════════════════════════════════════════════════
 
-// Resize canvases + re-render when window/orientation changes
 let _resizeTimer = null;
 window.addEventListener('resize', () => {
   clearTimeout(_resizeTimer);
@@ -2327,7 +2346,7 @@ window.addEventListener('resize', () => {
       hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight;
     }
     updateUI();
-  }, 80);
+  }, 60);
 });
 
 rebuildUI();
