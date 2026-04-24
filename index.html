@@ -10,23 +10,23 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 :root {
-–bg: #0c0c10;
-–card: #131318;
-–surface: #1a1a22;
-–surface2: #22222e;
-–border: #24242e;
-–border2: #32323f;
-–text: #dde0ee;
-–text2: #7878a0;
-–text3: #44445a;
-–font: ‘JetBrains Mono’, ‘Courier New’, monospace;
-–radius: 20px;
+--bg: #0c0c10;
+--card: #131318;
+--surface: #1a1a22;
+--surface2: #22222e;
+--border: #24242e;
+--border2: #32323f;
+--text: #dde0ee;
+--text2: #7878a0;
+--text3: #44445a;
+--font: ‘JetBrains Mono’, ‘Courier New’, monospace;
+--radius: 20px;
 }
 
 body {
-background: var(–bg);
-color: var(–text);
-font-family: var(–font);
+background: var(--bg);
+color: var(--text);
+font-family: var(--font);
 min-height: 100vh;
 display: flex;
 align-items: flex-start;
@@ -41,9 +41,9 @@ radial-gradient(ellipse 40% 30% at 80% 80%, rgba(40,80,160,0.09) 0%, transparent
 
 .picker {
 width: min(580px, 100%);
-background: var(–card);
-border-radius: var(–radius);
-border: 1px solid var(–border);
+background: var(--card);
+border-radius: var(--radius);
+border: 1px solid var(--border);
 padding: 18px;
 box-shadow:
 0 0 0 1px rgba(255,255,255,0.03) inset,
@@ -65,14 +65,14 @@ margin-bottom: 14px;
 font-size: 11px;
 font-weight: 500;
 letter-spacing: 0.14em;
-color: var(–text3);
+color: var(--text3);
 text-transform: lowercase;
 }
 
 .mode-toggle {
 display: flex;
-background: var(–bg);
-border: 1px solid var(–border);
+background: var(--bg);
+border: 1px solid var(--border);
 border-radius: 9px;
 padding: 2px;
 gap: 2px;
@@ -81,8 +81,8 @@ gap: 2px;
 .mode-btn {
 background: none;
 border: none;
-color: var(–text3);
-font-family: var(–font);
+color: var(--text3);
+font-family: var(--font);
 font-size: 10px;
 font-weight: 500;
 letter-spacing: 0.1em;
@@ -93,13 +93,13 @@ transition: all 0.18s;
 }
 
 .mode-btn.active {
-background: var(–surface2);
-color: var(–text);
+background: var(--surface2);
+color: var(--text);
 box-shadow: 0 1px 3px rgba(0,0,0,0.35);
 }
 
 .mode-btn:hover:not(.active) {
-color: var(–text2);
+color: var(--text2);
 }
 
 /* ─── MAIN AREA ───────────────────────────────────── */
@@ -178,7 +178,7 @@ position: absolute;
 top: 12px;
 left: 12px;
 z-index: 2;
-font-family: var(–font);
+font-family: var(--font);
 font-size: 9px;
 font-weight: 500;
 letter-spacing: 0.08em;
@@ -209,7 +209,7 @@ white-space: nowrap;
 }
 
 .badge {
-font-family: var(–font);
+font-family: var(--font);
 font-size: 10px;
 font-weight: 500;
 letter-spacing: 0.07em;
@@ -244,7 +244,7 @@ color: rgba(255, 142, 142, 0.92);
 }
 
 .chip-label.is-bright {
-color: var(–text);
+color: var(--text);
 }
 
 /* HSL vertical slider strip (mobile only, built by JS) */
@@ -285,9 +285,9 @@ position: relative;
 border-radius: 14px;
 overflow: hidden;
 cursor: crosshair;
-background: var(–surface);
+background: var(--surface);
 box-shadow:
-0 0 0 1px var(–border) inset,
+0 0 0 1px var(--border) inset,
 0 2px 8px rgba(0,0,0,0.3);
 }
 
@@ -335,7 +335,7 @@ min-width: 0;
 font-size: 9px;
 font-weight: 500;
 letter-spacing: 0.12em;
-color: var(–text3);
+color: var(--text3);
 text-transform: uppercase;
 }
 
@@ -347,7 +347,7 @@ border-radius: 10px;
 overflow: hidden;
 cursor: ns-resize;
 box-shadow:
-0 0 0 1px var(–border) inset,
+0 0 0 1px var(--border) inset,
 0 2px 8px rgba(0,0,0,0.3);
 }
 
@@ -385,7 +385,7 @@ box-shadow:
 .vslider-val {
 font-size: 9px;
 font-weight: 400;
-color: var(–text2);
+color: var(--text2);
 text-align: center;
 cursor: pointer;
 padding: 2px 4px;
@@ -395,8 +395,8 @@ min-width: 40px;
 }
 
 .vslider-val:hover {
-background: var(–surface2);
-color: var(–text);
+background: var(--surface2);
+color: var(--text);
 }
 
 /* ─── HORIZONTAL SLIDERS ──────────────────────────── */
@@ -421,9 +421,9 @@ border-radius: 10px;
 overflow: hidden;
 cursor: ew-resize;
 box-shadow:
-0 0 0 1px var(–border) inset,
+0 0 0 1px var(--border) inset,
 0 2px 8px rgba(0,0,0,0.25);
-background: var(–surface);
+background: var(--surface);
 }
 
 .hslider-thumb {
@@ -459,7 +459,7 @@ flex-shrink: 0;
 font-size: 9px;
 font-weight: 500;
 letter-spacing: 0.1em;
-color: var(–text3);
+color: var(--text3);
 text-transform: uppercase;
 margin-bottom: 3px;
 }
@@ -467,7 +467,7 @@ margin-bottom: 3px;
 .hslider-info-val {
 font-size: 13px;
 font-weight: 400;
-color: var(–text);
+color: var(--text);
 cursor: pointer;
 display: inline-block;
 padding: 2px 6px;
@@ -476,14 +476,14 @@ transition: all 0.12s;
 outline: none;
 }
 
-.hslider-info-val:hover:not([contenteditable=“true”]) {
-background: var(–surface2);
+.hslider-info-val:hover:not([contenteditable="true"]) {
+background: var(--surface2);
 }
 
-.hslider-info-val[contenteditable=“true”] {
-background: var(–surface2);
-border: 1px solid var(–border2);
-color: var(–text);
+.hslider-info-val[contenteditable="true"] {
+background: var(--surface2);
+border: 1px solid var(--border2);
+color: var(--text);
 }
 
 /* ─── VALUES BAR ──────────────────────────────────── */
@@ -499,8 +499,8 @@ gap: 8px;
 }
 
 .val-chip {
-background: var(–surface);
-border: 1px solid var(–border);
+background: var(--surface);
+border: 1px solid var(--border);
 border-radius: 10px;
 padding: 9px 12px;
 transition: border-color 0.14s, background 0.14s;
@@ -508,8 +508,8 @@ cursor: default;
 }
 
 .val-chip:hover {
-border-color: var(–border2);
-background: var(–surface2);
+border-color: var(--border2);
+background: var(--surface2);
 }
 
 .val-chip .chip-label {
@@ -517,7 +517,7 @@ display: block;
 font-size: 8px;
 font-weight: 500;
 letter-spacing: 0.12em;
-color: var(–text3);
+color: var(--text3);
 text-transform: uppercase;
 margin-bottom: 4px;
 }
@@ -525,7 +525,7 @@ margin-bottom: 4px;
 .val-chip .chip-val {
 font-size: 11px;
 font-weight: 400;
-color: var(–text);
+color: var(--text);
 white-space: nowrap;
 overflow: hidden;
 text-overflow: ellipsis;
@@ -541,7 +541,7 @@ cursor: text;
 }
 
 .chip-alpha .chip-val:focus {
-color: var(–text);
+color: var(--text);
 }
 
 /* ─── COPY INDICATOR ──────────────────────────────── */
@@ -567,10 +567,10 @@ position: fixed;
 bottom: 24px;
 left: 50%;
 transform: translateX(-50%) translateY(10px);
-background: var(–surface2);
-border: 1px solid var(–border2);
-color: var(–text);
-font-family: var(–font);
+background: var(--surface2);
+border: 1px solid var(--border2);
+color: var(--text);
+font-family: var(--font);
 font-size: 11px;
 padding: 8px 16px;
 border-radius: 9px;
@@ -768,7 +768,7 @@ font-size: 9px;
       </div>
     </div>
 
-```
+
 <div class="values-bar" id="fallbackValuesBar" style="visibility:hidden">
   <div class="val-chip chip-code" id="fallbackCodeChip">
     <div class="copy-ring"></div>
@@ -781,7 +781,7 @@ font-size: 9px;
     <div class="chip-val" id="fallbackHexVal">#2300b8</div>
   </div>
 </div>
-```
+
 
   </div>
 </div>
@@ -1023,7 +1023,7 @@ const S = {
   rgbDirty: false,
   hslH: 0, hslS: 0, hslLight: 0,
   hsvH: 0, hsvS: 0, hsvV: 0,
-  oklvhV: 1,   // vividness 0–1: fraction of maxChroma(L,H,'p3')
+  oklvhV: 1,   // vividness 0--1: fraction of maxChroma(L,H,'p3')
 };
 
 const C_MAX = 0.4;
@@ -1139,7 +1139,7 @@ function parseUnitNumber(token, scale = 1) {
 
 // Smart parser for % fields (S/L) and alpha/opacity fields
 // % fields: "50" → 0.5, "100" → 1, "0.5" → 0.5, "50%" → 0.5, "0.5%" → 0.005
-// Alpha: same logic, since alpha is also 0–1 range
+// Alpha: same logic, since alpha is also 0--1 range
 function parsePercentField(text) {
   let s = String(text).trim();
   if (!s) return NaN;
