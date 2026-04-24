@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -9,745 +10,708 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
 :root {
-  --bg: #050507;
-  --card: rgba(18,18,23,0.96);
-  --surface: rgba(28,28,35,0.88);
-  --surface2: rgba(42,42,50,0.92);
-  --border: rgba(255,255,255,0.09);
-  --border2: rgba(255,255,255,0.22);
-  --text: #f5f5f9;
-  --text2: #b0b0bd;
-  --text3: #7a7a8a;
-  --font: 'JetBrains Mono', 'Courier New', monospace;
-  --radius: 26px;
+–bg: #0c0c10;
+–card: #131318;
+–surface: #1a1a22;
+–surface2: #22222e;
+–border: #24242e;
+–border2: #32323f;
+–text: #dde0ee;
+–text2: #7878a0;
+–text3: #44445a;
+–font: ‘JetBrains Mono’, ‘Courier New’, monospace;
+–radius: 20px;
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font);
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  /* Tighter vertical centering for smaller picker */
-  padding: clamp(18px, calc(50vh - 310px), 60px) 18px 36px;
-  background-image:
-    radial-gradient(ellipse 70% 45% at 25% 15%, rgba(80,80,120,0.08) 0%, transparent 70%),
-    radial-gradient(ellipse 50% 35% at 75% 85%, rgba(60,90,140,0.07) 0%, transparent 70%);
+background: var(–bg);
+color: var(–text);
+font-family: var(–font);
+min-height: 100vh;
+display: flex;
+align-items: flex-start;
+justify-content: center;
+/* Use top padding to approximate vertical centering without repositioning
+on height changes. clamp(min, ideal, max) where ideal = 50vh - half picker height */
+padding: clamp(24px, calc(50vh - 430px), 80px) 24px 48px;
+background-image:
+radial-gradient(ellipse 60% 40% at 20% 20%, rgba(80,60,140,0.12) 0%, transparent 70%),
+radial-gradient(ellipse 40% 30% at 80% 80%, rgba(40,80,160,0.09) 0%, transparent 70%);
 }
 
 .picker {
-  width: min(450px, 100%);
-  background: var(--card);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  padding: 13px;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.06) inset,
-    0 2px 0 rgba(255,255,255,0.04) inset,
-    0 25px 70px -10px rgba(0,0,0,0.65),
-    0 8px 25px -6px rgba(0,0,0,0.4);
-  backdrop-filter: blur(32px);
-  -webkit-backdrop-filter: blur(32px);
-  user-select: none;
+width: min(580px, 100%);
+background: var(–card);
+border-radius: var(–radius);
+border: 1px solid var(–border);
+padding: 18px;
+box-shadow:
+0 0 0 1px rgba(255,255,255,0.03) inset,
+0 2px 0 rgba(255,255,255,0.04) inset,
+0 40px 120px rgba(0,0,0,0.75),
+0 12px 40px rgba(0,0,0,0.5);
+user-select: none;
 }
 
 /* ─── TOP BAR ─────────────────────────────────────── */
 .top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 11px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+margin-bottom: 14px;
 }
 
 .app-title {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  color: var(--text3);
-  text-transform: lowercase;
+font-size: 11px;
+font-weight: 500;
+letter-spacing: 0.14em;
+color: var(–text3);
+text-transform: lowercase;
 }
 
 .mode-toggle {
-  display: flex;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 2px;
-  gap: 2px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+display: flex;
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: 9px;
+padding: 2px;
+gap: 2px;
 }
 
 .mode-btn {
-  background: none;
-  border: none;
-  color: var(--text3);
-  font-family: var(--font);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  padding: 4px 12px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+background: none;
+border: none;
+color: var(–text3);
+font-family: var(–font);
+font-size: 10px;
+font-weight: 500;
+letter-spacing: 0.1em;
+padding: 5px 14px;
+border-radius: 7px;
+cursor: pointer;
+transition: all 0.18s;
 }
 
 .mode-btn.active {
-  background: rgba(255,255,255,0.14);
-  color: var(--text);
-  box-shadow:
-    0 1px 4px rgba(0,0,0,0.3),
-    0 0 0 1px rgba(255,255,255,0.12) inset;
+background: var(–surface2);
+color: var(–text);
+box-shadow: 0 1px 3px rgba(0,0,0,0.35);
 }
 
 .mode-btn:hover:not(.active) {
-  color: var(--text2);
+color: var(–text2);
 }
 
 /* ─── MAIN AREA ───────────────────────────────────── */
 .main-area {
-  display: flex;
-  gap: 9px;
-  margin-bottom: 10px;
-  height: 218px;
+display: flex;
+gap: 12px;
+margin-bottom: 12px;
+height: 280px;
 }
 
 /* ─── PREVIEW ─────────────────────────────────────── */
 .preview-wrap {
-  flex: 0 0 218px;
-  height: 218px;
-  position: relative;
+flex: 0 0 280px;
+height: 280px;
+position: relative;
 }
 
 .preview-swatch {
-  width: 100%;
-  height: 100%;
-  border-radius: 18px;
-  position: relative;
-  overflow: hidden;
-  transition: background-color 0.08s;
-  background-image:
-    repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
-    center / 16px 16px;
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.06) inset,
-    0 8px 20px rgba(0,0,0,0.4);
+width: 100%;
+height: 100%;
+border-radius: 14px;
+position: relative;
+overflow: hidden;
+transition: background-color 0.08s;
+/* Checkerboard base for transparency */
+background-image:
+repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
+center / 18px 18px;
 }
 
 .preview-color-layer {
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
+position: absolute;
+inset: 0;
+border-radius: 14px;
 }
 
 .preview-split {
-  position: absolute;
-  inset: 0;
-  display: none;
+position: absolute;
+inset: 0;
+display: none;
 }
 
 .preview-swatch.is-split .preview-color-layer {
-  display: none;
+display: none;
 }
 
 .preview-swatch.is-split .preview-split {
-  display: flex;
+display: flex;
 }
 
 .preview-split-half {
-  position: relative;
-  flex: 1;
-  overflow: hidden;
-  border-radius: 18px;
+position: relative;
+flex: 1;
+overflow: hidden;
 }
 
 .preview-split-half:first-child {
-  border-radius: 18px 0 0 18px;
+border-radius: 14px 0 0 14px;
 }
 
 .preview-split-half:last-child {
-  border-radius: 0 18px 18px 0;
+border-radius: 0 14px 14px 0;
 }
 
 .preview-split-half + .preview-split-half {
-  border-left: 1px solid rgba(255,255,255,0.14);
+border-left: 1px solid rgba(255,255,255,0.12);
 }
 
 .preview-split-layer {
-  position: absolute;
-  inset: 0;
-  /* border-radius: 18px; */
+position: absolute;
+inset: 0;
 }
 
 .preview-split-label {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 2;
-  font-family: var(--font);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: lowercase;
-  padding: 3px 8px;
-  border-radius: 9999px;
-  background: rgba(0,0,0,0.45);
-  color: rgba(255,255,255,0.85);
-  border: 1px solid rgba(255,255,255,0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+position: absolute;
+top: 12px;
+left: 12px;
+z-index: 2;
+font-family: var(–font);
+font-size: 9px;
+font-weight: 500;
+letter-spacing: 0.08em;
+text-transform: lowercase;
+padding: 4px 9px;
+border-radius: 20px;
+background: rgba(0,0,0,0.5);
+color: rgba(255,255,255,0.75);
+border: 1px solid rgba(255,255,255,0.12);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
 }
 
 .preview-split-fallback .preview-split-label {
-  left: auto;
-  right: 10px;
+left: auto;
+right: 12px;
 }
 
 .preview-badges {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 4px;
-  align-items: center;
-  white-space: nowrap;
+position: absolute;
+bottom: 12px;
+left: 50%;
+transform: translateX(-50%);
+display: flex;
+gap: 5px;
+align-items: center;
+white-space: nowrap;
 }
 
 .badge {
-  font-family: var(--font);
-  font-size: 9.5px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  padding: 3px 9px;
-  border-radius: 9999px;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+font-family: var(–font);
+font-size: 10px;
+font-weight: 500;
+letter-spacing: 0.07em;
+padding: 4px 10px;
+border-radius: 20px;
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
 }
 
 .badge-mode {
-  background: rgba(0,0,0,0.45);
-  color: rgba(255,255,255,0.85);
-  border: 1px solid rgba(255,255,255,0.15);
+background: rgba(0,0,0,0.5);
+color: rgba(255,255,255,0.75);
+border: 1px solid rgba(255,255,255,0.12);
 }
 
 .badge-gamut {
-  background: rgba(0,0,0,0.5);
-  color: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.12);
+background: rgba(0,0,0,0.5);
+color: rgba(255,255,255,0.75);
+border: 1px solid rgba(255,255,255,0.12);
 }
 
 .badge-p3 {
-  background: rgba(0,0,0,0.5);
-  color: rgba(255,255,255,0.75);
-  border: 1px solid rgba(255,255,255,0.12);
+background: rgba(0,0,0,0.5);
+color: rgba(255,255,255,0.75);
+border: 1px solid rgba(255,255,255,0.12);
 }
 
 .badge.is-alert,
 .preview-split-label.is-alert,
 .chip-label.is-alert {
-  color: #ff9a9a;
+color: rgba(255, 142, 142, 0.92);
 }
 
 .chip-label.is-bright {
-  color: var(--text);
+color: var(–text);
 }
 
 /* HSL vertical slider strip (mobile only, built by JS) */
 .hsl-vstrip {
-  display: flex;
-  flex-direction: row;
-  gap: 7px;
-  width: 100%;
-  height: 185px;
-  flex-shrink: 0;
+display: flex;
+flex-direction: row;
+gap: 8px;
+width: 100%;
+height: 110px;
+flex-shrink: 0;
 }
 
 /* ─── VERTICAL SLIDERS ────────────────────────────── */
 .vsliders-area {
-  flex: 1;
-  display: flex;
-  gap: 7px;
+flex: 1;
+display: flex;
+gap: 8px;
 }
 
-
 .picker.mode-hsl .preview-wrap {
-  flex: 0 0 105px;
+flex: 0 0 120px;
 }
 
 .picker.mode-hsl .preview-badges {
-  left: 10px;
-  bottom: 10px;
-  transform: none;
+left: 12px;
+bottom: 12px;
+transform: none;
 }
 
 .vsliders-area.hsl-mode-layout {
-  gap: 10px;
-  align-items: stretch;
+gap: 14px;
+align-items: stretch;
 }
 
 .hsl-field-wrap {
-  flex: 1;
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  cursor: crosshair;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.06) inset,
-    0 8px 20px rgba(0,0,0,0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+flex: 1;
+position: relative;
+border-radius: 14px;
+overflow: hidden;
+cursor: crosshair;
+background: var(–surface);
+box-shadow:
+0 0 0 1px var(–border) inset,
+0 2px 8px rgba(0,0,0,0.3);
 }
 
 .hsl-field-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+display: block;
+width: 100%;
+height: 100%;
 }
 
 .hsl-field-thumb {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 17px;
-  height: 17px;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  border: 2.5px solid rgba(255,255,255,0.95);
-  background: rgba(255,255,255,0.15);
-  box-shadow:
-    0 3px 10px rgba(0,0,0,0.4),
-    0 0 0 3px rgba(255,255,255,0.12);
-  pointer-events: none;
+position: absolute;
+left: 50%;
+top: 50%;
+width: 18px;
+height: 18px;
+transform: translate(-50%, -50%);
+border-radius: 50%;
+border: 2px solid rgba(255,255,255,0.96);
+background: rgba(255,255,255,0.18);
+box-shadow: 0 2px 8px rgba(0,0,0,0.45);
+pointer-events: none;
 }
 
 .hsl-field-wrap:hover .hsl-field-thumb,
 .hsl-field-wrap.dragging .hsl-field-thumb {
-  box-shadow:
-    0 3px 12px rgba(0,0,0,0.55),
-    0 0 0 3px rgba(255,255,255,0.12);
+box-shadow:
+0 3px 12px rgba(0,0,0,0.55),
+0 0 0 3px rgba(255,255,255,0.12);
 }
 
 .vslider-col.is-hsl-hue {
-  flex: 0 0 52px;
+flex: 0 0 58px;
 }
 
 .vslider-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  min-width: 0;
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6px;
+min-width: 0;
 }
 
 .vslider-label {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: var(--text3);
-  text-transform: uppercase;
+font-size: 9px;
+font-weight: 500;
+letter-spacing: 0.12em;
+color: var(–text3);
+text-transform: uppercase;
 }
 
 .vslider-track {
-  flex: 1;
-  width: 100%;
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: ns-resize;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.07) inset,
-    0 2px 8px rgba(0,0,0,0.35);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+flex: 1;
+width: 100%;
+position: relative;
+border-radius: 10px;
+overflow: hidden;
+cursor: ns-resize;
+box-shadow:
+0 0 0 1px var(–border) inset,
+0 2px 8px rgba(0,0,0,0.3);
 }
 
 .slider-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
+display: block;
+width: 100%;
+height: 100%;
 }
 
 .vslider-thumb {
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  width: 28px;
-  height: 15px;
-  background: linear-gradient(180deg, #f8f8f9 0%, #e5e5eb 100%);
-  border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.95);
-  box-shadow:
-    0 4px 12px -2px rgba(0,0,0,0.45),
-    0 1px 3px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.85),
-    inset 0 -1px 0 rgba(0,0,0,0.15);
-  pointer-events: none;
-  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s;
+position: absolute;
+left: 50%;
+bottom: 0;
+transform: translateX(-50%);
+width: 30px;
+height: 16px;
+background: rgba(255,255,255,0.92);
+border-radius: 5px;
+border: 2px solid rgba(255,255,255,0.98);
+box-shadow:
+0 2px 8px rgba(0,0,0,0.5),
+0 0 0 1px rgba(0,0,0,0.2);
+pointer-events: none;
+transition: box-shadow 0.12s;
 }
 
 .vslider-track:hover .vslider-thumb,
 .vslider-track.dragging .vslider-thumb {
-  box-shadow:
-    0 6px 16px -3px rgba(0,0,0,0.5),
-    0 1px 3px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 0 0 3px rgba(255,255,255,0.12);
-  transform: translateX(-50%) scale(1.05);
+box-shadow:
+0 3px 12px rgba(0,0,0,0.6),
+0 0 0 1px rgba(0,0,0,0.3),
+0 0 0 3px rgba(255,255,255,0.12);
 }
 
 .vslider-val {
-  font-size: 10px;
-  font-weight: 400;
-  color: var(--text2);
-  text-align: center;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 4px;
-  transition: all 0.12s;
-  min-width: 38px;
+font-size: 9px;
+font-weight: 400;
+color: var(–text2);
+text-align: center;
+cursor: pointer;
+padding: 2px 4px;
+border-radius: 4px;
+transition: all 0.12s;
+min-width: 40px;
 }
 
 .vslider-val:hover {
-  background: var(--surface2);
-  color: var(--text);
+background: var(–surface2);
+color: var(–text);
 }
 
 /* ─── HORIZONTAL SLIDERS ──────────────────────────── */
 .hsliders-area {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-bottom: 10px;
+display: flex;
+flex-direction: column;
+gap: 9px;
+margin-bottom: 12px;
 }
 
 .hslider-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+display: flex;
+align-items: center;
+gap: 10px;
 }
 
 .hslider-track {
-  flex: 1;
-  height: 40px;
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: ew-resize;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.07) inset,
-    0 2px 8px rgba(0,0,0,0.3);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+flex: 1;
+height: 46px;
+position: relative;
+border-radius: 10px;
+overflow: hidden;
+cursor: ew-resize;
+box-shadow:
+0 0 0 1px var(–border) inset,
+0 2px 8px rgba(0,0,0,0.25);
+background: var(–surface);
 }
 
 .hslider-thumb {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%);
-  width: 15px;
-  height: 27px;
-  background: linear-gradient(180deg, #f8f8f9 0%, #e5e5eb 100%);
-  border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.95);
-  box-shadow:
-    0 4px 12px -2px rgba(0,0,0,0.45),
-    0 1px 3px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.85),
-    inset 0 -1px 0 rgba(0,0,0,0.15);
-  pointer-events: none;
-  transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s;
+position: absolute;
+top: 50%;
+left: 0;
+transform: translateY(-50%);
+width: 16px;
+height: 32px;
+background: rgba(255,255,255,0.92);
+border-radius: 5px;
+border: 2px solid rgba(255,255,255,0.98);
+box-shadow:
+0 2px 8px rgba(0,0,0,0.5),
+0 0 0 1px rgba(0,0,0,0.2);
+pointer-events: none;
 }
 
 .hslider-track:hover .hslider-thumb,
 .hslider-track.dragging .hslider-thumb {
-  box-shadow:
-    0 6px 16px -3px rgba(0,0,0,0.5),
-    0 1px 3px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.9),
-    0 0 0 3px rgba(255,255,255,0.12);
-  transform: translateY(-50%) scale(1.05);
+box-shadow:
+0 3px 12px rgba(0,0,0,0.6),
+0 0 0 1px rgba(0,0,0,0.3),
+0 0 0 3px rgba(255,255,255,0.12);
 }
 
 .hslider-info {
-  width: 88px;
-  flex-shrink: 0;
+width: 96px;
+flex-shrink: 0;
 }
 
 .hslider-info-label {
-  font-size: 9px;
-  font-weight: 500;
-  letter-spacing: 0.1em;
-  color: var(--text3);
-  text-transform: uppercase;
-  margin-bottom: 3px;
+font-size: 9px;
+font-weight: 500;
+letter-spacing: 0.1em;
+color: var(–text3);
+text-transform: uppercase;
+margin-bottom: 3px;
 }
 
 .hslider-info-val {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--text);
-  cursor: pointer;
-  display: inline-block;
-  padding: 2px 6px;
-  border-radius: 5px;
-  transition: all 0.12s;
-  outline: none;
+font-size: 13px;
+font-weight: 400;
+color: var(–text);
+cursor: pointer;
+display: inline-block;
+padding: 2px 6px;
+border-radius: 5px;
+transition: all 0.12s;
+outline: none;
 }
 
-.hslider-info-val:hover:not([contenteditable="true"]) {
-  background: var(--surface2);
+.hslider-info-val:hover:not([contenteditable=“true”]) {
+background: var(–surface2);
 }
 
-.hslider-info-val[contenteditable="true"] {
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  color: var(--text);
+.hslider-info-val[contenteditable=“true”] {
+background: var(–surface2);
+border: 1px solid var(–border2);
+color: var(–text);
 }
 
 /* ─── VALUES BAR ──────────────────────────────────── */
 .values-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+display: flex;
+flex-direction: column;
+gap: 8px;
 }
 
 .values-bar {
-  display: flex;
-  gap: 7px;
+display: flex;
+gap: 8px;
 }
 
 .val-chip {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 8px 10px;
-  transition: border-color 0.14s, background 0.14s;
-  cursor: default;
-  position: relative;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 9px 12px;
+transition: border-color 0.14s, background 0.14s;
+cursor: default;
 }
 
 .val-chip:hover {
-  border-color: var(--border2);
-  background: var(--surface2);
+border-color: var(–border2);
+background: var(–surface2);
 }
 
 .val-chip .chip-label {
-  display: block;
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  color: var(--text3);
-  text-transform: uppercase;
-  margin-bottom: 3px;
+display: block;
+font-size: 8px;
+font-weight: 500;
+letter-spacing: 0.12em;
+color: var(–text3);
+text-transform: uppercase;
+margin-bottom: 4px;
 }
 
 .val-chip .chip-val {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+font-size: 11px;
+font-weight: 400;
+color: var(–text);
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
 
 .chip-code { flex: 1; }
-.chip-hex  { width: 92px; }
-.chip-alpha { width: 70px; }
+.chip-hex  { width: 100px; }
+.chip-alpha { width: 76px; }
 
 .chip-alpha .chip-val {
-  outline: none;
-  cursor: text;
+outline: none;
+cursor: text;
 }
 
 .chip-alpha .chip-val:focus {
-  color: var(--text);
+color: var(–text);
 }
 
 /* ─── COPY INDICATOR ──────────────────────────────── */
 .copy-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  pointer-events: none;
-  box-shadow: 0 0 0 0 rgba(120,170,255,0);
-  transition: box-shadow 0.15s;
+position: absolute;
+inset: 0;
+border-radius: 10px;
+pointer-events: none;
+box-shadow: 0 0 0 0 rgba(100,160,255,0);
+transition: box-shadow 0.1s;
 }
 
 .val-chip.copied .copy-ring {
-  box-shadow: 0 0 0 3px rgba(120,170,255,0.55);
-  transition: box-shadow 0s;
+box-shadow: 0 0 0 2px rgba(100,160,255,0.6);
+transition: box-shadow 0s;
 }
+
+.val-chip { position: relative; }
 
 /* ─── TOAST ───────────────────────────────────────── */
 .toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background: rgba(30,30,38,0.95);
-  border: 1px solid var(--border2);
-  color: var(--text);
-  font-family: var(--font);
-  font-size: 11px;
-  padding: 7px 15px;
-  border-radius: 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
-  box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: 9999;
+position: fixed;
+bottom: 24px;
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+background: var(–surface2);
+border: 1px solid var(–border2);
+color: var(–text);
+font-family: var(–font);
+font-size: 11px;
+padding: 8px 16px;
+border-radius: 9px;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s, transform 0.2s;
+box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+z-index: 9999;
 }
 
 .toast.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
+opacity: 1;
+transform: translateX(-50%) translateY(0);
 }
 
 /* ─── CHECKERBOARD CANVAS BG ──────────────────────── */
 .has-checker {
-  background-image:
-    repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
-    center / 10px 10px;
+background-image:
+repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
+center / 10px 10px;
 }
 
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 560px) {
-  body {
-    padding: 14px 10px 28px;
-  }
+body {
+padding: 16px 12px 32px;
+}
 
-  .picker {
-    padding: 11px;
-    border-radius: 22px;
-  }
+.picker {
+padding: 14px;
+border-radius: 16px;
+}
 
-  /* Stack preview above sliders */
-  .main-area {
-    flex-direction: column;
-    height: auto;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
+/* Stack preview above sliders */
+.main-area {
+flex-direction: column;
+height: auto;
+gap: 10px;
+margin-bottom: 10px;
+}
 
-  .preview-wrap {
-    flex: none;
-    width: 100%;
-    height: 145px;
-  }
+.preview-wrap {
+flex: none;
+width: 100%;
+height: 160px;
+}
 
-  /* HSL mode: preview override */
-  .picker.mode-hsl .preview-wrap {
-    flex: none;
-    width: 100%;
-    height: 145px;
-  }
+/* HSL mode: preview override */
+.picker.mode-hsl .preview-wrap {
+flex: none;
+width: 100%;
+height: 160px;
+}
 
-  /* Vertical sliders become a short horizontal strip */
-  .vsliders-area {
-    height: 98px;
-    flex-direction: row;
-  }
+/* Vertical sliders become a short horizontal strip */
+.vsliders-area {
+height: 110px;
+flex-direction: row;
+}
 
-  /* HSL field + hue need more vertical room */
-  .vsliders-area.hsl-mode-layout {
-    flex-direction: column;
-    height: auto;
-    gap: 8px;
-  }
+/* HSL field + hue need more vertical room */
+.vsliders-area.hsl-mode-layout {
+flex-direction: column;
+height: auto;
+gap: 8px;
+}
 
-  /* SV field gets fixed height when stacked */
-  .hsl-field-wrap {
-    flex: 0 0 145px;
-    border-radius: 10px;
-  }
+/* SV field gets fixed height when stacked */
+.hsl-field-wrap {
+flex: 0 0 160px;
+border-radius: 10px;
+}
 
-  /* Mobile HSL vstrip (all 4 sliders in a row) */
-  .hsl-vstrip {
-    height: 185px;
-  }
+/* Mobile HSL vstrip (all 4 sliders in a row) */
+.hsl-vstrip {
+height: 210px;
+}
 
-  /* Horizontal sliders: tighter info panel */
-  .hslider-track {
-    height: 36px;
-  }
+/* Horizontal sliders: tighter info panel */
+.hslider-track {
+height: 40px;
+}
 
-  .hslider-thumb {
-    height: 26px;
-  }
+.hslider-thumb {
+height: 28px;
+}
 
-  .hslider-info {
-    width: 68px;
-    flex-shrink: 0;
-  }
+.hslider-info {
+width: 72px;
+flex-shrink: 0;
+}
 
-  .hslider-info-val {
-    font-size: 12px;
-  }
+.hslider-info-val {
+font-size: 11px;
+}
 
-  .hsliders-area {
-    gap: 6px;
-    margin-bottom: 8px;
-  }
+.hsliders-area {
+gap: 8px;
+margin-bottom: 10px;
+}
 
-  /* Values chips */
-  .values-bar {
-    gap: 5px;
-  }
+/* Values chips */
+.values-bar {
+gap: 6px;
+}
 
-  .val-chip {
-    padding: 7px 9px;
-  }
+.val-chip {
+padding: 8px 10px;
+}
 
-  .val-chip .chip-val {
-    font-size: 11px;
-  }
+.val-chip .chip-val {
+font-size: 10px;
+}
 
-  .chip-hex {
-    width: 80px;
-  }
+.chip-hex {
+width: 82px;
+}
 
-  .chip-alpha {
-    width: 64px;
-  }
+.chip-alpha {
+width: 66px;
+}
 
-  /* Preview badges */
-  .preview-badges {
-    bottom: 8px;
-    gap: 4px;
-  }
+/* Preview badges */
+.preview-badges {
+bottom: 8px;
+gap: 4px;
+}
 
-  .picker.mode-hsl .preview-badges {
-    left: 9px;
-    bottom: 9px;
-  }
+.picker.mode-hsl .preview-badges {
+left: 10px;
+bottom: 10px;
+}
 
-  /* Mode toggle */
-  .mode-btn {
-    padding: 4px 10px;
-    font-size: 9.5px;
-  }
+/* Mode toggle */
+.mode-btn {
+padding: 5px 10px;
+font-size: 9px;
+}
 }
 </style>
+
 </head>
 <body>
 
@@ -758,6 +722,7 @@ body {
     <span class="app-title">chroma</span>
     <div class="mode-toggle" id="modeToggle">
       <button class="mode-btn active" data-mode="oklch">OKLCH</button>
+      <button class="mode-btn" data-mode="oklvh">OKLVH</button>
       <button class="mode-btn" data-mode="rgb">RGB</button>
       <button class="mode-btn" data-mode="hsl">HSL</button>
     </div>
@@ -803,18 +768,21 @@ body {
       </div>
     </div>
 
-    <div class="values-bar" id="fallbackValuesBar" style="visibility:hidden">
-      <div class="val-chip chip-code" id="fallbackCodeChip">
-        <div class="copy-ring"></div>
-        <span class="chip-label" id="fallbackCodeLabel">Color Code (Fallback)</span>
-        <div class="chip-val" id="fallbackCodeVal">oklch(0.3657 0.2375 271.03)</div>
-      </div>
-      <div class="val-chip chip-hex" id="fallbackHexChip">
-        <div class="copy-ring"></div>
-        <span class="chip-label" id="fallbackHexLabel">Hex (Fallback)</span>
-        <div class="chip-val" id="fallbackHexVal">#2300b8</div>
-      </div>
-    </div>
+```
+<div class="values-bar" id="fallbackValuesBar" style="visibility:hidden">
+  <div class="val-chip chip-code" id="fallbackCodeChip">
+    <div class="copy-ring"></div>
+    <span class="chip-label" id="fallbackCodeLabel">Color Code (Fallback)</span>
+    <div class="chip-val" id="fallbackCodeVal">oklch(0.3657 0.2375 271.03)</div>
+  </div>
+  <div class="val-chip chip-hex" id="fallbackHexChip">
+    <div class="copy-ring"></div>
+    <span class="chip-label" id="fallbackHexLabel">Hex (Fallback)</span>
+    <div class="chip-val" id="fallbackHexVal">#2300b8</div>
+  </div>
+</div>
+```
+
   </div>
 </div>
 
@@ -1029,7 +997,18 @@ const Color = (() => {
     return base + a;
   }
 
-  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, hueBoundaries, lightnessBoundaries, rgbToOKLCH, rgbToHSV, hsvToRGB, rgbToHSL, hslToRGB, toHex, toHexAlpha };
+  // Find the lightness where chroma is maximised for a given hue within gamut
+  function mostVividLightness(H, gamut = 'p3', steps = 64) {
+    let bestL = 0.5, bestC = 0;
+    for (let i = 1; i < steps; i++) {
+      const l = i / steps;
+      const c = maxChroma(l, H, gamut);
+      if (c > bestC) { bestC = c; bestL = l; }
+    }
+    return [bestL, bestC];
+  }
+
+  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, mostVividLightness, hueBoundaries, lightnessBoundaries, rgbToOKLCH, rgbToHSV, hsvToRGB, rgbToHSL, hslToRGB, toHex, toHexAlpha };
 })();
 
 // ═══════════════════════════════════════════════════════════
@@ -1044,6 +1023,7 @@ const S = {
   rgbDirty: false,
   hslH: 0, hslS: 0, hslLight: 0,
   hsvH: 0, hsvS: 0, hsvV: 0,
+  oklvhV: 1,   // vividness 0–1: fraction of maxChroma(L,H,'p3')
 };
 
 const C_MAX = 0.4;
@@ -1147,7 +1127,7 @@ function restoreSavedOKLCH() {
 }
 
 function markRGBDirty() {
-  if (S.mode !== 'oklch') S.rgbDirty = true;
+  if (S.mode !== 'oklch' && S.mode !== 'oklvh') S.rgbDirty = true;
 }
 
 function parseUnitNumber(token, scale = 1) {
@@ -1158,6 +1138,8 @@ function parseUnitNumber(token, scale = 1) {
 }
 
 // Smart parser for % fields (S/L) and alpha/opacity fields
+// % fields: "50" → 0.5, "100" → 1, "0.5" → 0.5, "50%" → 0.5, "0.5%" → 0.005
+// Alpha: same logic, since alpha is also 0–1 range
 function parsePercentField(text) {
   let s = String(text).trim();
   if (!s) return NaN;
@@ -1171,9 +1153,10 @@ function parsePercentField(text) {
   if (isNaN(n)) return NaN;
 
   if (hadPercent) {
-    return n / 100;
+    return n / 100;                    // explicit % always means percentage
   }
 
+  // No % sign: only treat bare integers > 1 as percentages
   if (!s.includes('.') && n > 1) {
     return n / 100;
   }
@@ -1184,7 +1167,7 @@ function parsePercentField(text) {
 function isMobile() { return window.innerWidth <= 560; }
 
 function syncStateFromRGB(r, g, b, options = {}) {
-  const { markDirty: shouldMarkDirty = S.mode !== 'oklch', rememberDerived = true } = options;
+  const { markDirty: shouldMarkDirty = (S.mode !== 'oklch' && S.mode !== 'oklvh'), rememberDerived = true } = options;
   S.r = clamp255(r);
   S.g = clamp255(g);
   S.b = clamp255(b);
@@ -1251,12 +1234,15 @@ function parseFunctionalColor(text) {
   const fn = match[1].toLowerCase();
   const raw = match[2];
 
+  // Split on slash to separate alpha
   const slashIdx = raw.lastIndexOf('/');
   const bodyStr = slashIdx >= 0 ? raw.slice(0, slashIdx).trim() : raw;
   const alphaStr = slashIdx >= 0 ? raw.slice(slashIdx + 1).trim() : null;
 
+  // Normalize commas to spaces, then split on whitespace
   const body = bodyStr.replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
 
+  // Alpha: from slash, or from 4th body token (legacy rgba/hsla)
   let alpha = null;
   if (alphaStr !== null) {
     alpha = parseUnitNumber(alphaStr, 1);
@@ -1267,10 +1253,11 @@ function parseFunctionalColor(text) {
   if (fn === 'oklch' && body.length >= 3) {
     const L = parseUnitNumber(body[0], 1);
     const C = parseUnitNumber(body[1], 1);
-    let H = parseUnitNumber(body[2], 360);
-    if (body[2].endsWith('%')) H = parseUnitNumber(body[2], 360);
-    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(H)) return null;
-    return { space: 'oklch', L, C, H, alpha };
+    const H = parseUnitNumber(body[2], 360);
+    // H without unit is degrees, body[2] with no % sign → pass as-is
+    const Hval = body[2].endsWith('%') ? parseUnitNumber(body[2], 360) : parseFloat(body[2]);
+    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(Hval)) return null;
+    return { space: 'oklch', L, C, H: Hval, alpha };
   }
 
   if (fn === 'oklab' && body.length >= 3) {
@@ -1278,6 +1265,7 @@ function parseFunctionalColor(text) {
     const a = parseUnitNumber(body[1], 0.4);
     const b = parseUnitNumber(body[2], 0.4);
     if ([L, a, b].some(v => Number.isNaN(v))) return null;
+    // Convert oklab → oklch
     const C = Math.sqrt(a * a + b * b);
     let H = Math.atan2(b, a) * 180 / Math.PI;
     if (H < 0) H += 360;
@@ -1293,6 +1281,7 @@ function parseFunctionalColor(text) {
   }
 
   if ((fn === 'hsl' || fn === 'hsla') && body.length >= 3) {
+    // Hue: strip deg/rad/turn units
     let hRaw = body[0].replace(/deg$/i, '').replace(/grad$/i, '');
     if (/rad$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 180 / Math.PI).toString();
     if (/turn$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 360).toString();
@@ -1304,11 +1293,13 @@ function parseFunctionalColor(text) {
   }
 
   if (fn === 'hwb' && body.length >= 3) {
+    // HWB → HSL/RGB conversion
     let hRaw = body[0].replace(/deg$/i, '');
     const h = parseFloat(hRaw);
     const w = parseUnitNumber(body[1], 1);
     const bk = parseUnitNumber(body[2], 1);
     if ([h, w, bk].some(v => Number.isNaN(v))) return null;
+    // HWB to RGB
     let ww = w, bb = bk;
     if (ww + bb > 1) { const s = ww + bb; ww /= s; bb /= s; }
     const [r01, g01, b01] = Color.hslToRGB(h, 1, 0.5);
@@ -1337,12 +1328,12 @@ function applyColorInput(text) {
 
   if (parsed.space === 'rgb') {
     syncStateFromRGB(parsed.r, parsed.g, parsed.b, {
-      markDirty: S.mode !== 'oklch',
+      markDirty: S.mode !== 'oklch' && S.mode !== 'oklvh',
       rememberDerived: true,
     });
   } else if (parsed.space === 'hsl') {
     syncStateFromHSL(parsed.h, parsed.s, parsed.l, {
-      markDirty: S.mode !== 'oklch',
+      markDirty: S.mode !== 'oklch' && S.mode !== 'oklvh',
       rememberDerived: true,
     });
   } else {
@@ -1374,12 +1365,12 @@ function colorSpecFromRGB(rgb, alpha = 1) {
 }
 
 function currentRGB01() {
-  if (S.mode === 'oklch') return Color.oklchClamped(S.L, S.C, S.H);
+  if (S.mode === 'oklch' || S.mode === 'oklvh') return Color.oklchClamped(S.L, S.C, S.H);
   return [S.r / 255, S.g / 255, S.b / 255];
 }
 
 function currentComputedRGB255() {
-  if (S.mode === 'oklch') {
+  if (S.mode === 'oklch' || S.mode === 'oklvh') {
     const [r01, g01, b01] = currentRGB01();
     return [Math.round(r01 * 255), Math.round(g01 * 255), Math.round(b01 * 255)];
   }
@@ -1387,7 +1378,7 @@ function currentComputedRGB255() {
 }
 
 function currentColorCss(alpha = S.alpha) {
-  if (S.mode === 'oklch' && SUPPORT.cssOKLCH) {
+  if ((S.mode === 'oklch' || S.mode === 'oklvh') && SUPPORT.cssOKLCH) {
     return alpha < 1
       ? `oklch(${S.L} ${S.C} ${S.H} / ${alpha})`
       : `oklch(${S.L} ${S.C} ${S.H})`;
@@ -1396,7 +1387,7 @@ function currentColorCss(alpha = S.alpha) {
 }
 
 function getFallbackState(alpha = S.alpha) {
-  if (S.mode !== 'oklch' || Color.inP3(S.L, S.C, S.H)) return null;
+  if ((S.mode !== 'oklch' && S.mode !== 'oklvh') || Color.inP3(S.L, S.C, S.H)) return null;
 
   const fallbackChroma = Math.min(S.C, Color.maxChroma(S.L, S.H, 'p3'));
   const spec = colorSpecFromOKLCH(S.L, fallbackChroma, S.H, alpha);
@@ -1416,7 +1407,7 @@ function getFallbackState(alpha = S.alpha) {
 }
 
 function outOfGamut() {
-  return S.mode === 'oklch' && !Color.inSRGB(S.L, S.C, S.H);
+  return (S.mode === 'oklch' || S.mode === 'oklvh') && !Color.inSRGB(S.L, S.C, S.H);
 }
 
 function buildBoundaryMarkers(srgbPoints = [], p3Points = []) {
@@ -1435,7 +1426,11 @@ function buildSingleBoundaryMarkers(srgbT, p3T) {
 function switchMode(m) {
   if (m === S.mode) return;
 
-  if (S.mode === 'oklch' && m !== 'oklch') {
+  const wasOKLCHlike = S.mode === 'oklch' || S.mode === 'oklvh';
+  const isOKLCHlike  = m === 'oklch' || m === 'oklvh';
+
+  if (wasOKLCHlike && !isOKLCHlike) {
+    // oklch/oklvh → rgb/hsl
     rememberCurrentOKLCH();
     const [r, g, b] = currentRGB01();
     S.r = Math.round(r * 255);
@@ -1443,11 +1438,17 @@ function switchMode(m) {
     S.b = Math.round(b * 255);
     syncAuxSpacesFromRGB();
     S.rgbDirty = false;
-  } else if (S.mode !== 'oklch' && m === 'oklch') {
+  } else if (!wasOKLCHlike && isOKLCHlike) {
+    // rgb/hsl → oklch/oklvh
     if (!(S.savedOKLCH && !S.rgbDirty && restoreSavedOKLCH())) {
       syncStateFromRGB(S.r, S.g, S.b, { markDirty: false, rememberDerived: true });
     }
     S.rgbDirty = false;
+  }
+  // Always recompute oklvhV when entering oklvh
+  if (m === 'oklvh') {
+    const maxC = Color.maxChroma(S.L, S.H, 'p3');
+    S.oklvhV = maxC > 1e-6 ? Math.max(0, Math.min(1, S.C / maxC)) : 0;
   }
 
   S.mode = m;
@@ -1460,6 +1461,7 @@ syncAuxSpacesFromRGB();
 // 3 ▸ CANVAS RENDERING
 // ═══════════════════════════════════════════════════════════
 
+// colorFn(t) → { css, fallback } | [r,g,b] | null (out-of-gamut → checkerboard)
 function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   const ctx = getCanvasCtx(canvas);
   const w = canvas.width, h = canvas.height;
@@ -1521,6 +1523,7 @@ function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   }
 }
 
+// Opacity slider: checkerboard + gradient with transparency
 function renderAlphaCanvas(canvas, isVert) {
   const ctx = getCanvasCtx(canvas);
   const w = canvas.width, h = canvas.height;
@@ -1679,14 +1682,114 @@ function getSliderDefs() {
     ];
   }
 
-    if (S.mode === 'rgb') {
+  if (S.mode === 'oklvh') {
+    // Helper: sync state when oklvh sliders change
+    function applyOKLVH(L, V, H) {
+      S.H = normHue(H, S.H);
+      S.L = Math.max(0, Math.min(1, L));
+      S.oklvhV = Math.max(0, Math.min(1, V));
+      const maxC = Color.maxChroma(S.L, S.H, 'p3');
+      S.C = S.oklvhV * maxC;
+      syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true });
+      // Preserve oklvhV exactly (syncStateFromOKLCH clamped C may shift it)
+      S.oklvhV = Math.max(0, Math.min(1, V));
+    }
+
+    return [
+      {
+        key:'L', label:'L', full:'Lightness',
+        min:0, max:1,
+        inputMode: 'decimal',
+        get:()=>S.L,
+        set:v=>{ applyOKLVH(v, S.oklvhV, S.H); },
+        fmt:v=>v.toFixed(4),
+        // Vertical: grayscale ramp (same as oklch)
+        vFn: t => { const g = Math.round(t * 255); return colorSpecFromRGB([g, g, g]); },
+        vBounds: () => [],
+        // Horizontal: most vivid colour at each lightness for current hue
+        hFn: t => {
+          const maxC = Color.maxChroma(t, S.H, 'p3');
+          if (!Color.inP3(t, maxC, S.H)) return colorSpecFromOKLCH(t, 0, S.H);
+          return colorSpecFromOKLCH(t, maxC, S.H);
+        },
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'oklvhV', label:'V', full:'Vividness',
+        min:0, max:1,
+        inputMode: 'decimal',
+        get:()=>S.oklvhV,
+        set:v=>{ applyOKLVH(S.L, v, S.H); },
+        fmt:v=>v.toFixed(4),
+        // Vertical: neutral gray → most vivid at current L/H
+        vFn: t => {
+          const maxC = Color.maxChroma(S.L, S.H, 'p3');
+          const c = t * maxC;
+          return colorSpecFromOKLCH(S.L, Math.min(c, maxC), S.H);
+        },
+        vBounds: () => [],
+        // Horizontal: same interpolation
+        hFn: t => {
+          const maxC = Color.maxChroma(S.L, S.H, 'p3');
+          const c = t * maxC;
+          return colorSpecFromOKLCH(S.L, Math.min(c, maxC), S.H);
+        },
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'H', label:'H', full:'Hue',
+        min:0, max:360,
+        inputMode: 'decimal',
+        get:()=>S.H,
+        set:v=>{
+          // When hue changes: snap to most vivid state for that hue
+          const newH = normHue(v, S.H);
+          const [bestL, bestC] = Color.mostVividLightness(newH, 'p3');
+          S.H = newH;
+          S.oklvhV = 1;
+          syncStateFromOKLCH(bestL, bestC, newH, { rememberRaw: true, clearRGBDirty: true });
+          S.oklvhV = 1;
+        },
+        fmt:v=>v.toFixed(2),
+        // Vertical: each hue at its most vivid lightness & chroma
+        vFn: t => {
+          const h = t * 360;
+          const [bestL, bestC] = Color.mostVividLightness(h, 'p3');
+          return colorSpecFromOKLCH(bestL, bestC, h);
+        },
+        vBounds: () => [],
+        // Horizontal: same
+        hFn: t => {
+          const h = t * 360;
+          const [bestL, bestC] = Color.mostVividLightness(h, 'p3');
+          return colorSpecFromOKLCH(bestL, bestC, h);
+        },
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'alpha', label:'A', full:'Opacity',
+        isAlpha: true,
+        min:0, max:1,
+        inputMode: 'decimal',
+        get:()=>S.alpha, set:v=>{S.alpha=v;},
+        fmt:v=>v.toFixed(2),
+        editText:()=>S.alpha.toFixed(2),
+        parse: parsePercentField,
+        showH: false,
+      }
+    ];
+  }
+
+  if (S.mode === 'rgb') {
     function parseRGBPercent(text) {
       const s = String(text).trim().replace(/%$/, '');
       const n = parseFloat(s);
       if (isNaN(n)) return NaN;
       return Math.max(0, Math.min(255, n / 100 * 255));
     }
-
     return [
       {
         key:'r', label:'R', full:'Red',
@@ -1695,17 +1798,12 @@ function getSliderDefs() {
         get:()=>S.r,
         set:v=>{ syncStateFromRGB(v, S.g, S.b, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-
         vLabel: 'R%',
         vFmt: v => Math.round(v / 255 * 100) + '%',
         vEditText: () => Math.round(S.r / 255 * 100).toString(),
         vParse: parseRGBPercent,
-
-        // keep vertical gradient fixed: black -> red
-        vFn: t => colorSpecFromRGB([t * 255, 0, 0]),
+        vFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
         vBounds: () => [],
-
-        // keep horizontal preview/live gradient
         hFn: t => colorSpecFromRGB([t * 255, S.g, S.b]),
         hBounds: () => [],
         showH: true,
@@ -1717,17 +1815,12 @@ function getSliderDefs() {
         get:()=>S.g,
         set:v=>{ syncStateFromRGB(S.r, v, S.b, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-
         vLabel: 'G%',
         vFmt: v => Math.round(v / 255 * 100) + '%',
         vEditText: () => Math.round(S.g / 255 * 100).toString(),
         vParse: parseRGBPercent,
-
-        // keep vertical gradient fixed: black -> green
-        vFn: t => colorSpecFromRGB([0, t * 255, 0]),
+        vFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
         vBounds: () => [],
-
-        // keep horizontal preview/live gradient
         hFn: t => colorSpecFromRGB([S.r, t * 255, S.b]),
         hBounds: () => [],
         showH: true,
@@ -1739,17 +1832,12 @@ function getSliderDefs() {
         get:()=>S.b,
         set:v=>{ syncStateFromRGB(S.r, S.g, v, { markDirty: true, rememberDerived: true }); },
         fmt:v=>Math.round(v).toString(),
-
         vLabel: 'B%',
         vFmt: v => Math.round(v / 255 * 100) + '%',
         vEditText: () => Math.round(S.b / 255 * 100).toString(),
         vParse: parseRGBPercent,
-
-        // keep vertical gradient fixed: black -> blue
-        vFn: t => colorSpecFromRGB([0, 0, t * 255]),
+        vFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
         vBounds: () => [],
-
-        // keep horizontal preview/live gradient
         hFn: t => colorSpecFromRGB([S.r, S.g, t * 255]),
         hBounds: () => [],
         showH: true,
@@ -1759,8 +1847,7 @@ function getSliderDefs() {
         isAlpha: true,
         min:0, max:1,
         inputMode: 'decimal',
-        get:()=>S.alpha,
-        set:v=>{ S.alpha = v; },
+        get:()=>S.alpha, set:v=>{S.alpha=v;},
         fmt:v=>v.toFixed(2),
         editText:()=>S.alpha.toFixed(2),
         parse: parsePercentField,
@@ -1821,6 +1908,7 @@ let sliders = [];
 let hslFieldUI = null;
 
 function buildVSlider(def) {
+  // Build a merged def for vertical-specific overrides
   const vdef = Object.assign({}, def, {
     label:    def.vLabel    || def.label,
     fmt:      def.vFmt      || def.fmt,
@@ -1984,6 +2072,7 @@ function rebuildUI() {
   const vsArea = document.getElementById('vslidersArea');
   const hsArea = document.getElementById('hslidersArea');
 
+  // Immediately hide fallback bar — prevents one-frame flash when switching modes
   const fallbackBar = document.getElementById('fallbackValuesBar');
   if (fallbackBar) fallbackBar.style.visibility = 'hidden';
 
@@ -1999,6 +2088,7 @@ function rebuildUI() {
     vsArea.appendChild(hslFieldUI.wrap);
 
     if (isMobile()) {
+      // Mobile: all 4 sliders (H, S, L, A) as vertical columns in a strip below the SV field
       const strip = document.createElement('div');
       strip.className = 'hsl-vstrip';
       vsArea.appendChild(strip);
@@ -2014,6 +2104,7 @@ function rebuildUI() {
         sliders.push({ def, vi, hi: null });
       });
     } else {
+      // Desktop: hue vertical beside SV field, others as horizontal rows below
       const hueDef = getHSLHueDef();
       const hueUI = buildVSlider(hueDef);
       hueUI.col.classList.add('is-hsl-hue');
@@ -2048,17 +2139,17 @@ function rebuildUI() {
     sliders.forEach(({ vi, hi }) => {
       if (vi) {
         vi.canvas.width = vi.track.offsetWidth || 44;
-        vi.canvas.height = vi.track.offsetHeight || 218;
+        vi.canvas.height = vi.track.offsetHeight || 240;
       }
       if (hi) {
-        hi.canvas.width = hi.track.offsetWidth || 320;
-        hi.canvas.height = hi.track.offsetHeight || 40;
+        hi.canvas.width = hi.track.offsetWidth || 400;
+        hi.canvas.height = hi.track.offsetHeight || 46;
       }
     });
 
     if (hslFieldUI) {
-      hslFieldUI.canvas.width = hslFieldUI.wrap.offsetWidth || 218;
-      hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight || 218;
+      hslFieldUI.canvas.width = hslFieldUI.wrap.offsetWidth || 280;
+      hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight || 280;
     }
 
     setupInteractions();
@@ -2077,9 +2168,10 @@ function updateUI() {
   const alpha = S.alpha;
   const computedRGB = currentComputedRGB255();
   const computedHex = Color.toHexAlpha(...computedRGB, alpha);
-  const inSRGB = S.mode !== 'oklch' || Color.inSRGB(S.L, S.C, S.H);
-  const inP3 = S.mode !== 'oklch' || Color.inP3(S.L, S.C, S.H);
-  const splitPreview = S.mode === 'oklch' && !inP3;
+  const isOKLCHlike = S.mode === 'oklch' || S.mode === 'oklvh';
+  const inSRGB = !isOKLCHlike || Color.inSRGB(S.L, S.C, S.H);
+  const inP3 = !isOKLCHlike || Color.inP3(S.L, S.C, S.H);
+  const splitPreview = isOKLCHlike && !inP3;
   const fallbackState = splitPreview ? getFallbackState(alpha) : null;
 
   const swatch = document.getElementById('previewSwatch');
@@ -2105,7 +2197,7 @@ function updateUI() {
   const badgeP3 = document.getElementById('badgeP3');
   const badgeGamut = document.getElementById('badgeGamut');
 
-  if (!splitPreview && S.mode === 'oklch' && !inSRGB) {
+  if (!splitPreview && isOKLCHlike && !inSRGB) {
     badgeP3.style.display = '';
     badgeP3.textContent = 'P3';
     badgeP3.classList.add('is-alert');
@@ -2140,7 +2232,7 @@ function updateUI() {
   codeLabel.classList.remove('is-alert');
   hexLabel.classList.remove('is-alert');
 
-  const computedCode = S.mode === 'oklch'
+  const computedCode = (S.mode === 'oklch' || S.mode === 'oklvh')
     ? formatOKLCHCode(S.L, S.C, S.H, alpha)
     : (S.mode === 'hsl'
       ? formatHSLCode(S.hslH, S.hslS, S.hslLight, alpha)
@@ -2162,8 +2254,8 @@ function updateUI() {
     const t = (val - def.min) / (def.max - def.min);
 
     if (vi) {
-      const trackH = vi.track.clientHeight || 218;
-      vi.thumb.style.bottom = (t * trackH - 7.5) + 'px';
+      const trackH = vi.track.clientHeight || 240;
+      vi.thumb.style.bottom = (t * trackH - 8) + 'px';
       const vfmt = vi.vdef ? vi.vdef.fmt : def.fmt;
       if (document.activeElement !== vi.valEl) vi.valEl.textContent = vfmt(val);
       if (vi.canvas.width > 0 && vi.canvas.height > 0) {
@@ -2173,8 +2265,8 @@ function updateUI() {
     }
 
     if (hi) {
-      const trackW = hi.track.clientWidth || 320;
-      hi.thumb.style.left = (t * trackW - 7.5) + 'px';
+      const trackW = hi.track.clientWidth || 400;
+      hi.thumb.style.left = (t * trackW - 8) + 'px';
       if (document.activeElement !== hi.valEl) hi.valEl.textContent = def.fmt(val);
       if (hi.canvas.width > 0 && hi.canvas.height > 0) {
         if (def.isAlpha) renderAlphaCanvas(hi.canvas, false);
@@ -2185,8 +2277,8 @@ function updateUI() {
 
   if (S.mode === 'hsl' && hslFieldUI) {
     renderHSLFieldCanvas(hslFieldUI.canvas);
-    const w = hslFieldUI.wrap.clientWidth || 218;
-    const h = hslFieldUI.wrap.clientHeight || 218;
+    const w = hslFieldUI.wrap.clientWidth || 280;
+    const h = hslFieldUI.wrap.clientHeight || 280;
     hslFieldUI.thumb.style.left = `${S.hsvS * w}px`;
     hslFieldUI.thumb.style.top = `${(1 - S.hsvV) * h}px`;
   }
@@ -2327,6 +2419,7 @@ document.getElementById('modeToggle').addEventListener('click', e => {
 // 9 ▸ BOOTSTRAP
 // ═══════════════════════════════════════════════════════════
 
+// Resize canvases + re-render when window/orientation changes
 let _resizeTimer = null;
 window.addEventListener('resize', () => {
   clearTimeout(_resizeTimer);
@@ -2346,10 +2439,11 @@ window.addEventListener('resize', () => {
       hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight;
     }
     updateUI();
-  }, 60);
+  }, 80);
 });
 
 rebuildUI();
 </script>
+
 </body>
 </html>
