@@ -898,6 +898,8 @@ body {
 // 1 ▸ COLOR MATHEMATICS
 // ═══════════════════════════════════════════════════════════
 const Color = (() => {
+  const strongestColorCache = new Map();
+
   function gammaToLinear(c) {
     const a = Math.abs(c);
     return a <= 0.04045
@@ -985,12 +987,18 @@ const Color = (() => {
   function maxChroma(L, H, gamut = 'srgb') {
     if (!inGamut(L, 0, H, gamut)) return 0;
     let lo = 0, hi = 0.01;
-    while (hi < C_MAX && inGamut(L, hi, H, gamut)) hi = Math.min(hi * 2.2 + 0.005, C_MAX);
+
+    while (hi < C_MAX && inGamut(L, hi, H, gamut)) {
+      hi = Math.min(hi * 2.2 + 0.005, C_MAX);
+    }
+
     if (inGamut(L, C_MAX, H, gamut)) return C_MAX;
+
     for (let i = 0; i < 26; i++) {
       const mid = (lo + hi) / 2;
       inGamut(L, mid, H, gamut) ? (lo = mid) : (hi = mid);
     }
+
     return lo;
   }
 
@@ -1105,17 +1113,83 @@ const Color = (() => {
     return base + a;
   }
 
-  function strongestColorForHue(H, gamut = 'p3', steps = 64) {
-    let bestTone = 0.5, bestChroma = 0;
-    for (let i = 1; i < steps; i++) {
-      const tone = i / steps;
-      const chroma = maxChroma(tone, H, gamut);
-      if (chroma > bestChroma) {
-        bestChroma = chroma;
-        bestTone = tone;
+  function strongestColorForHue(H, gamut = 'p3', options = {}) {
+    const {
+      useCache = true,
+      cacheStep = 0.1,
+      coarseSamples = 14,
+      refineSteps = 22,
+      safety = 0.9985,
+    } = options;
+
+    const hue = ((Number(H) % 360) + 360) % 360;
+    const cacheHue = Math.round(hue / cacheStep) * cacheStep;
+    const cacheKey = `${gamut}:${cacheHue.toFixed(4)}:${coarseSamples}:${refineSteps}`;
+
+    let tone;
+
+    if (useCache && strongestColorCache.has(cacheKey)) {
+      // Cache only the best tone neighborhood.
+      // Chroma is recomputed for the exact requested hue below.
+      tone = strongestColorCache.get(cacheKey);
+    } else {
+      let bestI = 1;
+      let bestChroma = -1;
+
+      for (let i = 1; i < coarseSamples; i++) {
+        const candidateTone = i / coarseSamples;
+        const chroma = maxChroma(candidateTone, hue, gamut);
+
+        if (chroma > bestChroma) {
+          bestChroma = chroma;
+          bestI = i;
+        }
       }
+
+      let lo = Math.max(0.0001, (bestI - 1) / coarseSamples);
+      let hi = Math.min(0.9999, (bestI + 1) / coarseSamples);
+
+      const gr = (Math.sqrt(5) - 1) / 2;
+
+      let x1 = hi - gr * (hi - lo);
+      let x2 = lo + gr * (hi - lo);
+
+      let c1 = maxChroma(x1, hue, gamut);
+      let c2 = maxChroma(x2, hue, gamut);
+
+      for (let i = 0; i < refineSteps; i++) {
+        if (c1 < c2) {
+          lo = x1;
+          x1 = x2;
+          c1 = c2;
+          x2 = lo + gr * (hi - lo);
+          c2 = maxChroma(x2, hue, gamut);
+        } else {
+          hi = x2;
+          x2 = x1;
+          c2 = c1;
+          x1 = hi - gr * (hi - lo);
+          c1 = maxChroma(x1, hue, gamut);
+        }
+      }
+
+      tone = (lo + hi) / 2;
+
+      if (useCache) strongestColorCache.set(cacheKey, tone);
     }
-    return [bestTone, bestChroma];
+
+    let chroma = maxChroma(tone, hue, gamut) * safety;
+
+    // Extra inward walk to avoid boundary precision / cache mismatch fallback.
+    while (chroma > 0 && !inGamut(tone, chroma, hue, gamut)) {
+      chroma *= 0.999;
+    }
+
+    return [tone, chroma];
+  }
+
+  function clearStrongestColorCache() {
+    strongestColorCache.clear();
   }
 
   return {
@@ -1141,6 +1215,7 @@ const Color = (() => {
     toHex,
     toHexAlpha,
     strongestColorForHue,
+    clearStrongestColorCache,
   };
 })();
 
@@ -1444,7 +1519,7 @@ function applyColorInput(text) {
 
     if (S.mode === 'tune') {
       const maxC = Color.maxChroma(S.L, S.H, 'p3');
-      S.C = Math.min(S.C, maxC);
+      S.C = Math.min(S.C, maxC * 0.9985);
       S.vividness = maxC > 1e-6 ? S.C / maxC : 0;
       syncStateFromOKLCH(S.L, S.C, S.H, {
         rememberRaw: true,
@@ -1499,7 +1574,7 @@ function currentColorCss(alpha = S.alpha) {
 function getFallbackState(alpha = S.alpha) {
   if ((S.mode !== 'oklch' && S.mode !== 'tune') || Color.inP3(S.L, S.C, S.H)) return null;
 
-  const fallbackChroma = Math.min(S.C, Color.maxChroma(S.L, S.H, 'p3'));
+  const fallbackChroma = Math.min(S.C, Color.maxChroma(S.L, S.H, 'p3') * 0.9985);
   const spec = colorSpecFromOKLCH(S.L, fallbackChroma, S.H, alpha);
   const hex = Color.toHexAlpha(...spec.fallback, alpha);
   const [fallbackL, fallbackC, fallbackH] = Color.rgbToOKLCH(
@@ -1552,7 +1627,7 @@ function switchMode(m) {
 
   if (m === 'tune') {
     const maxC = Color.maxChroma(S.L, S.H, 'p3');
-    S.C = Math.min(S.C, maxC);
+    S.C = Math.min(S.C, maxC * 0.9985);
     S.vividness = maxC > 1e-6 ? Math.max(0, Math.min(1, S.C / maxC)) : 0;
     S.activeTuneControl = S.activeTuneControl || 'color';
     syncStateFromOKLCH(S.L, S.C, S.H, {
@@ -1795,13 +1870,39 @@ function getSliderDefs() {
       return S.activeTuneControl === 'color' ? 'C' : 'H';
     }
 
+    function tuneChromaFor(tone, vividness, hue) {
+      const T = Math.max(0, Math.min(1, tone));
+      const V = Math.max(0, Math.min(1, vividness));
+      const H = normHue(hue, S.H);
+      const maxC = Color.maxChroma(T, H, 'p3');
+      return V * maxC * 0.9985;
+    }
+
+    function tuneColorSpec(tone, vividness, hue) {
+      const T = Math.max(0, Math.min(1, tone));
+      const H = normHue(hue, S.H);
+      const C = tuneChromaFor(T, vividness, H);
+      return colorSpecFromOKLCH(T, C, H);
+    }
+
+    function strongestColorSpec(hue) {
+      const H = normHue(hue, S.H);
+      const [tone, chroma] = Color.strongestColorForHue(H, 'p3', {
+        useCache: true,
+        cacheStep: 0.1,
+        coarseSamples: 14,
+        refineSteps: 22,
+        safety: 0.9985,
+      });
+      return colorSpecFromOKLCH(tone, chroma, H);
+    }
+
     function applyTune(tone, vividness, hue) {
       S.H = normHue(hue, S.H);
       S.L = Math.max(0, Math.min(1, tone));
       S.vividness = Math.max(0, Math.min(1, vividness));
 
-      const maxC = Color.maxChroma(S.L, S.H, 'p3');
-      S.C = S.vividness * maxC;
+      S.C = tuneChromaFor(S.L, S.vividness, S.H);
 
       syncStateFromOKLCH(S.L, S.C, S.H, {
         rememberRaw: true,
@@ -1813,7 +1914,13 @@ function getSliderDefs() {
 
     function applyColorControl(hue) {
       const newH = normHue(hue, S.H);
-      const [tone, chroma] = Color.strongestColorForHue(newH, 'p3');
+      const [tone, chroma] = Color.strongestColorForHue(newH, 'p3', {
+        useCache: true,
+        cacheStep: 0.1,
+        coarseSamples: 14,
+        refineSteps: 22,
+        safety: 0.9985,
+      });
 
       S.H = newH;
       S.vividness = 1;
@@ -1831,8 +1938,7 @@ function getSliderDefs() {
 
       const fixedTone = S.L;
       const fixedVividness = S.vividness;
-      const maxC = Color.maxChroma(fixedTone, newH, 'p3');
-      const nextC = fixedVividness * maxC;
+      const nextC = tuneChromaFor(fixedTone, fixedVividness, newH);
 
       S.H = newH;
       S.L = fixedTone;
@@ -1859,15 +1965,12 @@ function getSliderDefs() {
         get:()=>S.L,
         set:v=>{ applyTune(v, S.vividness, S.H); },
         fmt:v=>v.toFixed(4),
-        vFn: t => {
-          const g = Math.round(t * 255);
-          return colorSpecFromRGB([g, g, g]);
-        },
+
+        // Contextual: current Hue + current Vividness across Tone.
+        vFn: t => tuneColorSpec(t, S.vividness, S.H),
         vBounds: () => [],
-        hFn: t => {
-          const maxC = Color.maxChroma(t, S.H, 'p3');
-          return colorSpecFromOKLCH(t, maxC, S.H);
-        },
+
+        hFn: t => tuneColorSpec(t, S.vividness, S.H),
         hBounds: () => [],
         showH: true,
       },
@@ -1881,17 +1984,12 @@ function getSliderDefs() {
         get:()=>S.vividness,
         set:v=>{ applyTune(S.L, v, S.H); },
         fmt:v=>v.toFixed(4),
-        vFn: t => {
-          const maxC = Color.maxChroma(S.L, S.H, 'p3');
-          const c = t * maxC;
-          return colorSpecFromOKLCH(S.L, c, S.H);
-        },
+
+        // Contextual: current Tone + current Hue across Vividness.
+        vFn: t => tuneColorSpec(S.L, t, S.H),
         vBounds: () => [],
-        hFn: t => {
-          const maxC = Color.maxChroma(S.L, S.H, 'p3');
-          const c = t * maxC;
-          return colorSpecFromOKLCH(S.L, c, S.H);
-        },
+
+        hFn: t => tuneColorSpec(S.L, t, S.H),
         hBounds: () => [],
         showH: true,
       },
@@ -1909,17 +2007,18 @@ function getSliderDefs() {
           else applyHueControl(v);
         },
         fmt:v=>v.toFixed(2),
+
+        // Active vertical:
+        // Color = strongest P3 color for each hue.
+        // Hue = current Tone + current Vividness for each hue.
         vFn: t => {
           const h = t * 360;
 
           if (S.activeTuneControl === 'color') {
-            const [tone, chroma] = Color.strongestColorForHue(h, 'p3');
-            return colorSpecFromOKLCH(tone, chroma, h);
+            return strongestColorSpec(h);
           }
 
-          const maxC = Color.maxChroma(S.L, h, 'p3');
-          const c = S.vividness * maxC;
-          return colorSpecFromOKLCH(S.L, c, h);
+          return tuneColorSpec(S.L, S.vividness, h);
         },
         vBounds: () => [],
         showH: false,
@@ -1939,11 +2038,10 @@ function getSliderDefs() {
           applyColorControl(v);
         },
         fmt:v=>v.toFixed(2),
-        hFn: t => {
-          const h = t * 360;
-          const [tone, chroma] = Color.strongestColorForHue(h, 'p3');
-          return colorSpecFromOKLCH(tone, chroma, h);
-        },
+
+        // For every hue, render the strongest possible P3-safe color,
+        // allowing Tone and Chroma to change.
+        hFn: t => strongestColorSpec(t * 360),
         hBounds: () => [],
         showH: true,
       },
@@ -1962,12 +2060,9 @@ function getSliderDefs() {
           applyHueControl(v);
         },
         fmt:v=>v.toFixed(2),
-        hFn: t => {
-          const h = t * 360;
-          const maxC = Color.maxChroma(S.L, h, 'p3');
-          const c = S.vividness * maxC;
-          return colorSpecFromOKLCH(S.L, c, h);
-        },
+
+        // For every hue, preserve current Tone + current Vividness.
+        hFn: t => tuneColorSpec(S.L, S.vividness, t * 360),
         hBounds: () => [],
         showH: true,
       },
