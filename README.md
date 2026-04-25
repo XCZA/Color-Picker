@@ -2,14 +2,14 @@ Try the tool here:
 
 https://xcza.github.io/Color-Picker/
 
-# Chromaxxing Color Picker
+# Chromatune Color Picker
 
 A compact, single-file color picker for **modern CSS color workflows**, perceptual editing, and wide-gamut color exploration.
 
-Chromaxxing supports four modes:
+Chromatune supports four modes:
 
 - **OKLCH** — perceptual lightness, chroma, and hue editing
-- **Vivid** — P3-aware vivid color tuning with Tone, Vividness, Peak Hue, and Hue
+- **TUNE** — P3-aware color tuning with Tone, Vividness, Color, and Hue
 - **RGB** — direct channel editing and hex workflows
 - **HSL** — familiar hue + picker-square interaction with CSS `hsl()` output
 
@@ -20,7 +20,7 @@ No build step. No framework. Just open the HTML file in a modern browser.
 ## Features
 
 - Single-file HTML app
-- Dark, compact UI
+- Compact glass-style dark UI
 - Canvas-rendered sliders
 - Editable numeric fields
 - Editable color code and hex fields
@@ -98,27 +98,50 @@ The fallback row provides separate fallback code and hex values, which is useful
 
 ---
 
-## Vivid
+## TUNE
 
-Vivid mode is a guided, P3-aware editing model built on OKLCH.
+TUNE mode is a guided, P3-aware editing model built on OKLCH.
+
+It still outputs standard CSS `oklch(...)`. It is an editing model, not a separate color space.
 
 Controls:
 
 - **Tone** (`T`)
 - **Vividness** (`V`)
-- **Peak Hue** (`Hₚ`)
+- **Color** (`C`)
 - **Hue** (`H`)
 - **Opacity** (`A`)
 
-Vivid mode still outputs standard CSS `oklch(...)`. It is an editing model, not a separate color space.
+### Tone
 
-Vividness is normalized against the maximum P3 chroma available for the current Tone and Hue:
+**Tone** is the light/dark anchor for the color.
+
+It maps to OKLCH lightness, but in TUNE mode it also recalculates chroma to preserve the current Vividness:
+
+    lightness = tone
+    chroma = vividness × maxChroma(tone, hue, Display-P3)
+
+So Tone is not exactly the same as the OKLCH Lightness slider. It controls the color’s light/dark position while keeping the selected relative vividness intact.
+
+### Vividness
+
+**Vividness** is normalized OKLCH chroma.
+
+Raw OKLCH chroma is absolute, but the maximum usable chroma changes depending on lightness and hue. TUNE mode calculates the maximum Display-P3 chroma available for the current Tone and Hue, then treats Vividness as a fraction of that maximum:
 
     chroma = vividness × maxChroma(tone, hue, Display-P3)
 
-### Peak Hue
+So:
 
-**Peak Hue** finds the most vivid P3-safe color for each hue by adjusting both Tone and Chroma.
+- `Vividness = 0` means neutral gray at the current Tone
+- `Vividness = 0.5` means half of the available P3 chroma
+- `Vividness = 1` means the most vivid P3-safe color available at that Tone and Hue
+
+### Color
+
+**Color** finds the strongest Display-P3-safe color for each hue.
+
+It is called Color because it is not only changing hue. It is selecting a hue/lightness/chroma combination by adjusting both Tone and Chroma.
 
 Use it to answer:
 
@@ -128,16 +151,16 @@ Use it to answer:
 
 **Hue** changes hue while keeping Tone and Vividness fixed.
 
-This rotates the color identity while preserving the same overall tone/vividness relationship.
+The actual OKLCH chroma value changes as needed because each hue has a different maximum chroma at the current Tone.
 
-### Active hue control
+### Active Color / Hue control
 
-Vivid mode has two hue behaviors:
+TUNE mode has two related controls:
 
-- **Peak Hue**
-- **Hue**
+- **Color** — chooses the strongest P3-safe color by changing Tone and Chroma
+- **Hue** — changes Hue while preserving Tone and Vividness
 
-Only one is active at a time. The active behavior appears as the vertical hue slider. The inactive horizontal control collapses into a compact animated switch row.
+Only one is active at a time. The active behavior appears as the vertical slider. The inactive horizontal control collapses into a compact animated switch row.
 
 ---
 
@@ -210,7 +233,7 @@ If the preview is split:
 
 ## Design philosophy
 
-Chromaxxing is opinionated.
+Chromatune is opinionated.
 
 It is built to make color-space behavior visible instead of hiding it.
 
@@ -229,7 +252,7 @@ Core ideas:
 - exploring OKLCH
 - building CSS color tokens
 - testing sRGB and P3 behavior
-- finding vivid P3-safe colors
+- finding strong P3-safe colors
 - comparing computed vs fallback colors
 - generating OKLCH, RGB, HSL, and hex values
 
@@ -247,4 +270,4 @@ Core ideas:
 
 ---
 
-Built as an experimental color picker focused on **OKLCH**, **Vivid P3 color exploration**, **gamut-aware UI**, and modern CSS color output.
+Built as an experimental color picker focused on **OKLCH**, **TUNE mode**, **gamut-aware UI**, and modern CSS color output.
