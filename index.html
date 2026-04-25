@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chroma — Color Picker</title>
-<style type="text/css">@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:300;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:300;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:300;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/greek/wght/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:300;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:300;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:300;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:400;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:400;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:400;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:400;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:400;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:400;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/greek/wght/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:500;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:500;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:500;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/greek/wght/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:500;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:500;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:500;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:600;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/vietnamese/wght/normal.woff2);unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:600;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic-ext/wght/normal.woff2);unicode-range:U+0460-052F,U+1C80-1C88,U+20B4,U+2DE0-2DFF,U+A640-A69F,U+FE2E-FE2F;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:600;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin/wght/normal.woff2);unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:600;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/cyrillic/wght/normal.woff2);unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:600;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/greek/wght/normal.woff2);unicode-range:U+0370-03FF;font-display:swap;}@font-face {font-family:JetBrains Mono;font-style:normal;font-weight:600;src:url(/cf-fonts/v/jetbrains-mono/5.0.18/latin-ext/wght/normal.woff2);unicode-range:U+0100-02AF,U+0304,U+0308,U+0329,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF;font-display:swap;}</style>
+<title>Chromaxxing — Color Picker</title>
+
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 
@@ -19,7 +18,7 @@
 --text: #dde0ee;
 --text2: #7878a0;
 --text3: #44445a;
---font: ‘JetBrains Mono’, ‘Courier New’, monospace;
+--font: 'JetBrains Mono', 'Courier New', monospace;
 --radius: 20px;
 }
 
@@ -31,8 +30,6 @@ min-height: 100vh;
 display: flex;
 align-items: flex-start;
 justify-content: center;
-/* Use top padding to approximate vertical centering without repositioning
-on height changes. clamp(min, ideal, max) where ideal = 50vh - half picker height */
 padding: clamp(24px, calc(50vh - 430px), 80px) 24px 48px;
 background-image:
 radial-gradient(ellipse 60% 40% at 20% 20%, rgba(80,60,140,0.12) 0%, transparent 70%),
@@ -124,7 +121,6 @@ border-radius: 14px;
 position: relative;
 overflow: hidden;
 transition: background-color 0.08s;
-/* Checkerboard base for transparency */
 background-image:
 repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
 center / 18px 18px;
@@ -219,18 +215,8 @@ backdrop-filter: blur(12px);
 -webkit-backdrop-filter: blur(12px);
 }
 
-.badge-mode {
-background: rgba(0,0,0,0.5);
-color: rgba(255,255,255,0.75);
-border: 1px solid rgba(255,255,255,0.12);
-}
-
-.badge-gamut {
-background: rgba(0,0,0,0.5);
-color: rgba(255,255,255,0.75);
-border: 1px solid rgba(255,255,255,0.12);
-}
-
+.badge-mode,
+.badge-gamut,
 .badge-p3 {
 background: rgba(0,0,0,0.5);
 color: rgba(255,255,255,0.75);
@@ -243,11 +229,7 @@ border: 1px solid rgba(255,255,255,0.12);
 color: rgba(255, 142, 142, 0.92);
 }
 
-.chip-label.is-bright {
-color: var(--text);
-}
-
-/* HSL vertical slider strip (mobile only, built by JS) */
+/* ─── VERTICAL SLIDERS ────────────────────────────── */
 .hsl-vstrip {
 display: flex;
 flex-direction: row;
@@ -257,7 +239,6 @@ height: 110px;
 flex-shrink: 0;
 }
 
-/* ─── VERTICAL SLIDERS ────────────────────────────── */
 .vsliders-area {
 flex: 1;
 display: flex;
@@ -411,6 +392,15 @@ margin-bottom: 12px;
 display: flex;
 align-items: center;
 gap: 10px;
+max-height: 56px;
+opacity: 1;
+overflow: hidden;
+transform: translateY(0);
+transition:
+max-height 0.22s ease,
+opacity 0.18s ease,
+transform 0.18s ease,
+margin 0.22s ease;
 }
 
 .hslider-track {
@@ -424,6 +414,11 @@ box-shadow:
 0 0 0 1px var(--border) inset,
 0 2px 8px rgba(0,0,0,0.25);
 background: var(--surface);
+transition:
+height 0.18s ease,
+opacity 0.18s ease,
+transform 0.18s ease,
+box-shadow 0.14s ease;
 }
 
 .hslider-thumb {
@@ -440,6 +435,12 @@ box-shadow:
 0 2px 8px rgba(0,0,0,0.5),
 0 0 0 1px rgba(0,0,0,0.2);
 pointer-events: none;
+transition:
+transform 0.14s ease,
+opacity 0.14s ease,
+background 0.14s ease,
+border-color 0.14s ease,
+box-shadow 0.14s ease;
 }
 
 .hslider-track:hover .hslider-thumb,
@@ -453,6 +454,7 @@ box-shadow:
 .hslider-info {
 width: 96px;
 flex-shrink: 0;
+transition: width 0.18s ease;
 }
 
 .hslider-info-label {
@@ -462,6 +464,12 @@ letter-spacing: 0.1em;
 color: var(--text3);
 text-transform: uppercase;
 margin-bottom: 3px;
+transition:
+color 0.14s ease,
+opacity 0.14s ease,
+background 0.14s ease,
+border-color 0.14s ease,
+padding 0.14s ease;
 }
 
 .hslider-info-val {
@@ -472,7 +480,10 @@ cursor: pointer;
 display: inline-block;
 padding: 2px 6px;
 border-radius: 5px;
-transition: all 0.12s;
+transition:
+all 0.12s,
+opacity 0.14s ease,
+color 0.14s ease;
 outline: none;
 }
 
@@ -484,6 +495,83 @@ background: var(--surface2);
 background: var(--surface2);
 border: 1px solid var(--border2);
 color: var(--text);
+}
+
+/* Active hue control = full slider. Inactive hue control = compact switch pill. */
+.hslider-row.hue-control-row {
+cursor: pointer;
+}
+
+.hslider-row.hue-control-active .hslider-track {
+box-shadow:
+0 0 0 1px var(--border2) inset,
+0 2px 8px rgba(0,0,0,0.25),
+0 0 0 2px rgba(255,255,255,0.05);
+}
+
+.hslider-row.hue-control-active .hslider-thumb {
+transform: translateY(-50%) scale(1.08);
+opacity: 1;
+background: rgba(255,255,255,0.98);
+border-color: rgba(255,255,255,1);
+box-shadow:
+0 4px 14px rgba(0,0,0,0.65),
+0 0 0 1px rgba(0,0,0,0.25),
+0 0 0 4px rgba(255,255,255,0.14);
+}
+
+.hslider-row.hue-control-active .hslider-info-label,
+.hslider-row.hue-control-active .hslider-info-val {
+color: var(--text);
+opacity: 1;
+}
+
+.hslider-row.hue-control-compact {
+max-height: 30px;
+opacity: 0.88;
+transform: translateY(-1px);
+}
+
+.hslider-row.hue-control-compact .hslider-track {
+height: 0;
+opacity: 0;
+transform: scaleY(0.6);
+pointer-events: none;
+box-shadow: none;
+}
+
+.hslider-row.hue-control-compact .slider-canvas,
+.hslider-row.hue-control-compact .hslider-thumb {
+opacity: 0;
+}
+
+.hslider-row.hue-control-compact .hslider-info {
+width: auto;
+margin-left: auto;
+}
+
+.hslider-row.hue-control-compact .hslider-info-label {
+margin-bottom: 0;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+padding: 6px 10px;
+border-radius: 999px;
+border: 1px solid var(--border);
+background: var(--surface);
+color: var(--text2);
+}
+
+.hslider-row.hue-control-compact .hslider-info-label::before {
+content: "switch to ";
+text-transform: lowercase;
+letter-spacing: 0.06em;
+color: var(--text3);
+margin-right: 4px;
+}
+
+.hslider-row.hue-control-compact .hslider-info-val {
+display: none;
 }
 
 /* ─── VALUES BAR ──────────────────────────────────── */
@@ -533,18 +621,7 @@ text-overflow: ellipsis;
 
 .chip-code { flex: 1; }
 .chip-hex  { width: 100px; }
-.chip-alpha { width: 76px; }
 
-.chip-alpha .chip-val {
-outline: none;
-cursor: text;
-}
-
-.chip-alpha .chip-val:focus {
-color: var(--text);
-}
-
-/* ─── COPY INDICATOR ──────────────────────────────── */
 .copy-ring {
 position: absolute;
 inset: 0;
@@ -586,7 +663,6 @@ opacity: 1;
 transform: translateX(-50%) translateY(0);
 }
 
-/* ─── CHECKERBOARD CANVAS BG ──────────────────────── */
 .has-checker {
 background-image:
 repeating-conic-gradient(#2a2a36 0% 25%, #1e1e28 0% 50%)
@@ -604,7 +680,6 @@ padding: 14px;
 border-radius: 16px;
 }
 
-/* Stack preview above sliders */
 .main-area {
 flex-direction: column;
 height: auto;
@@ -618,38 +693,32 @@ width: 100%;
 height: 160px;
 }
 
-/* HSL mode: preview override */
 .picker.mode-hsl .preview-wrap {
 flex: none;
 width: 100%;
 height: 160px;
 }
 
-/* Vertical sliders become a short horizontal strip */
 .vsliders-area {
 height: 110px;
 flex-direction: row;
 }
 
-/* HSL field + hue need more vertical room */
 .vsliders-area.hsl-mode-layout {
 flex-direction: column;
 height: auto;
 gap: 8px;
 }
 
-/* SV field gets fixed height when stacked */
 .hsl-field-wrap {
 flex: 0 0 160px;
 border-radius: 10px;
 }
 
-/* Mobile HSL vstrip (all 4 sliders in a row) */
 .hsl-vstrip {
 height: 210px;
 }
 
-/* Horizontal sliders: tighter info panel */
 .hslider-track {
 height: 40px;
 }
@@ -672,7 +741,18 @@ gap: 8px;
 margin-bottom: 10px;
 }
 
-/* Values chips */
+.hslider-row.hue-control-active .hslider-thumb {
+transform: translateY(-50%) scale(1.12);
+}
+
+.hslider-row.hue-control-compact {
+max-height: 32px;
+}
+
+.hslider-row.hue-control-compact .hslider-info-label {
+padding: 7px 10px;
+}
+
 .values-bar {
 gap: 6px;
 }
@@ -689,11 +769,6 @@ font-size: 10px;
 width: 82px;
 }
 
-.chip-alpha {
-width: 66px;
-}
-
-/* Preview badges */
 .preview-badges {
 bottom: 8px;
 gap: 4px;
@@ -704,25 +779,23 @@ left: 10px;
 bottom: 10px;
 }
 
-/* Mode toggle */
 .mode-btn {
 padding: 5px 10px;
 font-size: 9px;
 }
 }
 </style>
-
 </head>
-<body>
 
+<body>
 <div class="toast" id="toast">Copied!</div>
 
 <div class="picker">
   <div class="top-bar">
-    <span class="app-title">chroma</span>
+    <span class="app-title">chromaxxing</span>
     <div class="mode-toggle" id="modeToggle">
       <button class="mode-btn active" data-mode="oklch">OKLCH</button>
-      <button class="mode-btn" data-mode="oklvh">OKLVH</button>
+      <button class="mode-btn" data-mode="vivid">Vivid</button>
       <button class="mode-btn" data-mode="rgb">RGB</button>
       <button class="mode-btn" data-mode="hsl">HSL</button>
     </div>
@@ -749,6 +822,7 @@ font-size: 9px;
         </div>
       </div>
     </div>
+
     <div class="vsliders-area" id="vslidersArea"></div>
   </div>
 
@@ -768,21 +842,18 @@ font-size: 9px;
       </div>
     </div>
 
-
-<div class="values-bar" id="fallbackValuesBar" style="visibility:hidden">
-  <div class="val-chip chip-code" id="fallbackCodeChip">
-    <div class="copy-ring"></div>
-    <span class="chip-label" id="fallbackCodeLabel">Color Code (Fallback)</span>
-    <div class="chip-val" id="fallbackCodeVal">oklch(0.3657 0.2375 271.03)</div>
-  </div>
-  <div class="val-chip chip-hex" id="fallbackHexChip">
-    <div class="copy-ring"></div>
-    <span class="chip-label" id="fallbackHexLabel">Hex (Fallback)</span>
-    <div class="chip-val" id="fallbackHexVal">#2300b8</div>
-  </div>
-</div>
-
-
+    <div class="values-bar" id="fallbackValuesBar" style="visibility:hidden">
+      <div class="val-chip chip-code" id="fallbackCodeChip">
+        <div class="copy-ring"></div>
+        <span class="chip-label" id="fallbackCodeLabel">Color Code (Fallback)</span>
+        <div class="chip-val" id="fallbackCodeVal">oklch(0.3657 0.2375 271.03)</div>
+      </div>
+      <div class="val-chip chip-hex" id="fallbackHexChip">
+        <div class="copy-ring"></div>
+        <span class="chip-label" id="fallbackHexLabel">Hex (Fallback)</span>
+        <div class="chip-val" id="fallbackHexVal">#2300b8</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -797,6 +868,7 @@ const Color = (() => {
       ? Math.sign(c) * a / 12.92
       : Math.sign(c) * ((a + 0.055) / 1.055) ** 2.4;
   }
+
   function linearToGamma(c) {
     const a = Math.abs(c);
     return a <= 0.0031308
@@ -807,10 +879,13 @@ const Color = (() => {
   function oklchToLinear(L, C, H) {
     const hr = H * Math.PI / 180;
     const a  = C * Math.cos(hr), b = C * Math.sin(hr);
+
     const l_ = L + 0.3963377774*a + 0.2158037573*b;
     const m_ = L - 0.1055613458*a - 0.0638541728*b;
     const s_ = L - 0.0894841775*a - 1.2914855480*b;
+
     const l = l_**3, m = m_**3, s = s_**3;
+
     return [
       +4.0767416621*l - 3.3077115913*m + 0.2309699292*s,
       -1.2684380046*l + 2.6097574011*m - 0.3413193965*s,
@@ -828,16 +903,21 @@ const Color = (() => {
 
   function inSRGB(L, C, H) {
     const [r,g,b] = oklchToLinear(L, C, H);
-    return r>=-1e-4 && r<=1+1e-4 && g>=-1e-4 && g<=1+1e-4 && b>=-1e-4 && b<=1+1e-4;
+    return r >= -1e-4 && r <= 1 + 1e-4
+        && g >= -1e-4 && g <= 1 + 1e-4
+        && b >= -1e-4 && b <= 1 + 1e-4;
   }
 
   function oklchToXYZ(L, C, H) {
     const hr = H * Math.PI / 180;
     const a  = C * Math.cos(hr), b = C * Math.sin(hr);
+
     const l_ = L + 0.3963377774*a + 0.2158037573*b;
     const m_ = L - 0.1055613458*a - 0.0638541728*b;
     const s_ = L - 0.0894841775*a - 1.2914855480*b;
+
     const l = l_**3, m = m_**3, s = s_**3;
+
     return [
       1.2268798733741557*l - 0.5578149965554813*m + 0.28139105017721583*s,
       -0.04057576262431372*l + 1.1122868293970594*m - 0.07171106666151701*s,
@@ -876,50 +956,66 @@ const Color = (() => {
 
   function maxChroma(L, H, gamut = 'srgb') {
     if (!inGamut(L, 0, H, gamut)) return 0;
+
     let lo = 0, hi = 0.01;
-    while (hi < C_MAX && inGamut(L, hi, H, gamut)) hi = Math.min(hi * 2.2 + 0.005, C_MAX);
+
+    while (hi < C_MAX && inGamut(L, hi, H, gamut)) {
+      hi = Math.min(hi * 2.2 + 0.005, C_MAX);
+    }
+
     if (inGamut(L, C_MAX, H, gamut)) return C_MAX;
+
     for (let i = 0; i < 26; i++) {
       const mid = (lo + hi) / 2;
       inGamut(L, mid, H, gamut) ? (lo = mid) : (hi = mid);
     }
+
     return lo;
   }
 
   function hueBoundaries(L, C, gamut = 'srgb', steps = 240) {
     const pts = [];
     let prev = inGamut(L, C, 0, gamut);
+
     for (let i = 1; i <= steps; i++) {
       const cur = inGamut(L, C, (i / steps) * 360, gamut);
       if (cur !== prev) pts.push(i / steps);
       prev = cur;
     }
+
     return pts;
   }
 
   function lightnessBoundaries(C, H, gamut = 'srgb', steps = 240) {
     const pts = [];
     let prev = inGamut(0, C, H, gamut);
+
     for (let i = 1; i <= steps; i++) {
       const cur = inGamut(i / steps, C, H, gamut);
       if (cur !== prev) pts.push(i / steps);
       prev = cur;
     }
+
     return pts;
   }
 
   function rgbToOKLCH(r, g, b) {
     const rl = gammaToLinear(r), gl = gammaToLinear(g), bl = gammaToLinear(b);
+
     const l = 0.4122214708*rl + 0.5363325363*gl + 0.0514459929*bl;
     const m = 0.2119034982*rl + 0.6806995451*gl + 0.1073969566*bl;
     const s = 0.0883024619*rl + 0.2817188376*gl + 0.6299787005*bl;
+
     const l_ = Math.cbrt(l), m_ = Math.cbrt(m), s_ = Math.cbrt(s);
+
     const Lv = 0.2104542553*l_ + 0.7936177850*m_ - 0.0040720468*s_;
     const av = 1.9779984951*l_ - 2.4285922050*m_ + 0.4505937099*s_;
     const bv = 0.0259040371*l_ + 0.7827717662*m_ - 0.8086757660*s_;
+
     const Cv = Math.sqrt(av**2 + bv**2);
     let Hv = Math.atan2(bv, av) * 180 / Math.PI;
     if (Hv < 0) Hv += 360;
+
     return [Lv, Cv, Hv];
   }
 
@@ -927,13 +1023,16 @@ const Color = (() => {
     const max = Math.max(r, g, b), min = Math.min(r, g, b);
     const d = max - min;
     let h = 0;
+
     if (d > 1e-9) {
       if (max === r) h = ((g - b) / d) % 6;
       else if (max === g) h = (b - r) / d + 2;
       else h = (r - g) / d + 4;
+
       h *= 60;
       if (h < 0) h += 360;
     }
+
     const s = max <= 1e-9 ? 0 : d / max;
     return [h, s, max];
   }
@@ -943,13 +1042,16 @@ const Color = (() => {
     const c = v * s;
     const x = c * (1 - Math.abs((hh / 60) % 2 - 1));
     const m = v - c;
+
     let r1 = 0, g1 = 0, b1 = 0;
+
     if (hh < 60) [r1, g1, b1] = [c, x, 0];
     else if (hh < 120) [r1, g1, b1] = [x, c, 0];
     else if (hh < 180) [r1, g1, b1] = [0, c, x];
     else if (hh < 240) [r1, g1, b1] = [0, x, c];
     else if (hh < 300) [r1, g1, b1] = [x, 0, c];
     else [r1, g1, b1] = [c, 0, x];
+
     return [r1 + m, g1 + m, b1 + m];
   }
 
@@ -957,15 +1059,20 @@ const Color = (() => {
     const max = Math.max(r, g, b), min = Math.min(r, g, b);
     const l = (max + min) / 2;
     const d = max - min;
+
     let h = 0, s = 0;
+
     if (d > 1e-9) {
       s = d / (1 - Math.abs(2 * l - 1));
+
       if (max === r) h = ((g - b) / d) % 6;
       else if (max === g) h = (b - r) / d + 2;
       else h = (r - g) / d + 4;
+
       h *= 60;
       if (h < 0) h += 360;
     }
+
     return [h, s || 0, l];
   }
 
@@ -974,13 +1081,16 @@ const Color = (() => {
     const c = (1 - Math.abs(2 * l - 1)) * s;
     const x = c * (1 - Math.abs((hh / 60) % 2 - 1));
     const m = l - c / 2;
+
     let r1 = 0, g1 = 0, b1 = 0;
+
     if (hh < 60) [r1, g1, b1] = [c, x, 0];
     else if (hh < 120) [r1, g1, b1] = [x, c, 0];
     else if (hh < 180) [r1, g1, b1] = [0, c, x];
     else if (hh < 240) [r1, g1, b1] = [0, x, c];
     else if (hh < 300) [r1, g1, b1] = [x, 0, c];
     else [r1, g1, b1] = [c, 0, x];
+
     return [r1 + m, g1 + m, b1 + m];
   }
 
@@ -993,22 +1103,54 @@ const Color = (() => {
   function toHexAlpha(r, g, b, alpha = 1) {
     const base = toHex(r, g, b);
     if (alpha >= 1) return base;
-    const a = Math.round(Math.max(0, Math.min(255, alpha * 255))).toString(16).padStart(2, '0');
+
+    const a = Math.round(Math.max(0, Math.min(255, alpha * 255)))
+      .toString(16)
+      .padStart(2, '0');
+
     return base + a;
   }
 
-  // Find the lightness where chroma is maximised for a given hue within gamut
-  function mostVividLightness(H, gamut = 'p3', steps = 64) {
-    let bestL = 0.5, bestC = 0;
+  function mostVividTone(H, gamut = 'p3', steps = 64) {
+    let bestTone = 0.5, bestChroma = 0;
+
     for (let i = 1; i < steps; i++) {
-      const l = i / steps;
-      const c = maxChroma(l, H, gamut);
-      if (c > bestC) { bestC = c; bestL = l; }
+      const tone = i / steps;
+      const chroma = maxChroma(tone, H, gamut);
+
+      if (chroma > bestChroma) {
+        bestChroma = chroma;
+        bestTone = tone;
+      }
     }
-    return [bestL, bestC];
+
+    return [bestTone, bestChroma];
   }
 
-  return { gammaToLinear, linearToGamma, oklchToXYZ, oklchToLinear, oklchToRGB, oklchClamped, oklchToLinearP3, oklchToP3, inSRGB, inP3, inGamut, maxChroma, mostVividLightness, hueBoundaries, lightnessBoundaries, rgbToOKLCH, rgbToHSV, hsvToRGB, rgbToHSL, hslToRGB, toHex, toHexAlpha };
+  return {
+    gammaToLinear,
+    linearToGamma,
+    oklchToXYZ,
+    oklchToLinear,
+    oklchToRGB,
+    oklchClamped,
+    oklchToLinearP3,
+    oklchToP3,
+    inSRGB,
+    inP3,
+    inGamut,
+    maxChroma,
+    mostVividTone,
+    hueBoundaries,
+    lightnessBoundaries,
+    rgbToOKLCH,
+    rgbToHSV,
+    hsvToRGB,
+    rgbToHSL,
+    hslToRGB,
+    toHex,
+    toHexAlpha,
+  };
 })();
 
 // ═══════════════════════════════════════════════════════════
@@ -1016,18 +1158,46 @@ const Color = (() => {
 // ═══════════════════════════════════════════════════════════
 const S = {
   mode: 'oklch',
-  L: 0.3657, C: 0.2375, H: 271.03,
-  r: 35, g: 0, b: 184,
+
+  L: 0.3657,
+  C: 0.2375,
+  H: 271.03,
+
+  r: 35,
+  g: 0,
+  b: 184,
+
   alpha: 1,
-  savedOKLCH: { L: 0.3657, C: 0.2375, H: 271.03 },
+
+  savedOKLCH: {
+    L: 0.3657,
+    C: 0.2375,
+    H: 271.03,
+  },
+
   rgbDirty: false,
-  hslH: 0, hslS: 0, hslLight: 0,
-  hsvH: 0, hsvS: 0, hsvV: 0,
-  oklvhV: 1,   // vividness 0--1: fraction of maxChroma(L,H,'p3')
+
+  hslH: 0,
+  hslS: 0,
+  hslLight: 0,
+
+  hsvH: 0,
+  hsvS: 0,
+  hsvV: 0,
+
+  // Vivid mode:
+  // vividness is a normalized fraction of maxChroma(Tone, Hue, 'p3').
+  vividness: 1,
+
+  // Vivid mode active hue behavior.
+  // 'peakHue' = adjusts Tone + Chroma to max possible vivid color for hue.
+  // 'hue' = keeps Tone + Vividness fixed while changing hue.
+  activeHueControl: 'peakHue',
 };
 
 const C_MAX = 0.4;
 const VERT_HUE_LIGHTNESS = 0.7;
+
 const SUPPORT = {
   cssP3: typeof CSS !== 'undefined' && CSS.supports('color', 'color(display-p3 1 0 0)'),
   cssOKLCH: typeof CSS !== 'undefined' && CSS.supports('color', 'oklch(0.5 0.2 180)'),
@@ -1062,6 +1232,7 @@ function rgbCss255(rgb, alpha = 1) {
 
 function p3Css(L, C, H, alpha = 1) {
   const [r, g, b] = Color.oklchToP3(L, C, H).map(clamp01);
+
   return alpha < 1
     ? `color(display-p3 ${r} ${g} ${b} / ${alpha})`
     : `color(display-p3 ${r} ${g} ${b})`;
@@ -1069,10 +1240,6 @@ function p3Css(L, C, H, alpha = 1) {
 
 function formatAlphaPercent(alpha = S.alpha) {
   return alpha < 1 ? ` / ${Math.round(alpha * 100)}%` : '';
-}
-
-function formatAlphaRaw(alpha = S.alpha) {
-  return alpha < 1 ? ` / ${alpha.toFixed(2)}` : '';
 }
 
 function formatOKLCHCode(L, C, H, alpha = S.alpha) {
@@ -1088,19 +1255,27 @@ function formatHSLCode(h, s, l, alpha = S.alpha) {
   const hh = Math.round(normHue(h, 0));
   const ss = Math.round(clamp01(s) * 100);
   const ll = Math.round(clamp01(l) * 100);
+
   const base = `hsl(${hh} ${ss}% ${ll}%`;
   return alpha < 1 ? `${base} / ${alpha.toFixed(2)})` : `${base})`;
 }
 
 function rememberCurrentOKLCH() {
-  S.savedOKLCH = { L: S.L, C: S.C, H: S.H };
+  S.savedOKLCH = {
+    L: S.L,
+    C: S.C,
+    H: S.H,
+  };
 }
 
 function syncAuxSpacesFromRGB() {
   const [hsvH, hsvS, hsvV] = Color.rgbToHSV(S.r / 255, S.g / 255, S.b / 255);
   const [hslH, hslS, hslL] = Color.rgbToHSL(S.r / 255, S.g / 255, S.b / 255);
 
-  const hueFallback = Number.isFinite(S.hsvH) ? S.hsvH : (Number.isFinite(S.hslH) ? S.hslH : 0);
+  const hueFallback = Number.isFinite(S.hsvH)
+    ? S.hsvH
+    : (Number.isFinite(S.hslH) ? S.hslH : 0);
+
   const chosenHue = (hsvS > 1e-6 && hsvV > 1e-6)
     ? hsvH
     : ((hslS > 1e-6) ? hslH : hueFallback);
@@ -1108,6 +1283,7 @@ function syncAuxSpacesFromRGB() {
   S.hsvH = normHue(chosenHue, hueFallback);
   S.hsvS = clamp01(hsvS);
   S.hsvV = clamp01(hsvV);
+
   S.hslH = normHue(chosenHue, hueFallback);
   S.hslS = clamp01(hslS);
   S.hslLight = clamp01(hslL);
@@ -1115,36 +1291,35 @@ function syncAuxSpacesFromRGB() {
 
 function restoreSavedOKLCH() {
   if (!S.savedOKLCH) return false;
+
   S.L = S.savedOKLCH.L;
   S.C = S.savedOKLCH.C;
   S.H = S.savedOKLCH.H;
+
   const [r01, g01, b01] = Color.oklchClamped(S.L, S.C, S.H);
+
   S.r = Math.round(r01 * 255);
   S.g = Math.round(g01 * 255);
   S.b = Math.round(b01 * 255);
+
   syncAuxSpacesFromRGB();
   return true;
-}
-
-function markRGBDirty() {
-  if (S.mode !== 'oklch' && S.mode !== 'oklvh') S.rgbDirty = true;
 }
 
 function parseUnitNumber(token, scale = 1) {
   const v = String(token).trim();
   if (!v) return NaN;
+
   if (v.endsWith('%')) return parseFloat(v) / 100 * scale;
   return parseFloat(v);
 }
 
-// Smart parser for % fields (S/L) and alpha/opacity fields
-// % fields: "50" → 0.5, "100" → 1, "0.5" → 0.5, "50%" → 0.5, "0.5%" → 0.005
-// Alpha: same logic, since alpha is also 0--1 range
 function parsePercentField(text) {
   let s = String(text).trim();
   if (!s) return NaN;
 
   const hadPercent = s.endsWith('%');
+
   if (hadPercent) {
     s = s.slice(0, -1).trim();
   }
@@ -1152,11 +1327,8 @@ function parsePercentField(text) {
   const n = parseFloat(s);
   if (isNaN(n)) return NaN;
 
-  if (hadPercent) {
-    return n / 100;                    // explicit % always means percentage
-  }
+  if (hadPercent) return n / 100;
 
-  // No % sign: only treat bare integers > 1 as percentages
   if (!s.includes('.') && n > 1) {
     return n / 100;
   }
@@ -1164,32 +1336,51 @@ function parsePercentField(text) {
   return n;
 }
 
-function isMobile() { return window.innerWidth <= 560; }
+function isMobile() {
+  return window.innerWidth <= 560;
+}
 
 function syncStateFromRGB(r, g, b, options = {}) {
-  const { markDirty: shouldMarkDirty = (S.mode !== 'oklch' && S.mode !== 'oklvh'), rememberDerived = true } = options;
+  const {
+    markDirty: shouldMarkDirty = (S.mode !== 'oklch' && S.mode !== 'vivid'),
+    rememberDerived = true,
+  } = options;
+
   S.r = clamp255(r);
   S.g = clamp255(g);
   S.b = clamp255(b);
+
   const [L, C, H] = Color.rgbToOKLCH(S.r / 255, S.g / 255, S.b / 255);
+
   S.L = L;
   S.C = C;
   S.H = H;
+
   syncAuxSpacesFromRGB();
+
   if (rememberDerived) rememberCurrentOKLCH();
+
   S.rgbDirty = !!shouldMarkDirty;
 }
 
 function syncStateFromOKLCH(L, C, H, options = {}) {
-  const { rememberRaw = true, clearRGBDirty = true } = options;
+  const {
+    rememberRaw = true,
+    clearRGBDirty = true,
+  } = options;
+
   S.L = Math.max(0, Math.min(1, L));
   S.C = Math.max(0, Math.min(C_MAX, C));
   S.H = normHue(H, S.H);
+
   const [r01, g01, b01] = Color.oklchClamped(S.L, S.C, S.H);
+
   S.r = Math.round(r01 * 255);
   S.g = Math.round(g01 * 255);
   S.b = Math.round(b01 * 255);
+
   syncAuxSpacesFromRGB();
+
   if (rememberRaw) rememberCurrentOKLCH();
   if (clearRGBDirty) S.rgbDirty = false;
 }
@@ -1197,8 +1388,11 @@ function syncStateFromOKLCH(L, C, H, options = {}) {
 function syncStateFromHSV(H, Sv, V, options = {}) {
   S.hsvH = normHue(H, S.hsvH);
   S.hslH = S.hsvH;
+
   const [r01, g01, b01] = Color.hsvToRGB(S.hsvH, clamp01(Sv), clamp01(V));
+
   syncStateFromRGB(r01 * 255, g01 * 255, b01 * 255, options);
+
   S.hsvH = normHue(H, S.hsvH);
   S.hslH = S.hsvH;
   S.hsvS = clamp01(Sv);
@@ -1208,8 +1402,11 @@ function syncStateFromHSV(H, Sv, V, options = {}) {
 function syncStateFromHSL(H, Sval, Lval, options = {}) {
   S.hslH = normHue(H, S.hslH);
   S.hsvH = S.hslH;
+
   const [r01, g01, b01] = Color.hslToRGB(S.hslH, clamp01(Sval), clamp01(Lval));
+
   syncStateFromRGB(r01 * 255, g01 * 255, b01 * 255, options);
+
   S.hslH = normHue(H, S.hslH);
   S.hsvH = S.hslH;
   S.hslS = clamp01(Sval);
@@ -1218,32 +1415,46 @@ function syncStateFromHSL(H, Sval, Lval, options = {}) {
 
 function parseHexColor(text) {
   let hex = String(text).trim().replace(/^#/, '');
-  if (![3, 4, 6, 8].includes(hex.length) || /[^0-9a-f]/i.test(hex)) return null;
-  if (hex.length <= 4) hex = hex.split('').map(ch => ch + ch).join('');
+
+  if (![3, 4, 6, 8].includes(hex.length) || /[^0-9a-f]/i.test(hex)) {
+    return null;
+  }
+
+  if (hex.length <= 4) {
+    hex = hex.split('').map(ch => ch + ch).join('');
+  }
+
   const hasAlpha = hex.length === 8;
+
   const r = parseInt(hex.slice(0, 2), 16);
   const g = parseInt(hex.slice(2, 4), 16);
   const b = parseInt(hex.slice(4, 6), 16);
   const alpha = hasAlpha ? parseInt(hex.slice(6, 8), 16) / 255 : null;
-  return { space: 'rgb', r, g, b, alpha };
+
+  return {
+    space: 'rgb',
+    r,
+    g,
+    b,
+    alpha,
+  };
 }
 
 function parseFunctionalColor(text) {
   const match = String(text).trim().match(/^([a-z]+)\(\s*(.*?)\s*\)$/i);
   if (!match) return null;
+
   const fn = match[1].toLowerCase();
   const raw = match[2];
 
-  // Split on slash to separate alpha
   const slashIdx = raw.lastIndexOf('/');
   const bodyStr = slashIdx >= 0 ? raw.slice(0, slashIdx).trim() : raw;
   const alphaStr = slashIdx >= 0 ? raw.slice(slashIdx + 1).trim() : null;
 
-  // Normalize commas to spaces, then split on whitespace
   const body = bodyStr.replace(/,/g, ' ').trim().split(/\s+/).filter(Boolean);
 
-  // Alpha: from slash, or from 4th body token (legacy rgba/hsla)
   let alpha = null;
+
   if (alphaStr !== null) {
     alpha = parseUnitNumber(alphaStr, 1);
   } else if (body.length >= 4) {
@@ -1253,60 +1464,125 @@ function parseFunctionalColor(text) {
   if (fn === 'oklch' && body.length >= 3) {
     const L = parseUnitNumber(body[0], 1);
     const C = parseUnitNumber(body[1], 1);
-    const H = parseUnitNumber(body[2], 360);
-    // H without unit is degrees, body[2] with no % sign → pass as-is
-    const Hval = body[2].endsWith('%') ? parseUnitNumber(body[2], 360) : parseFloat(body[2]);
-    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(Hval)) return null;
-    return { space: 'oklch', L, C, H: Hval, alpha };
+    const Hval = body[2].endsWith('%')
+      ? parseUnitNumber(body[2], 360)
+      : parseFloat(body[2]);
+
+    if ([L, C].some(v => Number.isNaN(v)) || Number.isNaN(Hval)) {
+      return null;
+    }
+
+    return {
+      space: 'oklch',
+      L,
+      C,
+      H: Hval,
+      alpha,
+    };
   }
 
   if (fn === 'oklab' && body.length >= 3) {
     const L = parseUnitNumber(body[0], 1);
     const a = parseUnitNumber(body[1], 0.4);
     const b = parseUnitNumber(body[2], 0.4);
-    if ([L, a, b].some(v => Number.isNaN(v))) return null;
-    // Convert oklab → oklch
+
+    if ([L, a, b].some(v => Number.isNaN(v))) {
+      return null;
+    }
+
     const C = Math.sqrt(a * a + b * b);
+
     let H = Math.atan2(b, a) * 180 / Math.PI;
     if (H < 0) H += 360;
-    return { space: 'oklch', L, C, H, alpha };
+
+    return {
+      space: 'oklch',
+      L,
+      C,
+      H,
+      alpha,
+    };
   }
 
   if ((fn === 'rgb' || fn === 'rgba') && body.length >= 3) {
     const r = parseUnitNumber(body[0], 255);
     const g = parseUnitNumber(body[1], 255);
     const b = parseUnitNumber(body[2], 255);
-    if ([r, g, b].some(v => Number.isNaN(v))) return null;
-    return { space: 'rgb', r, g, b, alpha };
+
+    if ([r, g, b].some(v => Number.isNaN(v))) {
+      return null;
+    }
+
+    return {
+      space: 'rgb',
+      r,
+      g,
+      b,
+      alpha,
+    };
   }
 
   if ((fn === 'hsl' || fn === 'hsla') && body.length >= 3) {
-    // Hue: strip deg/rad/turn units
     let hRaw = body[0].replace(/deg$/i, '').replace(/grad$/i, '');
-    if (/rad$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 180 / Math.PI).toString();
-    if (/turn$/i.test(body[0])) hRaw = (parseFloat(body[0]) * 360).toString();
+
+    if (/rad$/i.test(body[0])) {
+      hRaw = (parseFloat(body[0]) * 180 / Math.PI).toString();
+    }
+
+    if (/turn$/i.test(body[0])) {
+      hRaw = (parseFloat(body[0]) * 360).toString();
+    }
+
     const h = parseFloat(hRaw);
     const s = parseUnitNumber(body[1], 1);
     const l = parseUnitNumber(body[2], 1);
-    if ([h, s, l].some(v => Number.isNaN(v))) return null;
-    return { space: 'hsl', h, s, l, alpha };
+
+    if ([h, s, l].some(v => Number.isNaN(v))) {
+      return null;
+    }
+
+    return {
+      space: 'hsl',
+      h,
+      s,
+      l,
+      alpha,
+    };
   }
 
   if (fn === 'hwb' && body.length >= 3) {
-    // HWB → HSL/RGB conversion
     let hRaw = body[0].replace(/deg$/i, '');
+
     const h = parseFloat(hRaw);
     const w = parseUnitNumber(body[1], 1);
     const bk = parseUnitNumber(body[2], 1);
-    if ([h, w, bk].some(v => Number.isNaN(v))) return null;
-    // HWB to RGB
-    let ww = w, bb = bk;
-    if (ww + bb > 1) { const s = ww + bb; ww /= s; bb /= s; }
+
+    if ([h, w, bk].some(v => Number.isNaN(v))) {
+      return null;
+    }
+
+    let ww = w;
+    let bb = bk;
+
+    if (ww + bb > 1) {
+      const s = ww + bb;
+      ww /= s;
+      bb /= s;
+    }
+
     const [r01, g01, b01] = Color.hslToRGB(h, 1, 0.5);
+
     const r = (r01 * (1 - ww - bb) + ww) * 255;
     const g = (g01 * (1 - ww - bb) + ww) * 255;
     const b = (b01 * (1 - ww - bb) + ww) * 255;
-    return { space: 'rgb', r, g, b, alpha };
+
+    return {
+      space: 'rgb',
+      r,
+      g,
+      b,
+      alpha,
+    };
   }
 
   return null;
@@ -1317,23 +1593,24 @@ function applyColorInput(text) {
   if (!trimmed) return false;
 
   let parsed;
+
   if (trimmed.startsWith('#')) {
     parsed = parseHexColor(trimmed);
   } else if (/^[0-9a-f]+$/i.test(trimmed) && [3, 4, 6, 8].includes(trimmed.length)) {
     parsed = parseHexColor('#' + trimmed);
   }
-  if (!parsed) parsed = parseFunctionalColor(trimmed);
 
+  if (!parsed) parsed = parseFunctionalColor(trimmed);
   if (!parsed) return false;
 
   if (parsed.space === 'rgb') {
     syncStateFromRGB(parsed.r, parsed.g, parsed.b, {
-      markDirty: S.mode !== 'oklch' && S.mode !== 'oklvh',
+      markDirty: S.mode !== 'oklch' && S.mode !== 'vivid',
       rememberDerived: true,
     });
   } else if (parsed.space === 'hsl') {
     syncStateFromHSL(parsed.h, parsed.s, parsed.l, {
-      markDirty: S.mode !== 'oklch' && S.mode !== 'oklvh',
+      markDirty: S.mode !== 'oklch' && S.mode !== 'vivid',
       rememberDerived: true,
     });
   } else {
@@ -1341,6 +1618,17 @@ function applyColorInput(text) {
       rememberRaw: true,
       clearRGBDirty: true,
     });
+
+    if (S.mode === 'vivid') {
+      const maxC = Color.maxChroma(S.L, S.H, 'p3');
+      S.C = Math.min(S.C, maxC);
+      S.vividness = maxC > 1e-6 ? S.C / maxC : 0;
+
+      syncStateFromOKLCH(S.L, S.C, S.H, {
+        rememberRaw: true,
+        clearRGBDirty: true,
+      });
+    }
   }
 
   if (parsed.alpha != null && !Number.isNaN(parsed.alpha)) {
@@ -1352,46 +1640,74 @@ function applyColorInput(text) {
 
 function colorSpecFromOKLCH(L, C, H, alpha = 1) {
   const [sr, sg, sb] = Color.oklchClamped(L, C, H);
-  const fallback = [Math.round(sr * 255), Math.round(sg * 255), Math.round(sb * 255)];
+  const fallback = [
+    Math.round(sr * 255),
+    Math.round(sg * 255),
+    Math.round(sb * 255),
+  ];
+
   return {
-    css: Color.inP3(L, C, H) && SUPPORT.cssP3 ? p3Css(L, C, H, alpha) : rgbCss255(fallback, alpha),
+    css: Color.inP3(L, C, H) && SUPPORT.cssP3
+      ? p3Css(L, C, H, alpha)
+      : rgbCss255(fallback, alpha),
     fallback,
   };
 }
 
 function colorSpecFromRGB(rgb, alpha = 1) {
   const fallback = rgb.map(v => Math.round(Math.max(0, Math.min(255, v))));
-  return { css: rgbCss255(fallback, alpha), fallback };
+
+  return {
+    css: rgbCss255(fallback, alpha),
+    fallback,
+  };
 }
 
 function currentRGB01() {
-  if (S.mode === 'oklch' || S.mode === 'oklvh') return Color.oklchClamped(S.L, S.C, S.H);
-  return [S.r / 255, S.g / 255, S.b / 255];
+  if (S.mode === 'oklch' || S.mode === 'vivid') {
+    return Color.oklchClamped(S.L, S.C, S.H);
+  }
+
+  return [
+    S.r / 255,
+    S.g / 255,
+    S.b / 255,
+  ];
 }
 
 function currentComputedRGB255() {
-  if (S.mode === 'oklch' || S.mode === 'oklvh') {
+  if (S.mode === 'oklch' || S.mode === 'vivid') {
     const [r01, g01, b01] = currentRGB01();
-    return [Math.round(r01 * 255), Math.round(g01 * 255), Math.round(b01 * 255)];
+
+    return [
+      Math.round(r01 * 255),
+      Math.round(g01 * 255),
+      Math.round(b01 * 255),
+    ];
   }
+
   return [S.r, S.g, S.b];
 }
 
 function currentColorCss(alpha = S.alpha) {
-  if ((S.mode === 'oklch' || S.mode === 'oklvh') && SUPPORT.cssOKLCH) {
+  if ((S.mode === 'oklch' || S.mode === 'vivid') && SUPPORT.cssOKLCH) {
     return alpha < 1
       ? `oklch(${S.L} ${S.C} ${S.H} / ${alpha})`
       : `oklch(${S.L} ${S.C} ${S.H})`;
   }
+
   return rgbCss255(currentComputedRGB255(), alpha);
 }
 
 function getFallbackState(alpha = S.alpha) {
-  if ((S.mode !== 'oklch' && S.mode !== 'oklvh') || Color.inP3(S.L, S.C, S.H)) return null;
+  if ((S.mode !== 'oklch' && S.mode !== 'vivid') || Color.inP3(S.L, S.C, S.H)) {
+    return null;
+  }
 
   const fallbackChroma = Math.min(S.C, Color.maxChroma(S.L, S.H, 'p3'));
   const spec = colorSpecFromOKLCH(S.L, fallbackChroma, S.H, alpha);
   const hex = Color.toHexAlpha(...spec.fallback, alpha);
+
   const [fallbackL, fallbackC, fallbackH] = Color.rgbToOKLCH(
     spec.fallback[0] / 255,
     spec.fallback[1] / 255,
@@ -1399,15 +1715,15 @@ function getFallbackState(alpha = S.alpha) {
   );
 
   return {
-    source: { L: S.L, C: fallbackChroma, H: S.H },
+    source: {
+      L: S.L,
+      C: fallbackChroma,
+      H: S.H,
+    },
     display: spec,
     hex,
     code: formatOKLCHCode(fallbackL, fallbackC, fallbackH, alpha),
   };
-}
-
-function outOfGamut() {
-  return (S.mode === 'oklch' || S.mode === 'oklvh') && !Color.inSRGB(S.L, S.C, S.H);
 }
 
 function buildBoundaryMarkers(srgbPoints = [], p3Points = []) {
@@ -1420,35 +1736,49 @@ function buildBoundaryMarkers(srgbPoints = [], p3Points = []) {
 function buildSingleBoundaryMarkers(srgbT, p3T) {
   const srgbPoints = typeof srgbT === 'number' && srgbT < 0.999 ? [srgbT] : [];
   const p3Points = typeof p3T === 'number' && p3T < 0.999 ? [p3T] : [];
+
   return buildBoundaryMarkers(srgbPoints, p3Points);
 }
 
 function switchMode(m) {
   if (m === S.mode) return;
 
-  const wasOKLCHlike = S.mode === 'oklch' || S.mode === 'oklvh';
-  const isOKLCHlike  = m === 'oklch' || m === 'oklvh';
+  const wasOKLCHlike = S.mode === 'oklch' || S.mode === 'vivid';
+  const isOKLCHlike  = m === 'oklch' || m === 'vivid';
 
   if (wasOKLCHlike && !isOKLCHlike) {
-    // oklch/oklvh → rgb/hsl
     rememberCurrentOKLCH();
+
     const [r, g, b] = currentRGB01();
+
     S.r = Math.round(r * 255);
     S.g = Math.round(g * 255);
     S.b = Math.round(b * 255);
+
     syncAuxSpacesFromRGB();
     S.rgbDirty = false;
   } else if (!wasOKLCHlike && isOKLCHlike) {
-    // rgb/hsl → oklch/oklvh
     if (!(S.savedOKLCH && !S.rgbDirty && restoreSavedOKLCH())) {
-      syncStateFromRGB(S.r, S.g, S.b, { markDirty: false, rememberDerived: true });
+      syncStateFromRGB(S.r, S.g, S.b, {
+        markDirty: false,
+        rememberDerived: true,
+      });
     }
+
     S.rgbDirty = false;
   }
-  // Always recompute oklvhV when entering oklvh
-  if (m === 'oklvh') {
+
+  if (m === 'vivid') {
     const maxC = Color.maxChroma(S.L, S.H, 'p3');
-    S.oklvhV = maxC > 1e-6 ? Math.max(0, Math.min(1, S.C / maxC)) : 0;
+
+    S.C = Math.min(S.C, maxC);
+    S.vividness = maxC > 1e-6 ? Math.max(0, Math.min(1, S.C / maxC)) : 0;
+    S.activeHueControl = S.activeHueControl || 'peakHue';
+
+    syncStateFromOKLCH(S.L, S.C, S.H, {
+      rememberRaw: true,
+      clearRGBDirty: true,
+    });
   }
 
   S.mode = m;
@@ -1460,16 +1790,18 @@ syncAuxSpacesFromRGB();
 // ═══════════════════════════════════════════════════════════
 // 3 ▸ CANVAS RENDERING
 // ═══════════════════════════════════════════════════════════
-
-// colorFn(t) → { css, fallback } | [r,g,b] | null (out-of-gamut → checkerboard)
 function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   const ctx = getCanvasCtx(canvas);
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width;
+  const h = canvas.height;
+
   if (!ctx || !w || !h) return;
+
   ctx.clearRect(0, 0, w, h);
 
   const paintChecker = (x, y, ww, hh) => {
     const ts = 8;
+
     for (let yy = y; yy < y + hh; yy += ts) {
       for (let xx = x; xx < x + ww; xx += ts) {
         const ck = (((xx / ts) | 0) + ((yy / ts) | 0)) & 1;
@@ -1484,11 +1816,13 @@ function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
       paintChecker(x, y, ww, hh);
       return;
     }
+
     if (Array.isArray(spec)) {
       ctx.fillStyle = rgbCss255(spec);
       ctx.fillRect(x, y, ww, hh);
       return;
     }
+
     ctx.fillStyle = spec.css || rgbCss255(spec.fallback || [0, 0, 0]);
     ctx.fillRect(x, y, ww, hh);
   };
@@ -1513,6 +1847,7 @@ function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   for (const marker of boundaries) {
     const style = styles[marker.gamut] || styles.srgb;
     ctx.fillStyle = style.line;
+
     if (isVert) {
       const y = Math.round((1 - marker.t) * (h - 1));
       ctx.fillRect(0, y - 1, w, 2);
@@ -1523,14 +1858,17 @@ function renderSliderCanvas(canvas, colorFn, isVert, boundaries = []) {
   }
 }
 
-// Opacity slider: checkerboard + gradient with transparency
 function renderAlphaCanvas(canvas, isVert) {
   const ctx = getCanvasCtx(canvas);
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width;
+  const h = canvas.height;
+
   if (!ctx || !w || !h) return;
+
   ctx.clearRect(0, 0, w, h);
 
   const ts = 8;
+
   for (let ty = 0; ty < Math.ceil(h / ts); ty++) {
     for (let tx = 0; tx < Math.ceil(w / ts); tx++) {
       ctx.fillStyle = (tx + ty) % 2 === 0 ? '#2e2e3e' : '#1e1e2a';
@@ -1539,6 +1877,7 @@ function renderAlphaCanvas(canvas, isVert) {
   }
 
   let grad;
+
   if (isVert) {
     grad = ctx.createLinearGradient(0, 0, 0, h);
     grad.addColorStop(0, currentColorCss(1));
@@ -1548,14 +1887,18 @@ function renderAlphaCanvas(canvas, isVert) {
     grad.addColorStop(0, currentColorCss(0));
     grad.addColorStop(1, currentColorCss(1));
   }
+
   ctx.fillStyle = grad;
   ctx.fillRect(0, 0, w, h);
 }
 
 function renderHSLFieldCanvas(canvas) {
   const ctx = getCanvasCtx(canvas);
-  const w = canvas.width, h = canvas.height;
+  const w = canvas.width;
+  const h = canvas.height;
+
   if (!ctx || !w || !h) return;
+
   ctx.clearRect(0, 0, w, h);
 
   const img = ctx.createImageData(w, h);
@@ -1563,10 +1906,12 @@ function renderHSLFieldCanvas(canvas) {
 
   for (let y = 0; y < h; y++) {
     const v = 1 - y / Math.max(1, h - 1);
+
     for (let x = 0; x < w; x++) {
       const s = x / Math.max(1, w - 1);
       const [r, g, b] = Color.hsvToRGB(S.hsvH, s, v);
       const i = (y * w + x) * 4;
+
       d[i] = Math.round(r * 255);
       d[i + 1] = Math.round(g * 255);
       d[i + 2] = Math.round(b * 255);
@@ -1582,11 +1927,19 @@ function renderHSLFieldCanvas(canvas) {
 // ═══════════════════════════════════════════════════════════
 function getHSLHueDef() {
   return {
-    key:'hslHue', label:'H', full:'Hue',
-    min:0, max:360,
+    key:'hslHue',
+    label:'H',
+    full:'Hue',
+    min:0,
+    max:360,
     inputMode: 'decimal',
     get:()=>S.hsvH,
-    set:v=>{ syncStateFromHSV(v, S.hsvS, S.hsvV, { markDirty: true, rememberDerived: true }); },
+    set:v=>{
+      syncStateFromHSV(v, S.hsvS, S.hsvV, {
+        markDirty: true,
+        rememberDerived: true,
+      });
+    },
     fmt:v=>Math.round(v).toString(),
     vFn: t => colorSpecFromRGB(Color.hsvToRGB(t * 360, 1, 1).map(v => v * 255)),
     vBounds: () => [],
@@ -1598,10 +1951,20 @@ function getSliderDefs() {
   if (S.mode === 'oklch') {
     return [
       {
-        key:'L', label:'L', full:'Lightness',
-        min:0, max:1,
+        key:'L',
+        label:'L',
+        full:'Lightness',
+        min:0,
+        max:1,
         inputMode: 'decimal',
-        get:()=>S.L, set:v=>{ S.L = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
+        get:()=>S.L,
+        set:v=>{
+          S.L = v;
+          syncStateFromOKLCH(S.L, S.C, S.H, {
+            rememberRaw: true,
+            clearRGBDirty: true,
+          });
+        },
         fmt:v=>v.toFixed(4),
         vFn: t => {
           const g = Math.round(t * 255);
@@ -1622,11 +1985,20 @@ function getSliderDefs() {
         showH: true,
       },
       {
-        key:'C', label:'C', full:'Chroma',
-        min:0, max:C_MAX,
+        key:'C',
+        label:'C',
+        full:'Chroma',
+        min:0,
+        max:C_MAX,
         inputMode: 'decimal',
         get:()=>S.C,
-        set:v=>{ S.C = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
+        set:v=>{
+          S.C = v;
+          syncStateFromOKLCH(S.L, S.C, S.H, {
+            rememberRaw: true,
+            clearRGBDirty: true,
+          });
+        },
         fmt:v=>v.toFixed(4),
         vFn: t => {
           const c = t * C_MAX;
@@ -1649,11 +2021,20 @@ function getSliderDefs() {
         showH: true,
       },
       {
-        key:'H', label:'H', full:'Hue',
-        min:0, max:360,
+        key:'H',
+        label:'H',
+        full:'Hue',
+        min:0,
+        max:360,
         inputMode: 'decimal',
         get:()=>S.H,
-        set:v=>{ S.H = v; syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true }); },
+        set:v=>{
+          S.H = v;
+          syncStateFromOKLCH(S.L, S.C, S.H, {
+            rememberRaw: true,
+            clearRGBDirty: true,
+          });
+        },
         fmt:v=>v.toFixed(2),
         vFn: t => colorSpecFromOKLCH(VERT_HUE_LIGHTNESS, S.C, t * 360),
         vBounds: () => [],
@@ -1668,118 +2049,228 @@ function getSliderDefs() {
         ),
         showH: true,
       },
-      { 
-        key:'alpha', label:'A', full:'Opacity',
+      {
+        key:'alpha',
+        label:'A',
+        full:'Opacity',
         isAlpha: true,
-        min:0, max:1,
+        min:0,
+        max:1,
         inputMode: 'decimal',
-        get:()=>S.alpha, set:v=>{S.alpha=v;},
+        get:()=>S.alpha,
+        set:v=>{ S.alpha = v; },
         fmt:v=>v.toFixed(2),
         editText:()=>S.alpha.toFixed(2),
         parse: parsePercentField,
         showH: false,
-      }
+      },
     ];
   }
 
-  if (S.mode === 'oklvh') {
-    // Helper: sync state when oklvh sliders change
-    function applyOKLVH(L, V, H) {
+  if (S.mode === 'vivid') {
+    function activeHueShortLabel() {
+      return S.activeHueControl === 'peakHue' ? 'Hₚ' : 'H';
+    }
+
+    function applyVivid(T, V, H) {
       S.H = normHue(H, S.H);
-      S.L = Math.max(0, Math.min(1, L));
-      S.oklvhV = Math.max(0, Math.min(1, V));
+      S.L = Math.max(0, Math.min(1, T));
+      S.vividness = Math.max(0, Math.min(1, V));
+
       const maxC = Color.maxChroma(S.L, S.H, 'p3');
-      S.C = S.oklvhV * maxC;
-      syncStateFromOKLCH(S.L, S.C, S.H, { rememberRaw: true, clearRGBDirty: true });
-      // Preserve oklvhV exactly (syncStateFromOKLCH clamped C may shift it)
-      S.oklvhV = Math.max(0, Math.min(1, V));
+      S.C = S.vividness * maxC;
+
+      syncStateFromOKLCH(S.L, S.C, S.H, {
+        rememberRaw: true,
+        clearRGBDirty: true,
+      });
+
+      S.vividness = Math.max(0, Math.min(1, V));
+    }
+
+    function applyPeakHue(H) {
+      const newH = normHue(H, S.H);
+      const [peakTone, peakChroma] = Color.mostVividTone(newH, 'p3');
+
+      S.H = newH;
+      S.vividness = 1;
+
+      syncStateFromOKLCH(peakTone, peakChroma, newH, {
+        rememberRaw: true,
+        clearRGBDirty: true,
+      });
+
+      S.vividness = 1;
+    }
+
+    function applyVividHue(H) {
+      const newH = normHue(H, S.H);
+
+      const fixedTone = S.L;
+      const fixedVividness = S.vividness;
+      const maxC = Color.maxChroma(fixedTone, newH, 'p3');
+      const nextC = fixedVividness * maxC;
+
+      S.H = newH;
+      S.L = fixedTone;
+      S.C = nextC;
+      S.vividness = fixedVividness;
+
+      syncStateFromOKLCH(S.L, S.C, S.H, {
+        rememberRaw: true,
+        clearRGBDirty: true,
+      });
+
+      S.L = fixedTone;
+      S.vividness = fixedVividness;
     }
 
     return [
       {
-        key:'L', label:'L', full:'Lightness',
-        min:0, max:1,
+        key:'tone',
+        label:'T',
+        full:'Tone',
+        min:0,
+        max:1,
         inputMode: 'decimal',
         get:()=>S.L,
-        set:v=>{ applyOKLVH(v, S.oklvhV, S.H); },
+        set:v=>{ applyVivid(v, S.vividness, S.H); },
         fmt:v=>v.toFixed(4),
-        // Vertical: grayscale ramp (same as oklch)
-        vFn: t => { const g = Math.round(t * 255); return colorSpecFromRGB([g, g, g]); },
+
+        vFn: t => {
+          const g = Math.round(t * 255);
+          return colorSpecFromRGB([g, g, g]);
+        },
         vBounds: () => [],
-        // Horizontal: most vivid colour at each lightness for current hue
+
         hFn: t => {
           const maxC = Color.maxChroma(t, S.H, 'p3');
-          if (!Color.inP3(t, maxC, S.H)) return colorSpecFromOKLCH(t, 0, S.H);
           return colorSpecFromOKLCH(t, maxC, S.H);
         },
         hBounds: () => [],
         showH: true,
       },
       {
-        key:'oklvhV', label:'V', full:'Vividness',
-        min:0, max:1,
+        key:'vividness',
+        label:'V',
+        full:'Vividness',
+        min:0,
+        max:1,
         inputMode: 'decimal',
-        get:()=>S.oklvhV,
-        set:v=>{ applyOKLVH(S.L, v, S.H); },
+        get:()=>S.vividness,
+        set:v=>{ applyVivid(S.L, v, S.H); },
         fmt:v=>v.toFixed(4),
-        // Vertical: neutral gray → most vivid at current L/H
+
         vFn: t => {
           const maxC = Color.maxChroma(S.L, S.H, 'p3');
           const c = t * maxC;
-          return colorSpecFromOKLCH(S.L, Math.min(c, maxC), S.H);
+          return colorSpecFromOKLCH(S.L, c, S.H);
         },
         vBounds: () => [],
-        // Horizontal: same interpolation
+
         hFn: t => {
           const maxC = Color.maxChroma(S.L, S.H, 'p3');
           const c = t * maxC;
-          return colorSpecFromOKLCH(S.L, Math.min(c, maxC), S.H);
+          return colorSpecFromOKLCH(S.L, c, S.H);
         },
         hBounds: () => [],
         showH: true,
       },
       {
-        key:'H', label:'H', full:'Hue',
-        min:0, max:360,
+        key:'activeHue',
+        label: activeHueShortLabel(),
+        dynamicLabel: activeHueShortLabel,
+        full:'Active Hue',
+        min:0,
+        max:360,
         inputMode: 'decimal',
         get:()=>S.H,
         set:v=>{
-          // When hue changes: snap to most vivid state for that hue
-          const newH = normHue(v, S.H);
-          const [bestL, bestC] = Color.mostVividLightness(newH, 'p3');
-          S.H = newH;
-          S.oklvhV = 1;
-          syncStateFromOKLCH(bestL, bestC, newH, { rememberRaw: true, clearRGBDirty: true });
-          S.oklvhV = 1;
+          if (S.activeHueControl === 'peakHue') applyPeakHue(v);
+          else applyVividHue(v);
         },
         fmt:v=>v.toFixed(2),
-        // Vertical: each hue at its most vivid lightness & chroma
+
         vFn: t => {
           const h = t * 360;
-          const [bestL, bestC] = Color.mostVividLightness(h, 'p3');
-          return colorSpecFromOKLCH(bestL, bestC, h);
+
+          if (S.activeHueControl === 'peakHue') {
+            const [peakTone, peakChroma] = Color.mostVividTone(h, 'p3');
+            return colorSpecFromOKLCH(peakTone, peakChroma, h);
+          }
+
+          const maxC = Color.maxChroma(S.L, h, 'p3');
+          const c = S.vividness * maxC;
+          return colorSpecFromOKLCH(S.L, c, h);
         },
         vBounds: () => [],
-        // Horizontal: same
+        showH: false,
+      },
+      {
+        key:'peakHue',
+        label:'Hₚ',
+        full:'Peak Hue',
+        hueControl: 'peakHue',
+        horizontalOnly: true,
+        min:0,
+        max:360,
+        inputMode: 'decimal',
+        get:()=>S.H,
+        set:v=>{
+          S.activeHueControl = 'peakHue';
+          applyPeakHue(v);
+        },
+        fmt:v=>v.toFixed(2),
+
         hFn: t => {
           const h = t * 360;
-          const [bestL, bestC] = Color.mostVividLightness(h, 'p3');
-          return colorSpecFromOKLCH(bestL, bestC, h);
+          const [peakTone, peakChroma] = Color.mostVividTone(h, 'p3');
+          return colorSpecFromOKLCH(peakTone, peakChroma, h);
         },
         hBounds: () => [],
         showH: true,
       },
       {
-        key:'alpha', label:'A', full:'Opacity',
-        isAlpha: true,
-        min:0, max:1,
+        key:'hue',
+        label:'H',
+        full:'Hue',
+        hueControl: 'hue',
+        horizontalOnly: true,
+        min:0,
+        max:360,
         inputMode: 'decimal',
-        get:()=>S.alpha, set:v=>{S.alpha=v;},
+        get:()=>S.H,
+        set:v=>{
+          S.activeHueControl = 'hue';
+          applyVividHue(v);
+        },
+        fmt:v=>v.toFixed(2),
+
+        hFn: t => {
+          const h = t * 360;
+          const maxC = Color.maxChroma(S.L, h, 'p3');
+          const c = S.vividness * maxC;
+
+          return colorSpecFromOKLCH(S.L, c, h);
+        },
+        hBounds: () => [],
+        showH: true,
+      },
+      {
+        key:'alpha',
+        label:'A',
+        full:'Opacity',
+        isAlpha: true,
+        min:0,
+        max:1,
+        inputMode: 'decimal',
+        get:()=>S.alpha,
+        set:v=>{ S.alpha = v; },
         fmt:v=>v.toFixed(2),
         editText:()=>S.alpha.toFixed(2),
         parse: parsePercentField,
         showH: false,
-      }
+      },
     ];
   }
 
@@ -1787,16 +2278,27 @@ function getSliderDefs() {
     function parseRGBPercent(text) {
       const s = String(text).trim().replace(/%$/, '');
       const n = parseFloat(s);
+
       if (isNaN(n)) return NaN;
+
       return Math.max(0, Math.min(255, n / 100 * 255));
     }
+
     return [
       {
-        key:'r', label:'R', full:'Red',
-        min:0, max:255,
+        key:'r',
+        label:'R',
+        full:'Red',
+        min:0,
+        max:255,
         inputMode: 'decimal',
         get:()=>S.r,
-        set:v=>{ syncStateFromRGB(v, S.g, S.b, { markDirty: true, rememberDerived: true }); },
+        set:v=>{
+          syncStateFromRGB(v, S.g, S.b, {
+            markDirty: true,
+            rememberDerived: true,
+          });
+        },
         fmt:v=>Math.round(v).toString(),
         vLabel: 'R%',
         vFmt: v => Math.round(v / 255 * 100) + '%',
@@ -1809,11 +2311,19 @@ function getSliderDefs() {
         showH: true,
       },
       {
-        key:'g', label:'G', full:'Green',
-        min:0, max:255,
+        key:'g',
+        label:'G',
+        full:'Green',
+        min:0,
+        max:255,
         inputMode: 'decimal',
         get:()=>S.g,
-        set:v=>{ syncStateFromRGB(S.r, v, S.b, { markDirty: true, rememberDerived: true }); },
+        set:v=>{
+          syncStateFromRGB(S.r, v, S.b, {
+            markDirty: true,
+            rememberDerived: true,
+          });
+        },
         fmt:v=>Math.round(v).toString(),
         vLabel: 'G%',
         vFmt: v => Math.round(v / 255 * 100) + '%',
@@ -1826,11 +2336,19 @@ function getSliderDefs() {
         showH: true,
       },
       {
-        key:'b', label:'B', full:'Blue',
-        min:0, max:255,
+        key:'b',
+        label:'B',
+        full:'Blue',
+        min:0,
+        max:255,
         inputMode: 'decimal',
         get:()=>S.b,
-        set:v=>{ syncStateFromRGB(S.r, S.g, v, { markDirty: true, rememberDerived: true }); },
+        set:v=>{
+          syncStateFromRGB(S.r, S.g, v, {
+            markDirty: true,
+            rememberDerived: true,
+          });
+        },
         fmt:v=>Math.round(v).toString(),
         vLabel: 'B%',
         vFmt: v => Math.round(v / 255 * 100) + '%',
@@ -1843,26 +2361,38 @@ function getSliderDefs() {
         showH: true,
       },
       {
-        key:'alpha', label:'A', full:'Opacity',
+        key:'alpha',
+        label:'A',
+        full:'Opacity',
         isAlpha: true,
-        min:0, max:1,
+        min:0,
+        max:1,
         inputMode: 'decimal',
-        get:()=>S.alpha, set:v=>{S.alpha=v;},
+        get:()=>S.alpha,
+        set:v=>{ S.alpha = v; },
         fmt:v=>v.toFixed(2),
         editText:()=>S.alpha.toFixed(2),
         parse: parsePercentField,
         showH: false,
-      }
+      },
     ];
   }
 
   return [
     {
-      key:'hslS', label:'S', full:'Saturation',
-      min:0, max:1,
+      key:'hslS',
+      label:'S',
+      full:'Saturation',
+      min:0,
+      max:1,
       inputMode: 'decimal',
       get:()=>S.hslS,
-      set:v=>{ syncStateFromHSL(S.hslH, v, S.hslLight, { markDirty: true, rememberDerived: true }); },
+      set:v=>{
+        syncStateFromHSL(S.hslH, v, S.hslLight, {
+          markDirty: true,
+          rememberDerived: true,
+        });
+      },
       fmt:v=>`${Math.round(v * 100)}%`,
       editText:()=>`${Math.round(S.hslS * 100)}`,
       parse: parsePercentField,
@@ -1873,11 +2403,19 @@ function getSliderDefs() {
       showH: true,
     },
     {
-      key:'hslL', label:'L', full:'Lightness',
-      min:0, max:1,
+      key:'hslL',
+      label:'L',
+      full:'Lightness',
+      min:0,
+      max:1,
       inputMode: 'decimal',
       get:()=>S.hslLight,
-      set:v=>{ syncStateFromHSL(S.hslH, S.hslS, v, { markDirty: true, rememberDerived: true }); },
+      set:v=>{
+        syncStateFromHSL(S.hslH, S.hslS, v, {
+          markDirty: true,
+          rememberDerived: true,
+        });
+      },
       fmt:v=>`${Math.round(v * 100)}%`,
       editText:()=>`${Math.round(S.hslLight * 100)}`,
       parse: parsePercentField,
@@ -1888,16 +2426,20 @@ function getSliderDefs() {
       showH: true,
     },
     {
-      key:'alpha', label:'A', full:'Opacity',
+      key:'alpha',
+      label:'A',
+      full:'Opacity',
       isAlpha: true,
-      min:0, max:1,
+      min:0,
+      max:1,
       inputMode: 'decimal',
-      get:()=>S.alpha, set:v=>{S.alpha=v;},
+      get:()=>S.alpha,
+      set:v=>{ S.alpha = v; },
       fmt:v=>v.toFixed(2),
       editText:()=>S.alpha.toFixed(2),
       parse: parsePercentField,
       showH: true,
-    }
+    },
   ];
 }
 
@@ -1908,7 +2450,6 @@ let sliders = [];
 let hslFieldUI = null;
 
 function buildVSlider(def) {
-  // Build a merged def for vertical-specific overrides
   const vdef = Object.assign({}, def, {
     label:    def.vLabel    || def.label,
     fmt:      def.vFmt      || def.fmt,
@@ -1938,15 +2479,38 @@ function buildVSlider(def) {
   const valEl = document.createElement('div');
   valEl.className = 'vslider-val';
   valEl.textContent = vdef.fmt(def.get());
+
   makeEditableVal(valEl, vdef);
 
   col.append(lbl, track, valEl);
-  return { col, track, canvas: cv, thumb, valEl, vdef };
+
+  return {
+    col,
+    labelEl: lbl,
+    track,
+    canvas: cv,
+    thumb,
+    valEl,
+    vdef,
+  };
 }
 
 function buildHSlider(def) {
   const row = document.createElement('div');
   row.className = 'hslider-row';
+
+  if (def.hueControl) {
+    row.classList.add('hue-control-row');
+    row.dataset.hueControl = def.hueControl;
+
+    row.addEventListener('click', e => {
+      if (S.mode !== 'vivid') return;
+      if (S.activeHueControl === def.hueControl) return;
+
+      S.activeHueControl = def.hueControl;
+      updateUI();
+    });
+  }
 
   const track = document.createElement('div');
   track.className = def.isAlpha ? 'hslider-track has-checker' : 'hslider-track';
@@ -1970,11 +2534,20 @@ function buildHSlider(def) {
   const infoVal = document.createElement('div');
   infoVal.className = 'hslider-info-val';
   infoVal.textContent = def.fmt(def.get());
+
   makeEditableVal(infoVal, def);
 
   info.append(infoLbl, infoVal);
   row.append(track, info);
-  return { row, track, canvas: cv, thumb, valEl: infoVal };
+
+  return {
+    row,
+    labelEl: infoLbl,
+    track,
+    canvas: cv,
+    thumb,
+    valEl: infoVal,
+  };
 }
 
 function buildHSLField() {
@@ -1988,77 +2561,133 @@ function buildHSLField() {
   thumb.className = 'hsl-field-thumb';
 
   wrap.append(cv, thumb);
-  return { wrap, canvas: cv, thumb };
+
+  return {
+    wrap,
+    canvas: cv,
+    thumb,
+  };
 }
 
 function makeEditableVal(el, def) {
   el.title = 'Click to edit';
+
   el.addEventListener('click', e => {
     e.stopPropagation();
+
+    if (def.hueControl) {
+      S.activeHueControl = def.hueControl;
+    }
+
     el.contentEditable = 'true';
-    if (def.inputMode) el.inputMode = def.inputMode;
+
+    if (def.inputMode) {
+      el.inputMode = def.inputMode;
+    }
+
     el.textContent = def.editText ? def.editText() : def.get().toString();
+
     const range = document.createRange();
     range.selectNodeContents(el);
+
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
+
+    updateUI();
   });
+
   el.addEventListener('blur', () => {
     el.contentEditable = 'false';
     el.removeAttribute('inputmode');
-    const v = def.parse 
-      ? def.parse(el.textContent) 
+
+    const v = def.parse
+      ? def.parse(el.textContent)
       : parseFloat(el.textContent);
 
     if (!isNaN(v)) {
+      if (def.hueControl) {
+        S.activeHueControl = def.hueControl;
+      }
+
       def.set(Math.max(def.min, Math.min(def.max, v)));
     }
+
     updateUI();
   });
+
   el.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
-    if (e.key === 'Escape') { el.textContent = def.fmt(def.get()); el.blur(); }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      el.blur();
+    }
+
+    if (e.key === 'Escape') {
+      el.textContent = def.fmt(def.get());
+      el.blur();
+    }
   });
 }
 
 function makeEditableColorField(el, getText) {
   if (!el || el.dataset.editableBound === 'true') return;
+
   el.dataset.editableBound = 'true';
   el.title = 'Click to edit';
   el.spellcheck = false;
+
   el.addEventListener('click', e => {
     e.stopPropagation();
+
     if (el.contentEditable === 'true') return;
+
     const initialText = getText();
+
     el.dataset.editStartText = initialText;
     el.contentEditable = 'true';
-    if (el.dataset.inputmode) el.inputMode = el.dataset.inputmode;
+
+    if (el.dataset.inputmode) {
+      el.inputMode = el.dataset.inputmode;
+    }
+
     el.textContent = initialText;
+
     const range = document.createRange();
     range.selectNodeContents(el);
+
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
   });
+
   el.addEventListener('blur', () => {
     el.contentEditable = 'false';
     el.removeAttribute('inputmode');
+
     const initialText = el.dataset.editStartText ?? getText();
     const submittedText = String(el.textContent || '').trim();
+
     delete el.dataset.editStartText;
+
     if (!submittedText || submittedText === initialText.trim()) {
       el.textContent = getText();
       updateUI();
       return;
     }
+
     if (!applyColorInput(submittedText)) {
       el.textContent = getText();
     }
+
     updateUI();
   });
+
   el.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      el.blur();
+    }
+
     if (e.key === 'Escape') {
       e.preventDefault();
       el.textContent = el.dataset.editStartText ?? getText();
@@ -2072,14 +2701,16 @@ function rebuildUI() {
   const vsArea = document.getElementById('vslidersArea');
   const hsArea = document.getElementById('hslidersArea');
 
-  // Immediately hide fallback bar — prevents one-frame flash when switching modes
   const fallbackBar = document.getElementById('fallbackValuesBar');
   if (fallbackBar) fallbackBar.style.visibility = 'hidden';
 
   picker.classList.toggle('mode-hsl', S.mode === 'hsl');
+
   vsArea.innerHTML = '';
   hsArea.innerHTML = '';
+
   vsArea.classList.toggle('hsl-mode-layout', S.mode === 'hsl');
+
   sliders = [];
   hslFieldUI = null;
 
@@ -2088,46 +2719,79 @@ function rebuildUI() {
     vsArea.appendChild(hslFieldUI.wrap);
 
     if (isMobile()) {
-      // Mobile: all 4 sliders (H, S, L, A) as vertical columns in a strip below the SV field
       const strip = document.createElement('div');
       strip.className = 'hsl-vstrip';
       vsArea.appendChild(strip);
 
       const hueDef = getHSLHueDef();
       const hueUI = buildVSlider(hueDef);
+
       strip.appendChild(hueUI.col);
-      sliders.push({ def: hueDef, vi: hueUI, hi: null });
+      sliders.push({
+        def: hueDef,
+        vi: hueUI,
+        hi: null,
+      });
 
       getSliderDefs().forEach(def => {
         const vi = buildVSlider(def);
+
         strip.appendChild(vi.col);
-        sliders.push({ def, vi, hi: null });
+
+        sliders.push({
+          def,
+          vi,
+          hi: null,
+        });
       });
     } else {
-      // Desktop: hue vertical beside SV field, others as horizontal rows below
       const hueDef = getHSLHueDef();
       const hueUI = buildVSlider(hueDef);
+
       hueUI.col.classList.add('is-hsl-hue');
       vsArea.appendChild(hueUI.col);
-      sliders.push({ def: hueDef, vi: hueUI, hi: null });
+
+      sliders.push({
+        def: hueDef,
+        vi: hueUI,
+        hi: null,
+      });
 
       getSliderDefs().forEach(def => {
         const hi = buildHSlider(def);
+
         hsArea.appendChild(hi.row);
-        sliders.push({ def, vi: null, hi });
+
+        sliders.push({
+          def,
+          vi: null,
+          hi,
+        });
       });
     }
   } else {
     const defs = getSliderDefs();
+
     defs.forEach(def => {
-      const vi = buildVSlider(def);
-      vsArea.appendChild(vi.col);
+      let vi = null;
+
+      if (!def.horizontalOnly) {
+        vi = buildVSlider(def);
+        vsArea.appendChild(vi.col);
+      }
+
       let hi = null;
+
       if (def.showH) {
         hi = buildHSlider(def);
         hsArea.appendChild(hi.row);
       }
-      sliders.push({ def, vi, hi });
+
+      sliders.push({
+        def,
+        vi,
+        hi,
+      });
     });
   }
 
@@ -2141,6 +2805,7 @@ function rebuildUI() {
         vi.canvas.width = vi.track.offsetWidth || 44;
         vi.canvas.height = vi.track.offsetHeight || 240;
       }
+
       if (hi) {
         hi.canvas.width = hi.track.offsetWidth || 400;
         hi.canvas.height = hi.track.offsetHeight || 46;
@@ -2153,10 +2818,12 @@ function rebuildUI() {
     }
 
     setupInteractions();
+
     makeEditableColorField(document.getElementById('codeVal'), () => document.getElementById('codeVal').textContent);
     makeEditableColorField(document.getElementById('hexVal'), () => document.getElementById('hexVal').textContent);
     makeEditableColorField(document.getElementById('fallbackCodeVal'), () => document.getElementById('fallbackCodeVal').textContent);
     makeEditableColorField(document.getElementById('fallbackHexVal'), () => document.getElementById('fallbackHexVal').textContent);
+
     updateUI();
   });
 }
@@ -2168,7 +2835,8 @@ function updateUI() {
   const alpha = S.alpha;
   const computedRGB = currentComputedRGB255();
   const computedHex = Color.toHexAlpha(...computedRGB, alpha);
-  const isOKLCHlike = S.mode === 'oklch' || S.mode === 'oklvh';
+
+  const isOKLCHlike = S.mode === 'oklch' || S.mode === 'vivid';
   const inSRGB = !isOKLCHlike || Color.inSRGB(S.L, S.C, S.H);
   const inP3 = !isOKLCHlike || Color.inP3(S.L, S.C, S.H);
   const splitPreview = isOKLCHlike && !inP3;
@@ -2194,6 +2862,7 @@ function updateUI() {
   }
 
   document.getElementById('badgeMode').textContent = S.mode;
+
   const badgeP3 = document.getElementById('badgeP3');
   const badgeGamut = document.getElementById('badgeGamut');
 
@@ -2212,8 +2881,10 @@ function updateUI() {
   const hexLabel = document.getElementById('hexLabel');
   const fallbackCodeLabel = document.getElementById('fallbackCodeLabel');
   const fallbackHexLabel = document.getElementById('fallbackHexLabel');
+
   const codeEl = document.getElementById('codeVal');
   const hexEl = document.getElementById('hexVal');
+
   const fallbackBar = document.getElementById('fallbackValuesBar');
   const fallbackCodeEl = document.getElementById('fallbackCodeVal');
   const fallbackHexEl = document.getElementById('fallbackHexVal');
@@ -2229,10 +2900,11 @@ function updateUI() {
     fallbackCodeLabel.textContent = 'Color Code (Fallback)';
     fallbackHexLabel.textContent  = 'Hex (Fallback)';
   }
+
   codeLabel.classList.remove('is-alert');
   hexLabel.classList.remove('is-alert');
 
-  const computedCode = (S.mode === 'oklch' || S.mode === 'oklvh')
+  const computedCode = (S.mode === 'oklch' || S.mode === 'vivid')
     ? formatOKLCHCode(S.L, S.C, S.H, alpha)
     : (S.mode === 'hsl'
       ? formatHSLCode(S.hslH, S.hslS, S.hslLight, alpha)
@@ -2243,8 +2915,14 @@ function updateUI() {
 
   if (splitPreview && fallbackState) {
     fallbackBar.style.visibility = 'visible';
-    if (document.activeElement !== fallbackCodeEl) fallbackCodeEl.textContent = fallbackState.code;
-    if (document.activeElement !== fallbackHexEl) fallbackHexEl.textContent = fallbackState.hex;
+
+    if (document.activeElement !== fallbackCodeEl) {
+      fallbackCodeEl.textContent = fallbackState.code;
+    }
+
+    if (document.activeElement !== fallbackHexEl) {
+      fallbackHexEl.textContent = fallbackState.hex;
+    }
   } else {
     fallbackBar.style.visibility = 'hidden';
   }
@@ -2254,31 +2932,59 @@ function updateUI() {
     const t = (val - def.min) / (def.max - def.min);
 
     if (vi) {
+      if (def.dynamicLabel && vi.labelEl) {
+        vi.labelEl.textContent = def.dynamicLabel();
+      }
+
       const trackH = vi.track.clientHeight || 240;
       vi.thumb.style.bottom = (t * trackH - 8) + 'px';
+
       const vfmt = vi.vdef ? vi.vdef.fmt : def.fmt;
-      if (document.activeElement !== vi.valEl) vi.valEl.textContent = vfmt(val);
+
+      if (document.activeElement !== vi.valEl) {
+        vi.valEl.textContent = vfmt(val);
+      }
+
       if (vi.canvas.width > 0 && vi.canvas.height > 0) {
-        if (def.isAlpha) renderAlphaCanvas(vi.canvas, true);
-        else renderSliderCanvas(vi.canvas, def.vFn, true, def.vBounds ? def.vBounds() : []);
+        if (def.isAlpha) {
+          renderAlphaCanvas(vi.canvas, true);
+        } else {
+          renderSliderCanvas(vi.canvas, def.vFn, true, def.vBounds ? def.vBounds() : []);
+        }
       }
     }
 
     if (hi) {
       const trackW = hi.track.clientWidth || 400;
       hi.thumb.style.left = (t * trackW - 8) + 'px';
-      if (document.activeElement !== hi.valEl) hi.valEl.textContent = def.fmt(val);
+
+      if (document.activeElement !== hi.valEl) {
+        hi.valEl.textContent = def.fmt(val);
+      }
+
+      if (def.hueControl) {
+        const isActiveHue = S.mode === 'vivid' && S.activeHueControl === def.hueControl;
+
+        hi.row.classList.toggle('hue-control-active', isActiveHue);
+        hi.row.classList.toggle('hue-control-compact', !isActiveHue);
+      }
+
       if (hi.canvas.width > 0 && hi.canvas.height > 0) {
-        if (def.isAlpha) renderAlphaCanvas(hi.canvas, false);
-        else renderSliderCanvas(hi.canvas, def.hFn, false, def.hBounds ? def.hBounds() : []);
+        if (def.isAlpha) {
+          renderAlphaCanvas(hi.canvas, false);
+        } else {
+          renderSliderCanvas(hi.canvas, def.hFn, false, def.hBounds ? def.hBounds() : []);
+        }
       }
     }
   });
 
   if (S.mode === 'hsl' && hslFieldUI) {
     renderHSLFieldCanvas(hslFieldUI.canvas);
+
     const w = hslFieldUI.wrap.clientWidth || 280;
     const h = hslFieldUI.wrap.clientHeight || 280;
+
     hslFieldUI.thumb.style.left = `${S.hsvS * w}px`;
     hslFieldUI.thumb.style.top = `${(1 - S.hsvV) * h}px`;
   }
@@ -2293,15 +2999,19 @@ window.addEventListener('mousemove', e => {
   if (!drag) return;
   applyDrag(e.clientX, e.clientY);
 });
+
 window.addEventListener('mouseup', () => {
   if (drag) drag.track.classList.remove('dragging');
   drag = null;
 });
+
 window.addEventListener('touchmove', e => {
   if (!drag) return;
+
   e.preventDefault();
   applyDrag(e.touches[0].clientX, e.touches[0].clientY);
 }, { passive: false });
+
 window.addEventListener('touchend', () => {
   if (drag) drag.track.classList.remove('dragging');
   drag = null;
@@ -2313,30 +3023,65 @@ function applyDrag(cx, cy) {
   if (drag.kind === 'hsl-field') {
     const s = Math.max(0, Math.min(1, (cx - rect.left) / rect.width));
     const v = Math.max(0, Math.min(1, 1 - (cy - rect.top) / rect.height));
-    syncStateFromHSV(S.hsvH, s, v, { markDirty: true, rememberDerived: true });
+
+    syncStateFromHSV(S.hsvH, s, v, {
+      markDirty: true,
+      rememberDerived: true,
+    });
+
     updateUI();
     return;
+  }
+
+  if (drag.def && drag.def.hueControl) {
+    S.activeHueControl = drag.def.hueControl;
   }
 
   let t = drag.isVert
     ? 1 - (cy - rect.top) / rect.height
     : (cx - rect.left) / rect.width;
+
   t = Math.max(0, Math.min(1, t));
+
   drag.def.set(drag.def.min + t * (drag.def.max - drag.def.min));
+
   updateUI();
 }
 
 function setupTrackDrag(track, def, isVert) {
   track.addEventListener('mousedown', e => {
     e.preventDefault();
+
+    if (def.hueControl) {
+      S.activeHueControl = def.hueControl;
+    }
+
     track.classList.add('dragging');
-    drag = { track, def, isVert };
+
+    drag = {
+      track,
+      def,
+      isVert,
+    };
+
     applyDrag(e.clientX, e.clientY);
   });
+
   track.addEventListener('touchstart', e => {
     e.preventDefault();
+
+    if (def.hueControl) {
+      S.activeHueControl = def.hueControl;
+    }
+
     track.classList.add('dragging');
-    drag = { track, def, isVert };
+
+    drag = {
+      track,
+      def,
+      isVert,
+    };
+
     applyDrag(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: false });
 }
@@ -2344,14 +3089,27 @@ function setupTrackDrag(track, def, isVert) {
 function setupHSLFieldDrag(track) {
   track.addEventListener('mousedown', e => {
     e.preventDefault();
+
     track.classList.add('dragging');
-    drag = { track, kind: 'hsl-field' };
+
+    drag = {
+      track,
+      kind: 'hsl-field',
+    };
+
     applyDrag(e.clientX, e.clientY);
   });
+
   track.addEventListener('touchstart', e => {
     e.preventDefault();
+
     track.classList.add('dragging');
-    drag = { track, kind: 'hsl-field' };
+
+    drag = {
+      track,
+      kind: 'hsl-field',
+    };
+
     applyDrag(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: false });
 }
@@ -2361,16 +3119,21 @@ function setupInteractions() {
     if (vi) setupTrackDrag(vi.track, def, true);
     if (hi) setupTrackDrag(hi.track, def, false);
   });
-  if (hslFieldUI) setupHSLFieldDrag(hslFieldUI.wrap);
+
+  if (hslFieldUI) {
+    setupHSLFieldDrag(hslFieldUI.wrap);
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
-// 8 ▸ COPY, ALPHA, MODE
+// 8 ▸ COPY, MODE
 // ═══════════════════════════════════════════════════════════
 function showToast(msg) {
   const t = document.getElementById('toast');
+
   t.textContent = msg;
   t.classList.add('show');
+
   setTimeout(() => t.classList.remove('show'), 1800);
 }
 
@@ -2386,7 +3149,9 @@ const previewFallbackHalfEl = document.getElementById('previewFallbackHalf');
 if (previewSwatchEl) {
   previewSwatchEl.addEventListener('click', () => {
     const swatch = document.getElementById('previewSwatch');
+
     if (swatch.classList.contains('is-split')) return;
+
     copyText(document.getElementById('codeVal').textContent);
   });
 }
@@ -2394,8 +3159,11 @@ if (previewSwatchEl) {
 if (previewComputedHalfEl) {
   previewComputedHalfEl.addEventListener('click', e => {
     e.stopPropagation();
+
     const swatch = document.getElementById('previewSwatch');
+
     if (!swatch.classList.contains('is-split')) return;
+
     copyText(document.getElementById('codeVal').textContent);
   });
 }
@@ -2403,47 +3171,54 @@ if (previewComputedHalfEl) {
 if (previewFallbackHalfEl) {
   previewFallbackHalfEl.addEventListener('click', e => {
     e.stopPropagation();
+
     const swatch = document.getElementById('previewSwatch');
+
     if (!swatch.classList.contains('is-split')) return;
+
     copyText(document.getElementById('fallbackCodeVal').textContent);
   });
 }
 
-// Mode toggle
 document.getElementById('modeToggle').addEventListener('click', e => {
   const btn = e.target.closest('.mode-btn');
-  if (btn && btn.dataset.mode !== S.mode) switchMode(btn.dataset.mode);
+
+  if (btn && btn.dataset.mode !== S.mode) {
+    switchMode(btn.dataset.mode);
+  }
 });
 
 // ═══════════════════════════════════════════════════════════
 // 9 ▸ BOOTSTRAP
 // ═══════════════════════════════════════════════════════════
-
-// Resize canvases + re-render when window/orientation changes
 let _resizeTimer = null;
+
 window.addEventListener('resize', () => {
   clearTimeout(_resizeTimer);
+
   _resizeTimer = setTimeout(() => {
     sliders.forEach(({ vi, hi }) => {
       if (vi && vi.track.offsetHeight > 0) {
         vi.canvas.width  = vi.track.offsetWidth;
         vi.canvas.height = vi.track.offsetHeight;
       }
+
       if (hi && hi.track.offsetWidth > 0) {
         hi.canvas.width  = hi.track.offsetWidth;
         hi.canvas.height = hi.track.offsetHeight;
       }
     });
+
     if (hslFieldUI && hslFieldUI.wrap.offsetWidth > 0) {
       hslFieldUI.canvas.width  = hslFieldUI.wrap.offsetWidth;
       hslFieldUI.canvas.height = hslFieldUI.wrap.offsetHeight;
     }
+
     updateUI();
   }, 80);
 });
 
 rebuildUI();
 </script>
-
 </body>
 </html>
