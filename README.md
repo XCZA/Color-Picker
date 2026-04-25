@@ -2,76 +2,42 @@ Try the tool here:
 
 https://xcza.github.io/Color-Picker/
 
+# Chromaxxing Color Picker
 
-# Chroma Colo-Picker
+A compact, single-file color picker for **modern CSS color workflows**, perceptual editing, and wide-gamut color exploration.
 
-A compact, single-file color picker focused on **modern CSS color workflows**.
+Chromaxxing supports four modes:
 
-Chroma supports three working modes:
+- **OKLCH** — perceptual lightness, chroma, and hue editing
+- **Vivid** — P3-aware vivid color tuning with Tone, Vividness, Peak Hue, and Hue
+- **RGB** — direct channel editing and hex workflows
+- **HSL** — familiar hue + picker-square interaction with CSS `hsl()` output
 
-- **OKLCH** for perceptual color work and gamut exploration
-- **RGB** for direct channel editing and hex-oriented workflows
-- **HSL** for the familiar app-style hue + square picker UI, with CSS-safe `hsl()` / `hsla()` output
-
-The project is intentionally lightweight: no build step, no framework, no external app shell. Open the HTML file in a modern browser and it runs.
-
----
-
-## Why this picker exists
-
-Most color pickers are designed around sRGB and hide what happens when a color leaves a display gamut.
-
-This picker takes a different approach:
-
-- it lets you work directly in **OKLCH**
-- it shows where colors are valid in **sRGB** and **Display-P3**
-- it separates the idea of a **computed color** from a **perceptual fallback**
-- it keeps the UI focused on what each control is actually adjusting, instead of always previewing the final clipped result
-
-That makes it useful both as a practical picker and as a learning tool.
+No build step. No framework. Just open the HTML file in a modern browser.
 
 ---
 
 ## Features
 
-### General
-
 - Single-file HTML app
-- Dark UI with canvas-rendered sliders
+- Dark, compact UI
+- Canvas-rendered sliders
 - Editable numeric fields
 - Editable color code and hex fields
+- Alpha / opacity support
 - Copy-from-swatch behavior
-- Alpha support across all modes
-
-### Color spaces
-
-- **OKLCH** output as CSS `oklch(...)`
-- **RGB** output as CSS `rgb(...)`
-- **HSL** output as CSS `hsl(...)` / `hsla(...)`
-- Hex display for current computed color
-
-### Wide-gamut support
-
-- Detects and uses **Display-P3** when the browser supports it
-- Distinguishes **sRGB** and **P3** boundaries in OKLCH mode
-- Shows a **P3** badge when a color is inside P3 but outside sRGB
+- Responsive layout
+- OKLCH, RGB, HSL, and hex output
+- Display-P3-aware previews when supported
+- Computed vs fallback output for wide-gamut colors
 
 ---
 
-## Running the project
+## Running locally
 
-There is no install process.
+Clone or download the repo, then open:
 
-1. Clone or download the repository
-2. Open the main HTML file in a modern browser
-
-For example:
-
-```bash
-open "index.html"
-```
-
-or just double-click the file.
+    index.html
 
 For best results, use a browser with support for:
 
@@ -79,295 +45,206 @@ For best results, use a browser with support for:
 - `color(display-p3 ...)`
 - canvas color space support
 
-The picker still works without full wide-gamut support, but wide-gamut previewing will fall back to sRGB.
+The picker still works without full wide-gamut support, but previews fall back to sRGB where needed.
 
 ---
 
 ## Project structure
 
-This project is designed to stay simple.
+    /
+    ├─ index.html
+    └─ README.md
 
-```text
-/
-├─ index.html   # app UI, styles, state, rendering, color math
-└─ README.md
-```
+The app currently keeps everything in `index.html`:
 
-The current implementation keeps everything in one file:
-
-- UI markup
-- CSS
-- color conversion math
+- markup
+- styles
+- color math
 - canvas rendering
 - input parsing
-- interaction logic
-
-That makes it easy to tweak quickly and easy to host anywhere.
+- drag/edit interactions
 
 ---
 
 ## Modes
 
-## OKLCH mode
+## OKLCH
 
-This is the most distinctive part of the picker.
+OKLCH mode is for direct perceptual editing.
 
-OKLCH mode is built around three ideas:
+Controls:
 
-1. **Perceptual editing** — you edit lightness, chroma, and hue directly
-2. **Gamut awareness** — the UI shows where a color is valid in sRGB and P3
-3. **Computed vs fallback output** — when a color leaves P3, the picker shows both the raw computed result and a perceptual fallback
+- **Lightness**
+- **Chroma**
+- **Hue**
+- **Opacity**
 
-### OKLCH output
+Output example:
 
-The main code field uses standard CSS syntax:
+    oklch(0.6659 0.1564 86.84)
+    oklch(0.6659 0.1564 86.84 / 74%)
 
-```css
-oklch(0.6659 0.1564 86.84)
-oklch(0.6659 0.1564 86.84 / 0.74)
-```
+OKLCH mode shows gamut boundaries where useful:
 
-### What “computed” means
+- **white marker** = sRGB boundary
+- **black marker** = Display-P3 boundary
 
-In this picker, **computed** means:
+When a selected OKLCH color leaves Display-P3, the preview splits:
 
-> “What RGB color do you get if you directly evaluate the current OKLCH coordinates?”
+- **Computed** — the raw evaluated/clipped result
+- **Fallback** — a P3-safe fallback that preserves lightness and hue while reducing chroma
 
-If the selected OKLCH color falls outside the target gamut, the math can still produce an RGB result after clamping. That result may shift hue or appearance.
-
-Example:
-
-- selected color: a high-chroma yellow in OKLCH
-- computed result: may turn more orange after channel clipping
-
-This picker keeps showing that computed result instead of hiding it.
-
-### What “fallback” means
-
-The **fallback** is the nearest visually sensible color used by the picker when the selected OKLCH value leaves **Display-P3**.
-
-In the current implementation, the fallback is built by:
-
-- keeping the current **lightness** and **hue**
-- reducing **chroma** until the color fits inside **P3**
-- converting that fallback RGB back to an OKLCH code for display in the fallback row
-
-That means the fallback row is not just “another label” for the same color. It is a separate, accessible code path designed to preserve the original hue intent as much as possible.
-
-### Split swatch behavior
-
-When the selected OKLCH color is inside P3, the preview shows a normal single swatch.
-
-When the selected OKLCH color goes outside P3, the preview splits into two halves:
-
-- **Computed** — the raw computed result
-- **Fallback** — the last valid P3 color
-
-This makes the tradeoff visible without forcing the picker state to jump.
-
-### Why the fallback row exists
-
-When the swatch splits, the values area also adds:
-
-- **Color Code (Fallback)**
-- **Hex (Fallback)**
-
-This gives you two usable outputs:
-
-- the code you actually selected
-- the display-safe fallback you may want to ship
-
-That is especially helpful for design systems, design tokens, and browser QA.
-
-### Gamut markers
-
-OKLCH sliders include gamut markers so you can see where values stop being valid.
-
-- **white line** = sRGB boundary
-- **black line** = Display-P3 boundary
-
-These markers appear only on sliders where they help explain the range. The vertical hue slider intentionally hides them to keep the hue strip visually clean.
-
-### Vertical slider behavior in OKLCH mode
-
-The vertical sliders are intentionally not all rendered the same way.
-
-#### Lightness slider
-
-The vertical **L** slider stays a simple **black → white** gradient.
-
-It does **not** recolor itself based on the current hue/chroma, because its purpose is to communicate the **lightness axis** itself. Boundary markers are still drawn over it.
-
-#### Chroma slider
-
-The vertical **C** slider shows the active hue across chroma levels.
-
-Above the valid P3 boundary, the slider does **not** wander into clipped hues. Instead, it holds the **last valid color**. This keeps the chroma track visually tied to one hue instead of letting clipping turn it into an unrelated color.
-
-#### Hue slider
-
-The vertical **H** slider behaves differently from the chroma slider.
-
-It always shows a full hue spectrum, even when some hues are out of gamut. Rather than breaking into gaps, it fills those regions with fallback colors so the strip stays readable and continuous.
-
-Also, it does **not** update from current lightness the same way the contextual sliders do. Its job is to communicate the hue dimension itself.
-
-### Horizontal slider behavior in OKLCH mode
-
-The horizontal sliders are more contextual.
-
-They show how the current color changes as you adjust the active value, including the places where the color leaves a gamut. This makes them useful for precision tuning.
-
-### Out-of-gamut state handling
-
-A key design goal is that the picker **does not collapse your selection** just because it is out of gamut.
-
-That means:
-
-- the OKLCH sliders keep the original selected values
-- switching to RGB shows the computed RGB color
-- switching back to OKLCH restores the raw selected OKLCH color, unless you actually edited RGB
-
-This is important, because otherwise you lose the distinction between:
-
-- the color you selected
-- the color the display can currently show
+The fallback row provides separate fallback code and hex values, which is useful for design tokens and browser QA.
 
 ---
 
-## RGB mode
+## Vivid
 
-RGB mode is straightforward by design.
+Vivid mode is a guided, P3-aware editing model built on OKLCH.
 
-- edit **R**, **G**, and **B** channels directly
-- see live `rgb(...)` output
-- edit hex directly
-- alpha stays available as a separate control
+Controls:
 
-RGB is also the interchange mode for parsed hex and functional RGB input.
+- **Tone** (`T`)
+- **Vividness** (`V`)
+- **Peak Hue** (`Hₚ`)
+- **Hue** (`H`)
+- **Opacity** (`A`)
 
----
+Vivid mode still outputs standard CSS `oklch(...)`. It is an editing model, not a separate color space.
 
-## HSL mode
+Vividness is normalized against the maximum P3 chroma available for the current Tone and Hue:
 
-HSL mode uses a more familiar picker layout.
+    chroma = vividness × maxChroma(tone, hue, Display-P3)
 
-### Layout changes in HSL mode
+### Peak Hue
 
-- the left preview becomes a **half-width output swatch**
-- the freed space becomes a **square color field**
-- the square behaves like the common app picker:
-  - top-left = white
-  - top-right = full hue color
-  - bottom = black
-- only one vertical slider remains: **Hue**
-- alpha moves to the **third horizontal slider**
+**Peak Hue** finds the most vivid P3-safe color for each hue by adjusting both Tone and Chroma.
 
-### Why the square behaves like HSV
+Use it to answer:
 
-Although the output format is HSL, the square uses an **HSV-style interaction model** because that is what most people expect visually from this kind of picker.
+> What is the strongest P3 color available at this hue?
 
-So in HSL mode:
+### Hue
 
-- the square is used for intuitive picking
-- the final output is still formatted as CSS-safe `hsl(...)` / `hsla(...)`
+**Hue** changes hue while keeping Tone and Vividness fixed.
 
-Example output:
+This rotates the color identity while preserving the same overall tone/vividness relationship.
 
-```css
-hsl(50 100% 50%)
-hsla(50 100% 50% / 0.74)
-```
+### Active hue control
+
+Vivid mode has two hue behaviors:
+
+- **Peak Hue**
+- **Hue**
+
+Only one is active at a time. The active behavior appears as the vertical hue slider. The inactive horizontal control collapses into a compact animated switch row.
 
 ---
 
-## Editing and interaction model
+## RGB
 
-### Dragging
+RGB mode is for direct channel editing.
 
-- drag sliders for continuous updates
-- drag the HSL square to pick saturation/value visually
+Controls:
 
-### Inline editing
+- **Red**
+- **Green**
+- **Blue**
+- **Opacity**
+
+Output example:
+
+    rgb(118 0 255)
+    rgb(118 0 255 / 0.7)
+
+RGB also supports direct hex editing.
+
+---
+
+## HSL
+
+HSL mode uses a familiar app-style picker layout.
+
+- Preview becomes smaller
+- A square color field appears
+- The square uses HSV-style interaction
+- Output remains CSS `hsl(...)`
+
+Output example:
+
+    hsl(270 100% 50%)
+    hsl(270 100% 50% / 0.7)
+
+---
+
+## Editing
 
 Most displayed values can be edited inline:
 
-- channel values
+- slider values
 - color code
 - hex
 - fallback code
 - fallback hex
-- alpha
+- opacity
 
-Supported input types include:
+Supported inputs include:
 
-- hex: `#7600ff`
-- OKLCH: `oklch(0.3657 0.2375 271.03)`
-- RGB: `rgb(118 0 255 / 0.7)`
-- HSL: `hsl(270 100% 50% / 0.7)`
-
-### Copy behavior
-
-Copying is attached to the preview swatch rather than the value chips.
-
-- single swatch: click to copy the main color code
-- split swatch: click the **computed** half to copy computed code, or the **fallback** half to copy fallback code
+- `#7600ff`
+- `oklch(0.3657 0.2375 271.03)`
+- `rgb(118 0 255 / 0.7)`
+- `hsl(270 100% 50% / 0.7)`
 
 ---
 
-## Browser support notes
+## Copy behavior
 
-The picker tries to use the most capable rendering path available.
+Click the preview swatch to copy the current color code.
 
-- If the browser supports `color(display-p3 ...)`, P3 previews are shown directly.
-- If the browser supports `oklch(...)`, the preview can use native OKLCH CSS output.
-- Otherwise, colors fall back to RGB output.
+If the preview is split:
 
-So the UI is progressive:
-
-- modern browsers get the richer version
-- older browsers still get a usable picker
+- click **Computed** to copy computed code
+- click **Fallback** to copy fallback code
 
 ---
 
 ## Design philosophy
 
-This picker is opinionated.
+Chromaxxing is opinionated.
 
-It is not trying to hide color-space complexity. It is trying to make that complexity visible and useful.
+It is built to make color-space behavior visible instead of hiding it.
 
-The main ideas are:
+Core ideas:
 
-- preserve the **selected color state**
-- separate **selection**, **computation**, and **fallback**
-- show gamut boundaries instead of pretending they do not exist
-- keep controls focused on the value space they represent
-- make wide-gamut behavior understandable at a glance
+- preserve the selected color state
+- separate selected, computed, and fallback colors
+- show gamut limits clearly
+- keep controls honest about what they adjust
+- make OKLCH and wide-gamut color easier to explore
 
 ---
 
 ## Good use cases
 
-- exploring OKLCH for design systems
-- checking whether a color survives sRGB fallback
+- exploring OKLCH
 - building CSS color tokens
-- comparing computed vs fallback output
-- teaching the difference between perceptual and clipped color results
-- generating HSL, RGB, and OKLCH values from one UI
+- testing sRGB and P3 behavior
+- finding vivid P3-safe colors
+- comparing computed vs fallback colors
+- generating OKLCH, RGB, HSL, and hex values
 
 ---
 
 ## Future ideas
 
-A few natural next steps for the project:
-
-- export palettes or saved swatches
-- add named preset colors
-- add URL serialization for shareable states
-- add keyboard nudging for all major controls
-- add side-by-side token export for multiple formats
-- add explicit P3 CSS export when useful
+- saved swatches
+- palette export
+- URL serialization
+- keyboard nudging
+- token export
+- contrast checking
+- explicit P3 CSS export
 
 ---
 
-Built as an experimental color picker focused on **OKLCH**, **gamut-aware UI**, and modern CSS color output.
+Built as an experimental color picker focused on **OKLCH**, **Vivid P3 color exploration**, **gamut-aware UI**, and modern CSS color output.
